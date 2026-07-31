@@ -90,6 +90,7 @@ export function PdfSettingsForm({ initialData }: { initialData: PdfSettingsInput
         <CardContent className="grid gap-4 sm:grid-cols-2">
           <Select
             label="Posição da logomarca"
+            name="logoPosition"
             value={form.logoPosition}
             onChange={(e) => update('logoPosition', e.target.value as PdfSettingsInput['logoPosition'])}
           >
@@ -99,22 +100,26 @@ export function PdfSettingsForm({ initialData }: { initialData: PdfSettingsInput
           </Select>
           <Input
             label="Prefixo do número do orçamento"
+            name="quotePrefix"
             value={form.quotePrefix || ''}
             onChange={(e) => update('quotePrefix', e.target.value)}
             placeholder="Ex: ORC"
           />
           <Input
             label="Texto de cabeçalho"
+            name="headerText"
             value={form.headerText || ''}
             onChange={(e) => update('headerText', e.target.value)}
           />
           <Input
             label="Texto de rodapé"
+            name="footerText"
             value={form.footerText || ''}
             onChange={(e) => update('footerText', e.target.value)}
           />
           <Input
             label="Validade padrão (dias)"
+            name="defaultValidityDays"
             type="number"
             min={1}
             value={form.defaultValidityDays ?? 15}
@@ -137,6 +142,7 @@ export function PdfSettingsForm({ initialData }: { initialData: PdfSettingsInput
               />
             </div>
             <Textarea
+              name="defaultPaymentTerms"
               rows={2}
               value={form.defaultPaymentTerms || ''}
               onChange={(e) => update('defaultPaymentTerms', e.target.value)}
@@ -147,6 +153,7 @@ export function PdfSettingsForm({ initialData }: { initialData: PdfSettingsInput
               Prazo de entrega
             </label>
             <Input
+              name="defaultDeliveryTerms"
               value={form.defaultDeliveryTerms || ''}
               onChange={(e) => update('defaultDeliveryTerms', e.target.value)}
             />
@@ -154,6 +161,7 @@ export function PdfSettingsForm({ initialData }: { initialData: PdfSettingsInput
           <div>
             <label className="mb-1.5 block text-sm font-medium text-slate-700">Garantia</label>
             <Input
+              name="defaultWarranty"
               value={form.defaultWarranty || ''}
               onChange={(e) => update('defaultWarranty', e.target.value)}
             />
@@ -167,6 +175,7 @@ export function PdfSettingsForm({ initialData }: { initialData: PdfSettingsInput
               />
             </div>
             <Textarea
+              name="defaultNotes"
               rows={3}
               value={form.defaultNotes || ''}
               onChange={(e) => update('defaultNotes', e.target.value)}

@@ -96,22 +96,26 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
         <div className="grid flex-1 gap-4 sm:grid-cols-2">
           <Input
             label="Nome"
+            name="name"
             value={form.name}
             onChange={(e) => update('name', e.target.value)}
             required
           />
           <Input
             label="Código (SKU)"
+            name="code"
             value={form.code || ''}
             onChange={(e) => update('code', e.target.value)}
           />
           <Input
             label="Categoria"
+            name="category"
             value={form.category || ''}
             onChange={(e) => update('category', e.target.value)}
           />
           <Input
             label="Unidade"
+            name="unit"
             value={form.unit}
             onChange={(e) => update('unit', e.target.value)}
             placeholder="un, kg, h, m²..."
@@ -140,6 +144,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
           </div>
         </div>
         <Textarea
+          name="description"
           rows={3}
           value={form.description || ''}
           onChange={(e) => update('description', e.target.value)}
@@ -149,6 +154,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
       <div className="grid gap-4 sm:grid-cols-3">
         <Input
           label="Preço de venda (R$)"
+          name="price"
           type="number"
           step="0.01"
           min={0}
@@ -158,6 +164,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
         />
         <Input
           label="Custo (R$)"
+          name="cost"
           type="number"
           step="0.01"
           min={0}
@@ -166,6 +173,7 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
         />
         <Input
           label="Garantia"
+          name="warranty"
           value={form.warranty || ''}
           onChange={(e) => update('warranty', e.target.value)}
           placeholder="Ex: 90 dias"

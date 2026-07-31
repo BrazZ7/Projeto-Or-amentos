@@ -45,6 +45,7 @@ function LoginForm() {
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <Input
           label="E-mail"
+          name="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -53,6 +54,7 @@ function LoginForm() {
         />
         <Input
           label="Senha"
+          name="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

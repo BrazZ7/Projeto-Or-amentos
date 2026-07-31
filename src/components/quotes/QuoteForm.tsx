@@ -112,6 +112,7 @@ export function QuoteForm({ quoteId, initialData, clients, products }: QuoteForm
           <Select
             className="sm:col-span-1"
             label="Cliente"
+            name="clientId"
             value={form.clientId}
             onChange={(e) => update('clientId', e.target.value)}
             required
@@ -125,6 +126,7 @@ export function QuoteForm({ quoteId, initialData, clients, products }: QuoteForm
           </Select>
           <Input
             label="Data de emissão"
+            name="issueDate"
             type="date"
             value={form.issueDate}
             onChange={(e) => update('issueDate', e.target.value)}
@@ -132,6 +134,7 @@ export function QuoteForm({ quoteId, initialData, clients, products }: QuoteForm
           />
           <Input
             label="Válido até"
+            name="validUntil"
             type="date"
             value={form.validUntil}
             onChange={(e) => update('validUntil', e.target.value)}
@@ -161,6 +164,7 @@ export function QuoteForm({ quoteId, initialData, clients, products }: QuoteForm
           <div className="grid gap-4 sm:grid-cols-3">
             <Select
               label="Tipo de desconto"
+              name="discountType"
               value={form.discountType}
               onChange={(e) => update('discountType', e.target.value as QuoteInput['discountType'])}
             >
@@ -169,6 +173,7 @@ export function QuoteForm({ quoteId, initialData, clients, products }: QuoteForm
             </Select>
             <Input
               label="Desconto"
+              name="discountValue"
               type="number"
               min={0}
               step="0.01"
@@ -177,6 +182,7 @@ export function QuoteForm({ quoteId, initialData, clients, products }: QuoteForm
             />
             <Input
               label="Frete"
+              name="freight"
               type="number"
               min={0}
               step="0.01"
@@ -220,6 +226,7 @@ export function QuoteForm({ quoteId, initialData, clients, products }: QuoteForm
               />
             </div>
             <Textarea
+              name="paymentTerms"
               rows={2}
               value={form.paymentTerms || ''}
               onChange={(e) => update('paymentTerms', e.target.value)}
@@ -227,11 +234,13 @@ export function QuoteForm({ quoteId, initialData, clients, products }: QuoteForm
           </div>
           <Input
             label="Prazo de entrega"
+            name="deliveryTerms"
             value={form.deliveryTerms || ''}
             onChange={(e) => update('deliveryTerms', e.target.value)}
           />
           <Input
             label="Garantia"
+            name="warranty"
             value={form.warranty || ''}
             onChange={(e) => update('warranty', e.target.value)}
           />
@@ -241,6 +250,7 @@ export function QuoteForm({ quoteId, initialData, clients, products }: QuoteForm
               <AiTextActions text={form.notes || ''} onResult={(r) => update('notes', r)} />
             </div>
             <Textarea
+              name="notes"
               rows={3}
               value={form.notes || ''}
               onChange={(e) => update('notes', e.target.value)}
@@ -248,6 +258,7 @@ export function QuoteForm({ quoteId, initialData, clients, products }: QuoteForm
           </div>
           <Select
             label="Modelo de PDF"
+            name="template"
             value={form.template}
             onChange={(e) => update('template', e.target.value as QuoteInput['template'])}
           >

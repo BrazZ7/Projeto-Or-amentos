@@ -46,6 +46,7 @@ export function AiQuoteBuilder({ onGenerated }: { onGenerated: (result: AiGenera
           condições — depois é só revisar e ajustar.
         </p>
         <Textarea
+          name="aiRequestText"
           rows={3}
           placeholder="Ex: Orçamento para pintura de uma sala de 20m², tinta acrílica, com prazo de 5 dias úteis."
           value={requestText}

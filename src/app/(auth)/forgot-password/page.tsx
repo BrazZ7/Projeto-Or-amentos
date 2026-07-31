@@ -47,6 +47,7 @@ export default function ForgotPasswordPage() {
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <Input
           label="E-mail"
+          name="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}

@@ -68,6 +68,7 @@ export function ClientForm({ clientId, initialData }: ClientFormProps) {
       <div className="grid gap-4 sm:grid-cols-3">
         <Select
           label="Tipo de cliente"
+          name="type"
           value={form.type}
           onChange={(e) => update('type', e.target.value as ClientInput['type'])}
         >
@@ -77,6 +78,7 @@ export function ClientForm({ clientId, initialData }: ClientFormProps) {
         <Input
           className="sm:col-span-2"
           label={form.type === 'PF' ? 'Nome completo' : 'Razão social'}
+          name="name"
           value={form.name}
           onChange={(e) => update('name', e.target.value)}
           required
@@ -86,17 +88,20 @@ export function ClientForm({ clientId, initialData }: ClientFormProps) {
       <div className="grid gap-4 sm:grid-cols-3">
         <Input
           label={form.type === 'PF' ? 'CPF' : 'CNPJ'}
+          name="document"
           value={form.document || ''}
           onChange={(e) => update('document', e.target.value)}
         />
         <Input
           label="E-mail"
+          name="email"
           type="email"
           value={form.email || ''}
           onChange={(e) => update('email', e.target.value)}
         />
         <Input
           label="Telefone"
+          name="phone"
           value={form.phone || ''}
           onChange={(e) => update('phone', e.target.value)}
         />
@@ -104,6 +109,7 @@ export function ClientForm({ clientId, initialData }: ClientFormProps) {
 
       <Input
         label="WhatsApp"
+        name="whatsapp"
         value={form.whatsapp || ''}
         onChange={(e) => update('whatsapp', e.target.value)}
       />
@@ -112,16 +118,19 @@ export function ClientForm({ clientId, initialData }: ClientFormProps) {
         <Input
           className="sm:col-span-2"
           label="Endereço"
+          name="addressStreet"
           value={form.addressStreet || ''}
           onChange={(e) => update('addressStreet', e.target.value)}
         />
         <Input
           label="Número"
+          name="addressNumber"
           value={form.addressNumber || ''}
           onChange={(e) => update('addressNumber', e.target.value)}
         />
         <Input
           label="Complemento"
+          name="addressComplement"
           value={form.addressComplement || ''}
           onChange={(e) => update('addressComplement', e.target.value)}
         />
@@ -130,21 +139,25 @@ export function ClientForm({ clientId, initialData }: ClientFormProps) {
       <div className="grid gap-4 sm:grid-cols-4">
         <Input
           label="Bairro"
+          name="addressNeighborhood"
           value={form.addressNeighborhood || ''}
           onChange={(e) => update('addressNeighborhood', e.target.value)}
         />
         <Input
           label="Cidade"
+          name="addressCity"
           value={form.addressCity || ''}
           onChange={(e) => update('addressCity', e.target.value)}
         />
         <Input
           label="Estado"
+          name="addressState"
           value={form.addressState || ''}
           onChange={(e) => update('addressState', e.target.value)}
         />
         <Input
           label="CEP"
+          name="addressZipCode"
           value={form.addressZipCode || ''}
           onChange={(e) => update('addressZipCode', e.target.value)}
         />
@@ -152,6 +165,7 @@ export function ClientForm({ clientId, initialData }: ClientFormProps) {
 
       <Textarea
         label="Observações"
+        name="notes"
         rows={3}
         value={form.notes || ''}
         onChange={(e) => update('notes', e.target.value)}

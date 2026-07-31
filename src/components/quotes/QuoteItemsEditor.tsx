@@ -76,6 +76,7 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
             <div className="sm:col-span-5">
               <Input
                 label={index === 0 ? 'Descrição' : undefined}
+                name={`items.${index}.description`}
                 value={item.description}
                 onChange={(e) => updateItem(index, { description: e.target.value })}
                 required
@@ -84,6 +85,7 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
             <div className="sm:col-span-2">
               <Input
                 label={index === 0 ? 'Qtd.' : undefined}
+                name={`items.${index}.quantity`}
                 type="number"
                 min={0.01}
                 step="0.01"
@@ -95,6 +97,7 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
             <div className="sm:col-span-2">
               <Input
                 label={index === 0 ? 'Vlr. unit.' : undefined}
+                name={`items.${index}.unitPrice`}
                 type="number"
                 min={0}
                 step="0.01"
@@ -106,6 +109,7 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
             <div className="sm:col-span-2">
               <Input
                 label={index === 0 ? 'Desconto' : undefined}
+                name={`items.${index}.discount`}
                 type="number"
                 min={0}
                 step="0.01"
@@ -137,6 +141,7 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
         {products.length > 0 && (
           <Select
             className="max-w-xs"
+            name="addProductFromCatalog"
             defaultValue=""
             onChange={(e) => {
               if (e.target.value) {

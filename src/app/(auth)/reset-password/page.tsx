@@ -56,6 +56,7 @@ function ResetPasswordForm() {
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <Input
           label="Nova senha"
+          name="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

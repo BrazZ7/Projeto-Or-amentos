@@ -70,6 +70,7 @@ export default function RegisterPage() {
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <Input
           label="Razão social da empresa"
+          name="companyLegalName"
           value={form.companyLegalName}
           onChange={(e) => update('companyLegalName', e.target.value)}
           required
@@ -77,6 +78,7 @@ export default function RegisterPage() {
         <div className="grid grid-cols-3 gap-3">
           <Select
             label="Tipo"
+            name="documentType"
             value={form.documentType}
             onChange={(e) => update('documentType', e.target.value)}
             className="col-span-1"
@@ -86,6 +88,7 @@ export default function RegisterPage() {
           </Select>
           <Input
             label="CPF/CNPJ"
+            name="document"
             value={form.document}
             onChange={(e) => update('document', e.target.value)}
             required
@@ -94,12 +97,14 @@ export default function RegisterPage() {
         </div>
         <Input
           label="Seu nome"
+          name="name"
           value={form.name}
           onChange={(e) => update('name', e.target.value)}
           required
         />
         <Input
           label="E-mail"
+          name="email"
           type="email"
           value={form.email}
           onChange={(e) => update('email', e.target.value)}
@@ -107,6 +112,7 @@ export default function RegisterPage() {
         />
         <Input
           label="Senha"
+          name="password"
           type="password"
           hint="Mínimo de 8 caracteres."
           value={form.password}
