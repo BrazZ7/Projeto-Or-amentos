@@ -44,6 +44,42 @@ rota aceita um `companyId` vindo do cliente.
 
 A aplicação estará disponível em `http://localhost:3000`.
 
+## Deploy na Vercel
+
+O projeto está pronto para deploy na Vercel (o `npm run build` já roda
+`prisma generate`, `prisma migrate deploy` e `prisma db seed` automaticamente).
+
+1. **Banco de dados**: crie um Postgres gratuito, por exemplo em
+   [neon.tech](https://neon.tech) ou [supabase.com](https://supabase.com), e copie a
+   connection string (use a variante com `sslmode=require`, se oferecida).
+2. Em [vercel.com](https://vercel.com), faça login com sua conta GitHub e clique em
+   **Add New → Project**, selecionando o repositório `BrazZ7/projeto-or-amentos` e o
+   branch com o código (`claude/saas-orcamentos-pdf-w7edha` ou o branch para onde ele
+   for mesclado).
+3. Antes de clicar em **Deploy**, configure as variáveis de ambiente do projeto
+   (aba *Environment Variables*):
+   - `DATABASE_URL` — a connection string do passo 1
+   - `NEXTAUTH_SECRET` — gere com `openssl rand -base64 32`
+   - `NEXTAUTH_URL` e `NEXT_PUBLIC_APP_URL` — a URL que a Vercel vai atribuir ao
+     projeto (ex: `https://seu-projeto.vercel.app`); dá para editar depois do
+     primeiro deploy e fazer um redeploy
+   - `ANTHROPIC_API_KEY` — opcional, habilita os recursos de IA
+   - `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASSWORD`/`SMTP_FROM` — opcional; sem
+     isso, os e-mails de confirmação/recuperação só aparecem nos **Runtime Logs** do
+     projeto na Vercel (Functions → Logs), o que é suficiente para testar o fluxo
+   - `STRIPE_*` — opcional, só necessário para testar assinaturas de verdade
+4. Clique em **Deploy**.
+5. Depois do primeiro deploy, ative o **Vercel Blob** (aba *Storage* → *Create
+   Database* → *Blob* → conectar ao projeto) para que o upload de logotipo,
+   assinatura e imagens de produto funcione — a Vercel injeta a variável
+   `BLOB_READ_WRITE_TOKEN` automaticamente e a rota `/api/upload` já usa o Blob
+   quando essa variável existe (sem ela, cai para disco local, que não persiste em
+   produção). Depois de conectar o Blob, faça um redeploy.
+
+Com isso o app fica acessível por uma URL pública para teste completo do fluxo:
+cadastro → confirmação de e-mail (via logs, se SMTP não configurado) → login →
+empresa/clientes/produtos → orçamento → PDF → link público de aprovação.
+
 ## Funcionalidades implementadas
 
 - Cadastro de empresa + usuário owner, confirmação de e-mail, login, recuperação de senha.
