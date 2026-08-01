@@ -46,6 +46,15 @@ instalado. Não precisa instalar Node nem Postgres na máquina.
    minutos.
 4. Acesse `http://localhost:3000`.
 
+**Usuário de teste** (criado automaticamente pelo seed, já com e-mail
+confirmado — não precisa cadastrar nada):
+
+- E-mail: `demo@orcafacil.com`
+- Senha: `Demo@1234`
+
+Ele já vem com uma empresa de demonstração e um plano Starter em teste. Se
+preferir, também dá pra criar sua própria conta pela tela de cadastro.
+
 Como o SMTP não está configurado por padrão, o link de confirmação de e-mail
 (no cadastro) e o de recuperação de senha aparecem no terminal onde você rodou
 `docker compose up` (procure por "E-mail não enviado (SMTP não configurado)").
