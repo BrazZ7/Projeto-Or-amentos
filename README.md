@@ -24,7 +24,36 @@ campo** a partir da sessão autenticada (`requireSession()` em
 `src/lib/session.ts`), o que garante isolamento total entre empresas. Nenhuma
 rota aceita um `companyId` vindo do cliente.
 
-## Configuração
+## Rodar localmente com Docker (mais simples)
+
+Só precisa ter o [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+instalado. Não precisa instalar Node nem Postgres na máquina.
+
+1. Clone o repositório e entre na pasta:
+   ```bash
+   git clone https://github.com/BrazZ7/projeto-or-amentos.git
+   cd projeto-or-amentos
+   git checkout claude/saas-orcamentos-pdf-w7edha
+   ```
+2. (Opcional) copie `.env.example` para `.env` e preencha `ANTHROPIC_API_KEY`
+   se quiser testar os recursos de IA. Sem isso, tudo o mais funciona normalmente.
+3. Suba tudo com um comando:
+   ```bash
+   docker compose up --build
+   ```
+   Na primeira vez isso baixa as imagens, builda a aplicação, sobe o Postgres,
+   roda as migrações e popula os planos automaticamente — pode levar alguns
+   minutos.
+4. Acesse `http://localhost:3000`.
+
+Como o SMTP não está configurado por padrão, o link de confirmação de e-mail
+(no cadastro) e o de recuperação de senha aparecem no terminal onde você rodou
+`docker compose up` (procure por "E-mail não enviado (SMTP não configurado)").
+
+Para parar: `Ctrl+C` e depois `docker compose down` (adicione `-v` para também
+apagar os dados do banco).
+
+## Configuração manual (sem Docker)
 
 1. Copie `.env.example` para `.env` e preencha as variáveis (banco de dados,
    NextAuth, SMTP, Anthropic, Stripe conforme necessário).
