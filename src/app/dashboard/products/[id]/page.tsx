@@ -20,6 +20,7 @@ export default async function EditProductPage({ params }: { params: { id: string
       </div>
       <ProductForm
         productId={product.id}
+        currentStock={Number(product.stockQuantity)}
         initialData={{
           name: product.name,
           code: product.code || '',
@@ -31,6 +32,8 @@ export default async function EditProductPage({ params }: { params: { id: string
           cost: Number(product.cost),
           warranty: product.warranty || '',
           active: product.active,
+          trackStock: product.trackStock,
+          minStockAlert: product.minStockAlert ? Number(product.minStockAlert) : null,
         }}
       />
     </div>

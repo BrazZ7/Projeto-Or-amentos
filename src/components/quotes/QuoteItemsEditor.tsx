@@ -15,6 +15,8 @@ export interface ProductOption {
   description: string | null;
   imageUrl: string | null;
   unit: string;
+  trackStock?: boolean;
+  stockQuantity?: number;
 }
 
 interface QuoteItemsEditorProps {
@@ -70,7 +72,12 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
         </p>
       )}
 
-      {items.map((item, index) => (
+      {items.map((item, index) => {
+        const linkedProduct = products.find((p) => p.id === item.productId);
+        const insufficientStock =
+          linkedProduct?.trackStock && (linkedProduct.stockQuantity ?? 0) < item.quantity;
+
+        return (
         <div key={index} className="rounded-xl border border-slate-200 p-3">
           <div className="grid gap-3 sm:grid-cols-12">
             <div className="sm:col-span-5">
@@ -127,11 +134,21 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
               </button>
             </div>
           </div>
-          <p className="mt-1 text-right text-xs font-medium text-slate-500">
-            Total do item: {formatCurrency(calculateItemTotal(item))}
-          </p>
+          <div className="mt-1 flex items-center justify-between">
+            {insufficientStock ? (
+              <p className="text-xs font-medium text-amber-700">
+                Estoque disponível: {linkedProduct?.stockQuantity ?? 0} {linkedProduct?.unit}
+              </p>
+            ) : (
+              <span />
+            )}
+            <p className="text-right text-xs font-medium text-slate-500">
+              Total do item: {formatCurrency(calculateItemTotal(item))}
+            </p>
+          </div>
         </div>
-      ))}
+        );
+      })}
 
       <div className="flex flex-wrap items-center gap-3">
         <Button type="button" variant="outline" size="sm" onClick={addBlankItem}>
@@ -154,6 +171,7 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
             {products.map((product) => (
               <option key={product.id} value={product.id}>
                 {product.name} — {formatCurrency(product.price)}
+                {product.trackStock ? ` (estoque: ${product.stockQuantity ?? 0})` : ''}
               </option>
             ))}
           </Select>

@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Sparkles, Loader2 } from 'lucide-react';
+import Link from 'next/link';
+import { Sparkles, Loader2, Boxes } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Button } from '@/components/ui/Button';
@@ -13,6 +14,7 @@ import type { ProductInput } from '@/lib/validations/product';
 interface ProductFormProps {
   productId?: string;
   initialData?: Partial<ProductInput>;
+  currentStock?: number;
 }
 
 const emptyForm: ProductInput = {
@@ -26,9 +28,11 @@ const emptyForm: ProductInput = {
   cost: 0,
   warranty: '',
   active: true,
+  trackStock: true,
+  minStockAlert: null,
 };
 
-export function ProductForm({ productId, initialData }: ProductFormProps) {
+export function ProductForm({ productId, initialData, currentStock }: ProductFormProps) {
   const router = useRouter();
   const [form, setForm] = useState<ProductInput>({ ...emptyForm, ...initialData });
   const [loading, setLoading] = useState(false);
@@ -189,6 +193,54 @@ export function ProductForm({ productId, initialData }: ProductFormProps) {
         />
         Ativo (disponível para uso em orçamentos)
       </label>
+
+      <div className="rounded-xl border border-slate-200 p-4">
+        <div className="flex items-center justify-between">
+          <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+            <input
+              type="checkbox"
+              checked={form.trackStock}
+              onChange={(e) => update('trackStock', e.target.checked)}
+              className="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+            />
+            <Boxes className="h-4 w-4 text-slate-400" />
+            Controla estoque
+          </label>
+          {productId && form.trackStock && (
+            <Link
+              href={`/dashboard/stock?productId=${productId}`}
+              className="text-sm font-medium text-brand-600 hover:underline"
+            >
+              Ver/registrar movimentações
+            </Link>
+          )}
+        </div>
+
+        {form.trackStock && (
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            {productId && (
+              <div>
+                <p className="mb-1.5 text-sm font-medium text-slate-700">Estoque atual</p>
+                <p className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
+                  {currentStock ?? 0} {form.unit}
+                </p>
+              </div>
+            )}
+            <Input
+              label="Alertar quando o estoque for menor que"
+              name="minStockAlert"
+              type="number"
+              min={0}
+              step="0.01"
+              value={form.minStockAlert ?? ''}
+              onChange={(e) =>
+                update('minStockAlert', e.target.value === '' ? null : Number(e.target.value))
+              }
+              placeholder="Opcional"
+            />
+          </div>
+        )}
+      </div>
 
       {error && <p className="text-sm text-rose-600">{error}</p>}
 

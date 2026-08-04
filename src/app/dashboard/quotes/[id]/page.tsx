@@ -25,7 +25,16 @@ export default async function QuoteDetailPage({ params }: { params: { id: string
     prisma.product.findMany({
       where: { companyId, active: true },
       orderBy: { name: 'asc' },
-      select: { id: true, name: true, price: true, description: true, imageUrl: true, unit: true },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        description: true,
+        imageUrl: true,
+        unit: true,
+        trackStock: true,
+        stockQuantity: true,
+      },
     }),
   ]);
 
@@ -57,7 +66,11 @@ export default async function QuoteDetailPage({ params }: { params: { id: string
       <QuoteForm
         quoteId={quote.id}
         clients={clients}
-        products={products.map((p) => ({ ...p, price: Number(p.price) }))}
+        products={products.map((p) => ({
+          ...p,
+          price: Number(p.price),
+          stockQuantity: Number(p.stockQuantity),
+        }))}
         initialData={{
           clientId: quote.clientId,
           issueDate: toDateInputValue(quote.issueDate),

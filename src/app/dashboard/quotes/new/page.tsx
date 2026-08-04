@@ -15,7 +15,16 @@ export default async function NewQuotePage() {
     prisma.product.findMany({
       where: { companyId, active: true },
       orderBy: { name: 'asc' },
-      select: { id: true, name: true, price: true, description: true, imageUrl: true, unit: true },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        description: true,
+        imageUrl: true,
+        unit: true,
+        trackStock: true,
+        stockQuantity: true,
+      },
     }),
     prisma.company.findUniqueOrThrow({ where: { id: companyId } }),
   ]);
@@ -34,7 +43,11 @@ export default async function NewQuotePage() {
       </div>
       <QuoteForm
         clients={clients}
-        products={products.map((p) => ({ ...p, price: Number(p.price) }))}
+        products={products.map((p) => ({
+          ...p,
+          price: Number(p.price),
+          stockQuantity: Number(p.stockQuantity),
+        }))}
         initialData={{
           clientId: '',
           issueDate: toDateInputValue(issueDate),

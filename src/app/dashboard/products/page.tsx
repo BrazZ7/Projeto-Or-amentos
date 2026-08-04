@@ -20,6 +20,9 @@ export default async function ProductsPage() {
       price: true,
       imageUrl: true,
       active: true,
+      trackStock: true,
+      stockQuantity: true,
+      minStockAlert: true,
     },
   });
 
@@ -38,7 +41,14 @@ export default async function ProductsPage() {
         </Link>
       </div>
 
-      <ProductsGrid products={products.map((p) => ({ ...p, price: Number(p.price) }))} />
+      <ProductsGrid
+        products={products.map((p) => ({
+          ...p,
+          price: Number(p.price),
+          stockQuantity: Number(p.stockQuantity),
+          minStockAlert: p.minStockAlert != null ? Number(p.minStockAlert) : null,
+        }))}
+      />
     </div>
   );
 }

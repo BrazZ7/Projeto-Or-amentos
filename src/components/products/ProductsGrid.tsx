@@ -19,6 +19,9 @@ export interface ProductRow {
   price: number;
   imageUrl: string | null;
   active: boolean;
+  trackStock: boolean;
+  stockQuantity: number;
+  minStockAlert: number | null;
 }
 
 export function ProductsGrid({ products }: { products: ProductRow[] }) {
@@ -91,6 +94,22 @@ export function ProductsGrid({ products }: { products: ProductRow[] }) {
                   {formatCurrency(product.price)}{' '}
                   <span className="text-xs font-normal text-slate-400">/ {product.unit}</span>
                 </p>
+                {product.trackStock && (
+                  <p className="mt-1 text-xs">
+                    <span
+                      className={
+                        product.minStockAlert != null && product.stockQuantity < product.minStockAlert
+                          ? 'font-semibold text-amber-700'
+                          : 'text-slate-500'
+                      }
+                    >
+                      Estoque: {product.stockQuantity} {product.unit}
+                    </span>
+                    {product.minStockAlert != null && product.stockQuantity < product.minStockAlert && (
+                      <Badge className="ml-1.5 bg-amber-100 text-amber-700">Baixo</Badge>
+                    )}
+                  </p>
+                )}
                 <div className="mt-2 flex gap-2">
                   <Link
                     href={`/dashboard/products/${product.id}`}
