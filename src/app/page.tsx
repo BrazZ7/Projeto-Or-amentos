@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
+import { BackgroundBlobs } from '@/components/ui/BackgroundBlobs';
 
 const features = [
   {
@@ -46,32 +47,42 @@ const features = [
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-surface-muted">
-      <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
-        <div className="flex items-center gap-2 text-lg font-semibold text-slate-900">
-          <FileText className="h-6 w-6 text-brand-600" />
-          OrcaFacil
-        </div>
-        <div className="flex items-center gap-3">
-          <Link href="/login">
-            <Button variant="ghost">Entrar</Button>
-          </Link>
-          <Link href="/register">
-            <Button>Criar conta grátis</Button>
-          </Link>
+    <div className="relative min-h-screen overflow-hidden bg-surface-muted">
+      <BackgroundBlobs position="fixed" />
+
+      <header className="sticky top-0 z-20 border-b border-white/60 bg-white/70 shadow-sm backdrop-blur-lg">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+            <FileText className="h-6 w-6 text-brand-600" />
+            OrcaFacil
+          </div>
+          <div className="flex items-center gap-3">
+            <Link href="/login">
+              <Button variant="ghost">Entrar</Button>
+            </Link>
+            <Link href="/register">
+              <Button>Criar conta grátis</Button>
+            </Link>
+          </div>
         </div>
       </header>
 
       <main>
-        <section className="mx-auto max-w-4xl px-6 pb-16 pt-12 text-center">
-          <h1 className="text-4xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+        <section className="mx-auto max-w-4xl px-6 pb-16 pt-16 text-center">
+          <h1 className="animate-fade-in-up text-4xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-5xl">
             Orçamentos profissionais em PDF, prontos em minutos.
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
+          <p
+            className="mx-auto mt-5 max-w-2xl animate-fade-in-up text-lg text-slate-600"
+            style={{ animationDelay: '80ms' }}
+          >
             Cadastre clientes e produtos, gere propostas com sua marca e acompanhe cada orçamento
             até a aprovação — tudo em um só lugar.
           </p>
-          <div className="mt-8 flex items-center justify-center gap-3">
+          <div
+            className="mt-8 flex animate-fade-in-up items-center justify-center gap-3"
+            style={{ animationDelay: '160ms' }}
+          >
             <Link href="/register">
               <Button size="lg">Começar gratuitamente</Button>
             </Link>
@@ -85,10 +96,16 @@ export default function LandingPage() {
 
         <section className="mx-auto max-w-6xl px-6 pb-24">
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature) => (
-              <Card key={feature.title}>
+            {features.map((feature, index) => (
+              <Card
+                key={feature.title}
+                glass
+                hoverable
+                className="group animate-fade-in-up"
+                style={{ animationDelay: `${index * 60}ms` }}
+              >
                 <CardContent className="flex flex-col gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600 transition-transform duration-300 group-hover:scale-110">
                     <feature.icon className="h-5 w-5" />
                   </div>
                   <h3 className="font-semibold text-slate-900">{feature.title}</h3>

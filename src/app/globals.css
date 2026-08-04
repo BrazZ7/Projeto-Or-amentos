@@ -13,3 +13,37 @@ body {
 ::selection {
   @apply bg-brand-200;
 }
+
+@layer utilities {
+  .glass {
+    @apply border border-white/60 bg-white/70 shadow-glass backdrop-blur-lg;
+  }
+
+  .glass-strong {
+    @apply border border-white/70 bg-white/80 shadow-glass backdrop-blur-xl;
+  }
+
+  .glass-solid {
+    @apply border border-white/70 bg-white/95 shadow-glass backdrop-blur-xl;
+  }
+
+  .glass-dark {
+    @apply border border-white/10 bg-slate-900/40 shadow-glass backdrop-blur-lg;
+  }
+
+  .bg-grid-fade {
+    background-image: radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.06) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

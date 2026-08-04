@@ -14,9 +14,14 @@ export function StatsCard({
   accent?: string;
 }) {
   return (
-    <Card>
+    <Card hoverable glass className="group">
       <CardContent className="flex items-center gap-4">
-        <div className={cn('flex h-11 w-11 shrink-0 items-center justify-center rounded-xl', accent)}>
+        <div
+          className={cn(
+            'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3',
+            accent,
+          )}
+        >
           <Icon className="h-5 w-5" />
         </div>
         <div>

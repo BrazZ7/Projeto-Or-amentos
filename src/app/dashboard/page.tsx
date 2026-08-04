@@ -83,7 +83,7 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
+        <Card hoverable>
           <CardHeader className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
               <AlertTriangle className="h-4 w-4 text-amber-500" />
@@ -120,7 +120,7 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card hoverable>
           <CardHeader>
             <CardTitle>Clientes recentes</CardTitle>
           </CardHeader>
