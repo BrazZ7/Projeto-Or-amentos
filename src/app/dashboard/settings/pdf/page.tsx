@@ -1,5 +1,6 @@
 import { requireSession } from '@/lib/session';
 import { prisma } from '@/lib/prisma';
+import { companyAllowsPremiumTemplates } from '@/lib/plan-limits';
 import { PdfSettingsForm } from '@/components/company/PdfSettingsForm';
 
 export default async function PdfSettingsPage() {
@@ -8,6 +9,7 @@ export default async function PdfSettingsPage() {
   const company = await prisma.company.findUniqueOrThrow({
     where: { id: session.user.companyId },
   });
+  const premiumAllowed = await companyAllowsPremiumTemplates(session.user.companyId);
 
   return (
     <div className="max-w-4xl space-y-6">
@@ -18,6 +20,7 @@ export default async function PdfSettingsPage() {
         </p>
       </div>
       <PdfSettingsForm
+        premiumAllowed={premiumAllowed}
         initialData={{
           pdfTemplate: company.pdfTemplate,
           logoPosition: company.logoPosition,

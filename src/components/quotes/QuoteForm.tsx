@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
@@ -12,6 +13,7 @@ import { AiTextActions } from '@/components/ui/AiTextActions';
 import { QuoteItemsEditor, type ProductOption } from '@/components/quotes/QuoteItemsEditor';
 import { AiQuoteBuilder } from '@/components/quotes/AiQuoteBuilder';
 import { calculateQuoteTotals } from '@/lib/calculations';
+import { PDF_TEMPLATE_OPTIONS } from '@/lib/pdf/template-options';
 import { formatCurrency } from '@/lib/utils';
 import type { QuoteInput } from '@/lib/validations/quote';
 import type { AiGeneratedQuote } from '@/lib/ai';
@@ -26,9 +28,16 @@ interface QuoteFormProps {
   initialData: QuoteInput;
   clients: ClientOption[];
   products: ProductOption[];
+  premiumAllowed: boolean;
 }
 
-export function QuoteForm({ quoteId, initialData, clients, products }: QuoteFormProps) {
+export function QuoteForm({
+  quoteId,
+  initialData,
+  clients,
+  products,
+  premiumAllowed,
+}: QuoteFormProps) {
   const router = useRouter();
   const [form, setForm] = useState<QuoteInput>(initialData);
   const [loading, setLoading] = useState(false);
@@ -262,11 +271,27 @@ export function QuoteForm({ quoteId, initialData, clients, products }: QuoteForm
             value={form.template}
             onChange={(e) => update('template', e.target.value as QuoteInput['template'])}
           >
-            <option value="CLASSIC">Clássico</option>
-            <option value="MODERN">Moderno</option>
-            <option value="PROPOSAL">Proposta comercial</option>
-            <option value="FORMAL">Formal</option>
+            {PDF_TEMPLATE_OPTIONS.map((tpl) => {
+              // O modelo já salvo no orçamento continua selecionável mesmo que
+              // hoje seja bloqueado, senão o select perderia o valor atual.
+              const locked = tpl.premium && !premiumAllowed && tpl.value !== initialData.template;
+              return (
+                <option key={tpl.value} value={tpl.value} disabled={locked}>
+                  {tpl.label}
+                  {locked ? ' (plano Starter)' : ''}
+                </option>
+              );
+            })}
           </Select>
+          {!premiumAllowed && (
+            <p className="text-xs text-slate-500">
+              Modelos Executivo, Lateral e Catálogo exigem um plano com identidade visual
+              personalizada.{' '}
+              <Link href="/dashboard/settings/plan" className="font-medium text-brand-600 hover:underline">
+                Ver planos
+              </Link>
+            </p>
+          )}
         </CardContent>
       </Card>
 

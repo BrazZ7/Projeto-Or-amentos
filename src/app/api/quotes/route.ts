@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/session';
 import { quoteSchema } from '@/lib/validations/quote';
 import { handleApiError } from '@/lib/api-utils';
-import { assertWithinPlanLimit } from '@/lib/plan-limits';
+import { assertWithinPlanLimit, resolveQuoteTemplate } from '@/lib/plan-limits';
 import { calculateQuoteTotals } from '@/lib/calculations';
 
 export async function GET(request: NextRequest) {
@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     const company = await prisma.company.findUniqueOrThrow({ where: { id: companyId } });
+    const template = await resolveQuoteTemplate(companyId, data.template, company.pdfTemplate);
 
     const totals = calculateQuoteTotals({
       items: data.items,
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
           deliveryTerms: data.deliveryTerms,
           warranty: data.warranty,
           notes: data.notes,
-          template: data.template || company.pdfTemplate,
+          template,
           items: {
             create: data.items.map((item, index) => ({
               productId: item.productId || null,

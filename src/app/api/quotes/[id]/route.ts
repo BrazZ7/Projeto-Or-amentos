@@ -4,6 +4,7 @@ import { requireSession } from '@/lib/session';
 import { quoteSchema } from '@/lib/validations/quote';
 import { handleApiError } from '@/lib/api-utils';
 import { calculateQuoteTotals } from '@/lib/calculations';
+import { assertTemplateAllowed } from '@/lib/plan-limits';
 
 async function getOwnedQuote(companyId: string, id: string) {
   const quote = await prisma.quote.findFirst({ where: { id, companyId } });
@@ -41,6 +42,13 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     const client = await prisma.client.findFirst({ where: { id: data.clientId, companyId } });
     if (!client) {
       return NextResponse.json({ error: 'Cliente inválido.' }, { status: 422 });
+    }
+
+    // Só barra a troca para um modelo premium. O formulário reenvia o modelo
+    // atual do orçamento, então validar sempre impediria uma empresa que
+    // rebaixou o plano de salvar qualquer edição em orçamentos antigos.
+    if (data.template && data.template !== existing.template) {
+      await assertTemplateAllowed(companyId, data.template);
     }
 
     const totals = calculateQuoteTotals({

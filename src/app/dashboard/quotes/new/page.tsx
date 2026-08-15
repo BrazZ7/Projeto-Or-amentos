@@ -1,5 +1,6 @@
 import { requireSession } from '@/lib/session';
 import { prisma } from '@/lib/prisma';
+import { companyAllowsPremiumTemplates } from '@/lib/plan-limits';
 import { QuoteForm } from '@/components/quotes/QuoteForm';
 
 function toDateInputValue(date: Date) {
@@ -28,6 +29,7 @@ export default async function NewQuotePage() {
     }),
     prisma.company.findUniqueOrThrow({ where: { id: companyId } }),
   ]);
+  const premiumAllowed = await companyAllowsPremiumTemplates(companyId);
 
   const issueDate = new Date();
   const validUntil = new Date();
@@ -42,6 +44,7 @@ export default async function NewQuotePage() {
         </p>
       </div>
       <QuoteForm
+        premiumAllowed={premiumAllowed}
         clients={clients}
         products={products.map((p) => ({
           ...p,

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { PDF_TEMPLATE_VALUES } from '@/lib/pdf/template-options';
 
 export const quoteItemSchema = z.object({
   productId: z.string().optional().nullable(),
@@ -25,6 +26,6 @@ export const quoteSchema = z.object({
   deliveryTerms: z.string().optional().nullable(),
   warranty: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
-  template: z.enum(['CLASSIC', 'MODERN', 'PROPOSAL', 'FORMAL']).optional(),
+  template: z.enum(PDF_TEMPLATE_VALUES).optional(),
 });
 export type QuoteInput = z.infer<typeof quoteSchema>;

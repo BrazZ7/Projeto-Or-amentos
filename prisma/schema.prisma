@@ -26,6 +26,9 @@ enum PdfTemplate {
   MODERN
   PROPOSAL
   FORMAL
+  EXECUTIVE
+  SIDEBAR
+  CATALOG
 }
 
 enum LogoPosition {

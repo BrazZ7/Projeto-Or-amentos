@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { requireSession } from '@/lib/session';
 import { prisma } from '@/lib/prisma';
+import { companyAllowsPremiumTemplates } from '@/lib/plan-limits';
 import { QuoteForm } from '@/components/quotes/QuoteForm';
 import { QuoteActions } from '@/components/quotes/QuoteActions';
 import { Badge } from '@/components/ui/Badge';
@@ -37,6 +38,7 @@ export default async function QuoteDetailPage({ params }: { params: { id: string
       },
     }),
   ]);
+  const premiumAllowed = await companyAllowsPremiumTemplates(companyId);
 
   return (
     <div className="max-w-4xl space-y-6">
@@ -65,6 +67,7 @@ export default async function QuoteDetailPage({ params }: { params: { id: string
 
       <QuoteForm
         quoteId={quote.id}
+        premiumAllowed={premiumAllowed}
         clients={clients}
         products={products.map((p) => ({
           ...p,

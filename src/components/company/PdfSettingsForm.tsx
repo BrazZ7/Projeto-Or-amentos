@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Check } from 'lucide-react';
+import Link from 'next/link';
+import { Check, Lock } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
@@ -10,16 +11,16 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { AiTextActions } from '@/components/ui/AiTextActions';
 import { cn } from '@/lib/utils';
+import { PDF_TEMPLATE_OPTIONS } from '@/lib/pdf/template-options';
 import type { PdfSettingsInput } from '@/lib/validations/company';
 
-const templates: { value: PdfSettingsInput['pdfTemplate']; label: string; description: string }[] = [
-  { value: 'CLASSIC', label: 'Clássico', description: 'Layout tradicional, tabela simples.' },
-  { value: 'MODERN', label: 'Moderno', description: 'Visual arrojado com destaque de cores.' },
-  { value: 'PROPOSAL', label: 'Proposta comercial', description: 'Foco em apresentação e argumentação.' },
-  { value: 'FORMAL', label: 'Formal', description: 'Sóbrio, ideal para órgãos públicos e licitações.' },
-];
-
-export function PdfSettingsForm({ initialData }: { initialData: PdfSettingsInput }) {
+export function PdfSettingsForm({
+  initialData,
+  premiumAllowed,
+}: {
+  initialData: PdfSettingsInput;
+  premiumAllowed: boolean;
+}) {
   const router = useRouter();
   const [form, setForm] = useState<PdfSettingsInput>(initialData);
   const [loading, setLoading] = useState(false);
@@ -60,26 +61,52 @@ export function PdfSettingsForm({ initialData }: { initialData: PdfSettingsInput
         </CardHeader>
         <CardContent>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {templates.map((tpl) => (
-              <button
-                type="button"
-                key={tpl.value}
-                onClick={() => update('pdfTemplate', tpl.value)}
-                className={cn(
-                  'relative rounded-xl border p-4 text-left transition-colors',
-                  form.pdfTemplate === tpl.value
-                    ? 'border-brand-500 bg-brand-50'
-                    : 'border-slate-200 hover:border-slate-300',
-                )}
-              >
-                {form.pdfTemplate === tpl.value && (
-                  <Check className="absolute right-3 top-3 h-4 w-4 text-brand-600" />
-                )}
-                <p className="font-medium text-slate-900">{tpl.label}</p>
-                <p className="mt-1 text-xs text-slate-500">{tpl.description}</p>
-              </button>
-            ))}
+            {PDF_TEMPLATE_OPTIONS.map((tpl) => {
+              const locked = tpl.premium && !premiumAllowed;
+              const selected = form.pdfTemplate === tpl.value;
+              return (
+                <button
+                  type="button"
+                  key={tpl.value}
+                  disabled={locked}
+                  aria-disabled={locked}
+                  onClick={() => !locked && update('pdfTemplate', tpl.value)}
+                  className={cn(
+                    'relative rounded-xl border p-4 text-left transition-colors',
+                    locked
+                      ? 'cursor-not-allowed border-slate-200 bg-slate-50 opacity-70'
+                      : selected
+                        ? 'border-brand-500 bg-brand-50'
+                        : 'border-slate-200 hover:border-slate-300',
+                  )}
+                >
+                  {selected && !locked && (
+                    <Check className="absolute right-3 top-3 h-4 w-4 text-brand-600" />
+                  )}
+                  {locked && <Lock className="absolute right-3 top-3 h-4 w-4 text-slate-400" />}
+                  <p className={cn('font-medium', locked ? 'text-slate-500' : 'text-slate-900')}>
+                    {tpl.label}
+                  </p>
+                  <p className="mt-1 text-xs text-slate-500">{tpl.description}</p>
+                  {locked && (
+                    <p className="mt-2 text-[11px] font-medium uppercase tracking-wide text-amber-600">
+                      Plano Starter
+                    </p>
+                  )}
+                </button>
+              );
+            })}
           </div>
+
+          {!premiumAllowed && (
+            <p className="mt-4 text-sm text-slate-500">
+              Os modelos Executivo, Lateral e Catálogo fazem parte dos planos com identidade visual
+              personalizada.{' '}
+              <Link href="/dashboard/settings/plan" className="font-medium text-brand-600 hover:underline">
+                Ver planos
+              </Link>
+            </p>
+          )}
         </CardContent>
       </Card>
 

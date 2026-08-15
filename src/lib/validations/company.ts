@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { PDF_TEMPLATE_VALUES } from '@/lib/pdf/template-options';
 
 export const companySchema = z.object({
   legalName: z.string().min(2, 'Informe a razão social.'),
@@ -33,7 +34,7 @@ export const companySchema = z.object({
 export type CompanyInput = z.infer<typeof companySchema>;
 
 export const pdfSettingsSchema = z.object({
-  pdfTemplate: z.enum(['CLASSIC', 'MODERN', 'PROPOSAL', 'FORMAL']),
+  pdfTemplate: z.enum(PDF_TEMPLATE_VALUES),
   logoPosition: z.enum(['LEFT', 'CENTER', 'RIGHT']),
   headerText: z.string().optional().nullable(),
   footerText: z.string().optional().nullable(),

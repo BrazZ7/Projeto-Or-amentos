@@ -5,6 +5,9 @@ import { ClassicTemplate } from './templates/classic';
 import { ModernTemplate } from './templates/modern';
 import { ProposalTemplate } from './templates/proposal';
 import { FormalTemplate } from './templates/formal';
+import { ExecutiveTemplate } from './templates/executive';
+import { SidebarTemplate } from './templates/sidebar';
+import { CatalogTemplate } from './templates/catalog';
 import type { QuotePdfData } from './types';
 
 function buildAddressLine(entity: {
@@ -95,6 +98,9 @@ const templateComponents = {
   MODERN: ModernTemplate,
   PROPOSAL: ProposalTemplate,
   FORMAL: FormalTemplate,
+  EXECUTIVE: ExecutiveTemplate,
+  SIDEBAR: SidebarTemplate,
+  CATALOG: CatalogTemplate,
 };
 
 export async function generateQuotePdf(
