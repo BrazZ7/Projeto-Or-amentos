@@ -82,6 +82,26 @@ apagar os dados do banco).
 
 A aplicação estará disponível em `http://localhost:3000`.
 
+### Rodar em outra porta
+
+Se a 3000 já estiver ocupada, defina `PORT` no `.env` (que não vai para o
+repositório):
+
+```bash
+PORT="3001"
+```
+
+Ajuste também `NEXTAUTH_URL` e `NEXT_PUBLIC_APP_URL` para a mesma porta, senão
+os links de login e de aprovação de orçamento vão apontar para o lugar errado.
+Uma variável de ambiente `PORT` no shell tem precedência sobre o `.env`, útil
+para uma execução pontual:
+
+```bash
+PORT=3005 npm run dev
+```
+
+No Docker o equivalente é `APP_HOST_PORT` (veja `docker-compose.yml`).
+
 ## Deploy na Vercel
 
 O projeto está pronto para deploy na Vercel (o `npm run build` já roda
