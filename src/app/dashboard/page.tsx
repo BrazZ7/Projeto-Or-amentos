@@ -1,14 +1,4 @@
-import {
-  subMonths,
-  startOfMonth,
-  endOfMonth,
-  isSameMonth,
-  subDays,
-  startOfDay,
-  eachDayOfInterval,
-  isSameDay,
-} from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { subMonths, startOfMonth, endOfMonth, isSameMonth } from 'date-fns';
 import { FileText, CheckCircle2, Clock, DollarSign } from 'lucide-react';
 import { requireSession } from '@/lib/session';
 import { prisma } from '@/lib/prisma';
@@ -27,19 +17,15 @@ function pctDelta(current: number, previous: number) {
   return ((current - previous) / previous) * 100;
 }
 
-const sum = (values: number[]) => values.reduce((total, value) => total + value, 0);
-
 export default async function DashboardPage() {
   const session = await requireSession();
   const companyId = session.user.companyId;
 
   const now = new Date();
-  const today = startOfDay(now);
   const twelveMonthsAgo = startOfMonth(subMonths(now, 11));
   const thisMonthStart = startOfMonth(now);
   const lastMonthStart = startOfMonth(subMonths(now, 1));
   const lastMonthEnd = endOfMonth(subMonths(now, 1));
-  const last7Days = eachDayOfInterval({ start: subDays(today, 6), end: today });
 
   const [
     totalQuotes,
@@ -57,7 +43,6 @@ export default async function DashboardPage() {
     latestQuote,
     company,
     activityQuotes,
-    recentDaily,
   ] = await Promise.all([
     prisma.quote.count({ where: { companyId } }),
     prisma.quote.count({ where: { companyId, status: 'APPROVED' } }),
@@ -129,10 +114,6 @@ export default async function DashboardPage() {
       orderBy: { updatedAt: 'desc' },
       take: 12,
     }),
-    prisma.quote.findMany({
-      where: { companyId, createdAt: { gte: subDays(today, 6) } },
-      select: { createdAt: true },
-    }),
   ]);
 
   const revenueThisMonth = Number(monthRevenue._sum.total || 0);
@@ -151,10 +132,6 @@ export default async function DashboardPage() {
       quotes: created.length,
     };
   });
-
-  const quotesSpark = last7Days.map(
-    (day) => recentDaily.filter((quote) => isSameDay(quote.createdAt, day)).length,
-  );
 
   // Cada carimbo de data vira um item do feed; a lista é achatada e ordenada
   // pelo instante em que aconteceu.
@@ -191,7 +168,6 @@ export default async function DashboardPage() {
             value={String(totalQuotes)}
             accent="blue"
             delta={pctDelta(quotesThisMonth, quotesLastMonth)}
-            spark={quotesSpark}
           />
           <StatsCard
             icon={CheckCircle2}
@@ -227,6 +203,7 @@ export default async function DashboardPage() {
             issueDate: quote.issueDate,
             status: quote.status,
             total: Number(quote.total),
+            publicToken: quote.publicToken,
           }))}
         />
       </div>

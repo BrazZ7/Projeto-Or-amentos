@@ -8,14 +8,20 @@ function initials(name: string) {
 }
 
 /** Cartão do plano + identificação do usuário, no rodapé da sidebar. */
+const ROLE_LABELS: Record<string, string> = {
+  OWNER: 'Administrador',
+  ADMIN: 'Administrador',
+  MEMBER: 'Membro',
+};
+
 export function SidebarFooter({
   userName,
-  companyName,
+  userRole,
   planName,
   planComplete,
 }: {
   userName: string;
-  companyName: string;
+  userRole: string;
   planName: string | null;
   planComplete: boolean;
 }) {
@@ -44,7 +50,7 @@ export function SidebarFooter({
         </span>
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium text-slate-100">{userName}</p>
-          <p className="truncate text-xs text-slate-400">{companyName}</p>
+          <p className="truncate text-xs text-slate-400">{ROLE_LABELS[userRole] || 'Membro'}</p>
         </div>
         <SignOutButton />
       </div>

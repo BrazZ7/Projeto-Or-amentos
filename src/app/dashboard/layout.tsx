@@ -47,6 +47,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
     prisma.subscription.findUnique({ where: { companyId }, include: { plan: true } }),
   ]);
 
+  // O cargo não está no JWT; buscar aqui evita forçar novo login de quem já
+  // tem sessão aberta.
+  const currentUser = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { role: true },
+  });
+
   const notifications: NotificationItem[] = [
     ...expiring.map((quote) => ({
       id: `exp-${quote.id}`,
@@ -81,7 +88,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <Sidebar className="mt-8 flex-1" />
         <SidebarFooter
           userName={session.user.name || 'Usuário'}
-          companyName={session.user.companyName}
+          userRole={currentUser?.role ?? 'MEMBER'}
           planName={subscription?.plan.name ?? null}
           planComplete={!!subscription?.plan.hasCustomBrand}
         />

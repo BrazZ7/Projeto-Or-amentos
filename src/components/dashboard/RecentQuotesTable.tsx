@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import { QuoteRowMenu } from '@/components/dashboard/QuoteRowMenu';
 import { Badge } from '@/components/ui/Badge';
 import { cn, formatCurrency, formatDate, QUOTE_STATUS_COLORS, QUOTE_STATUS_LABELS } from '@/lib/utils';
 
@@ -11,6 +12,7 @@ export interface RecentQuoteRow {
   issueDate: Date;
   status: string;
   total: number;
+  publicToken: string;
 }
 
 const AVATAR_GRADIENTS = [
@@ -48,17 +50,18 @@ export function RecentQuotesTable({ quotes }: { quotes: RecentQuoteRow[] }) {
           <table className="w-full min-w-[560px]">
             <thead>
               <tr className="border-y border-hairline px-2 text-left text-[11px] uppercase tracking-wider text-slate-400">
-                <th className="px-3 py-3 font-medium">Nº do orçamento</th>
-                <th className="px-3 py-3 font-medium">Cliente</th>
-                <th className="px-3 py-3 font-medium">Data</th>
-                <th className="px-3 py-3 font-medium">Status</th>
-                <th className="px-3 py-3 text-right font-medium">Valor</th>
+                <th className="px-2 py-3 font-medium">Nº do orçamento</th>
+                <th className="px-2 py-3 font-medium">Cliente</th>
+                <th className="px-2 py-3 font-medium">Data</th>
+                <th className="px-2 py-3 font-medium">Status</th>
+                <th className="px-2 py-3 text-right font-medium">Valor</th>
+                <th className="w-10 px-2 py-3 font-medium" />
               </tr>
             </thead>
             <tbody className="divide-y divide-hairline">
               {quotes.map((quote, index) => (
                 <tr key={quote.id} className="group transition-colors hover:bg-white/[0.03]">
-                  <td className="px-3 py-3.5">
+                  <td className="px-2 py-3.5">
                     <Link
                       href={`/dashboard/quotes/${quote.id}`}
                       className="text-sm font-medium text-slate-200 transition-colors group-hover:text-brand-300"
@@ -67,7 +70,7 @@ export function RecentQuotesTable({ quotes }: { quotes: RecentQuoteRow[] }) {
                       {String(quote.number).padStart(4, '0')}
                     </Link>
                   </td>
-                  <td className="px-3 py-3.5">
+                  <td className="px-2 py-3.5">
                     <div className="flex items-center gap-2.5">
                       <span
                         className={cn(
@@ -80,16 +83,19 @@ export function RecentQuotesTable({ quotes }: { quotes: RecentQuoteRow[] }) {
                       <span className="truncate text-sm text-slate-300">{quote.clientName}</span>
                     </div>
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3.5 text-sm text-slate-400">
+                  <td className="whitespace-nowrap px-2 py-3.5 text-sm text-slate-400">
                     {formatDate(quote.issueDate)}
                   </td>
-                  <td className="px-3 py-3.5">
+                  <td className="px-2 py-3.5">
                     <Badge className={QUOTE_STATUS_COLORS[quote.status]}>
                       {QUOTE_STATUS_LABELS[quote.status] || quote.status}
                     </Badge>
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3.5 text-right text-sm font-semibold text-slate-100">
+                  <td className="whitespace-nowrap px-2 py-3.5 text-right text-sm font-semibold text-slate-100">
                     {formatCurrency(quote.total)}
+                  </td>
+                  <td className="px-2 py-3.5">
+                    <QuoteRowMenu quoteId={quote.id} publicToken={quote.publicToken} />
                   </td>
                 </tr>
               ))}

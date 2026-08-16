@@ -9,12 +9,12 @@ import {
   Package,
   Boxes,
   BarChart3,
-  Building2,
-  Palette,
-  CreditCard,
+  Settings,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+// Seis entradas, como no mockup. Empresa, modelos de PDF e plano ficam sob
+// Configurações — continuam acessíveis, agora por uma tela índice.
 const links = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/dashboard/quotes', label: 'Orçamentos', icon: FileText },
@@ -22,9 +22,7 @@ const links = [
   { href: '/dashboard/products', label: 'Produtos', icon: Package },
   { href: '/dashboard/stock', label: 'Estoque', icon: Boxes },
   { href: '/dashboard/reports', label: 'Relatórios', icon: BarChart3 },
-  { href: '/dashboard/company', label: 'Minha empresa', icon: Building2 },
-  { href: '/dashboard/settings/pdf', label: 'Modelos de PDF', icon: Palette },
-  { href: '/dashboard/settings/plan', label: 'Plano e assinatura', icon: CreditCard },
+  { href: '/dashboard/settings', label: 'Configurações', icon: Settings },
 ];
 
 export function Sidebar({ className }: { className?: string }) {

@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { Info } from 'lucide-react';
+import { CalendarDays, Info } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 
 export interface RevenuePoint {
@@ -73,18 +73,21 @@ export function RevenueAreaChart({ data }: { data: RevenuePoint[] }) {
               </option>
             ))}
           </select>
-          <select
+          <div className="relative flex items-center">
+            <CalendarDays className="pointer-events-none absolute left-2.5 h-3.5 w-3.5 text-slate-500" />
+            <select
             value={months}
             onChange={(e) => setMonths(Number(e.target.value))}
             aria-label="Período"
-            className="rounded-lg border border-hairline-strong bg-night-850/80 px-3 py-1.5 text-xs text-slate-300 transition-colors hover:border-brand-500/40 focus:outline-none focus:ring-2 focus:ring-brand-500/25"
+            className="rounded-lg border border-hairline-strong bg-night-850/80 py-1.5 pl-7 pr-3 text-xs text-slate-300 transition-colors hover:border-brand-500/40 focus:outline-none focus:ring-2 focus:ring-brand-500/25"
           >
-            {PERIODS.map((period) => (
-              <option key={period.value} value={period.value}>
-                {period.label}
-              </option>
-            ))}
-          </select>
+              {PERIODS.map((period) => (
+                <option key={period.value} value={period.value}>
+                  {period.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
