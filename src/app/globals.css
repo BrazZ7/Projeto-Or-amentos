@@ -3,50 +3,110 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 body {
-  @apply bg-surface-muted text-slate-800;
+  @apply bg-night-950 text-slate-200;
+  /* Duas faixas de luz diagonais + dois halos frios. As faixas são o que dá o
+     aspecto de superfície polida do mockup: sem elas o fundo fica chapado e as
+     bordas prateadas dos painéis não têm de onde "pegar" luz. */
+  background-image:
+    linear-gradient(115deg, transparent 30%, rgba(226, 232, 240, 0.05) 44%, transparent 58%),
+    linear-gradient(115deg, transparent 62%, rgba(148, 163, 184, 0.035) 72%, transparent 82%),
+    radial-gradient(80rem 50rem at 12% -10%, rgba(37, 99, 235, 0.18), transparent 60%),
+    radial-gradient(60rem 40rem at 95% 0%, rgba(56, 189, 248, 0.12), transparent 55%);
+  background-attachment: fixed;
 }
 
 ::selection {
-  @apply bg-brand-200;
+  @apply bg-brand-500/30 text-white;
+}
+
+/* Barra de rolagem discreta, para não abrir uma faixa clara no tema escuro. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.25) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.22);
+  border-radius: 9999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.35);
 }
 
 @layer utilities {
+  /* Painel padrão do app. O gradiente de cima para baixo (mais claro no topo)
+     simula luz vindo de cima; junto do filete branco do shadow-panel e da
+     borda prateada é o que reproduz o vidro polido do mockup. */
+  .panel {
+    @apply relative rounded-2xl border border-hairline shadow-panel backdrop-blur-xl;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(30, 41, 59, 0.92) 0%,
+      rgba(14, 22, 38, 0.88) 45%,
+      rgba(11, 17, 32, 0.92) 100%
+    );
+  }
+
+  /* Realce prateado na aresta superior de todo painel — no mockup o
+     tratamento é uniforme, não só nos cards de destaque.
+     top: 0 e não -1px porque vários painéis usam overflow-hidden e
+     cortariam o filete. */
+  .panel::before {
+    content: '';
+    position: absolute;
+    inset-inline: 12%;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(226, 232, 240, 0.55), transparent);
+    pointer-events: none;
+  }
+
+  .panel-raised {
+    @apply relative rounded-2xl border border-hairline-strong bg-night-700/70 shadow-glass backdrop-blur-xl;
+  }
+
   .glass {
-    @apply relative border border-white/60 bg-white/70 shadow-glass backdrop-blur-lg;
+    @apply relative border border-hairline bg-night-800/70 shadow-glass backdrop-blur-lg;
   }
 
   .glass-strong {
-    @apply relative border border-white/70 bg-white/80 shadow-glass backdrop-blur-xl;
+    @apply relative border border-hairline-strong bg-night-800/85 shadow-glass backdrop-blur-xl;
   }
 
   .glass-solid {
-    @apply relative border border-white/70 bg-white/95 shadow-glass backdrop-blur-xl;
+    @apply relative border border-hairline bg-night-800 shadow-glass;
   }
 
   .glass-dark {
-    @apply relative border border-white/10 bg-slate-900/40 shadow-glass backdrop-blur-lg;
+    @apply relative border border-hairline bg-night-900/60 shadow-glass backdrop-blur-lg;
   }
 
   .bg-grid-fade {
-    background-image: radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.06) 1px, transparent 0);
+    background-image: radial-gradient(circle at 1px 1px, rgba(148, 163, 184, 0.09) 1px, transparent 0);
     background-size: 24px 24px;
   }
 
-  /* Textura de ruído sutil para tirar a "planura" digital do glassmorphism —
-     aplicada em baixa opacidade sobre superfícies de vidro/fundos. */
+  /* Textura de ruído sutil para tirar a "planura" digital das superfícies. */
   .bg-noise {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     background-size: 180px 180px;
   }
 
-  /* Brilho ambiente colorido ao redor do elemento, revelado no hover — usar
-     junto de `group` no ancestral. Só usa box-shadow (sem pseudo-elemento
-     nem mask), então nunca é cortado por overflow-hidden de irmãos como o
-     .sheen-hover. */
+  /* Brilho ambiente ao redor do elemento, revelado no hover — usar junto de
+     `group` no ancestral. Só box-shadow, então nunca é cortado por
+     overflow-hidden de irmãos. */
   .glow-ring {
     transition: box-shadow 0.5s ease;
   }
@@ -54,12 +114,13 @@ body {
   .group:hover .glow-ring,
   .glow-ring:hover {
     box-shadow:
-      0 0 0 1px rgba(129, 140, 248, 0.35),
-      0 10px 40px -10px rgba(139, 92, 246, 0.5),
-      0 0 60px -18px rgba(97, 114, 243, 0.55);
+      0 0 0 1px rgba(59, 130, 246, 0.35),
+      0 10px 40px -10px rgba(37, 99, 235, 0.55),
+      0 0 60px -18px rgba(56, 189, 248, 0.4);
   }
 
-  /* Sweep de brilho especular sobre superfícies de vidro/botões no hover. */
+  /* Sweep especular no hover. Bem mais fraco que no tema claro: no escuro um
+     branco a 55% vira um flash. */
   .sheen-hover {
     @apply relative overflow-hidden;
   }
@@ -68,7 +129,7 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.55) 50%, transparent 60%);
+    background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.14) 50%, transparent 60%);
     transform: translateX(-120%);
     pointer-events: none;
   }
@@ -76,6 +137,11 @@ body {
   .group:hover .sheen-hover::after,
   .sheen-hover:hover::after {
     animation: sheen 1s ease-out;
+  }
+
+  /* Texto com gradiente, usado na marca e em números de destaque. */
+  .text-gradient-brand {
+    @apply bg-gradient-to-r from-white via-brand-100 to-brand-300 bg-clip-text text-transparent;
   }
 }
 

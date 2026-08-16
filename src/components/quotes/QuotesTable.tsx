@@ -79,9 +79,9 @@ export function QuotesTable({ quotes }: { quotes: QuoteRow[] }) {
           description="Crie seu primeiro orçamento para começar a enviar propostas profissionais."
         />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-2xl border border-hairline bg-night-800">
           <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+            <thead className="bg-night-850 text-xs uppercase tracking-wide text-slate-400">
               <tr>
                 <th className="px-4 py-3">Nº</th>
                 <th className="px-4 py-3">Cliente</th>
@@ -91,16 +91,16 @@ export function QuotesTable({ quotes }: { quotes: QuoteRow[] }) {
                 <th className="px-4 py-3 text-right">Ações</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-hairline">
               {filtered.map((quote) => (
-                <tr key={quote.id} className="hover:bg-slate-50">
+                <tr key={quote.id} className="hover:bg-night-850">
                   <td className="px-4 py-3">
-                    <Link href={`/dashboard/quotes/${quote.id}`} className="font-medium text-slate-900 hover:text-brand-600">
+                    <Link href={`/dashboard/quotes/${quote.id}`} className="font-medium text-slate-100 hover:text-brand-600">
                       #{quote.number}
                     </Link>
                   </td>
-                  <td className="px-4 py-3 text-slate-700">{quote.client.name}</td>
-                  <td className="hidden px-4 py-3 text-slate-600 sm:table-cell">
+                  <td className="px-4 py-3 text-slate-300">{quote.client.name}</td>
+                  <td className="hidden px-4 py-3 text-slate-400 sm:table-cell">
                     {formatDate(quote.validUntil)}
                   </td>
                   <td className="px-4 py-3">
@@ -108,7 +108,7 @@ export function QuotesTable({ quotes }: { quotes: QuoteRow[] }) {
                       {QUOTE_STATUS_LABELS[quote.status]}
                     </Badge>
                   </td>
-                  <td className="px-4 py-3 text-right font-medium text-slate-900">
+                  <td className="px-4 py-3 text-right font-medium text-slate-100">
                     {formatCurrency(quote.total)}
                   </td>
                   <td className="px-4 py-3">
@@ -116,7 +116,7 @@ export function QuotesTable({ quotes }: { quotes: QuoteRow[] }) {
                       <button
                         onClick={() => handleDelete(quote.id)}
                         disabled={deletingId === quote.id}
-                        className="rounded-lg p-2 text-slate-500 hover:bg-rose-50 hover:text-rose-600"
+                        className="rounded-lg p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>

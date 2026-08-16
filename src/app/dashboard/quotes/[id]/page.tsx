@@ -53,12 +53,12 @@ export default async function QuoteDetailPage({ params }: { params: { id: string
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-semibold text-slate-900">Orçamento #{quote.number}</h1>
+            <h1 className="text-2xl font-semibold text-slate-100">Orçamento #{quote.number}</h1>
             <Badge className={QUOTE_STATUS_COLORS[quote.status]}>
               {QUOTE_STATUS_LABELS[quote.status]}
             </Badge>
           </div>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-slate-400">
             {quote.client.name} · Total {formatCurrency(Number(quote.total))}
           </p>
         </div>

@@ -10,18 +10,18 @@ export function Topbar({ companyName }: { companyName: string }) {
 
   return (
     <>
-      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-white/50 bg-white/50 px-4 py-3 shadow-sm backdrop-blur-xl lg:hidden">
+      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-hairline bg-night-900/80 px-4 py-3 backdrop-blur-xl lg:hidden">
         <button
           onClick={() => setOpen(true)}
-          className="rounded-lg p-2 transition-colors hover:bg-slate-900/5"
+          className="rounded-lg p-2 text-slate-300 transition-colors hover:bg-white/5"
           aria-label="Abrir menu"
         >
           <Menu className="h-5 w-5" />
         </button>
-        <span className="text-sm font-medium text-slate-700">{companyName}</span>
+        <span className="text-sm font-medium text-slate-200">{companyName}</span>
         <button
           onClick={() => signOut({ callbackUrl: '/login' })}
-          className="rounded-lg p-2 transition-colors hover:bg-slate-900/5"
+          className="rounded-lg p-2 text-slate-300 transition-colors hover:bg-white/5"
           aria-label="Sair"
         >
           <LogOut className="h-5 w-5" />
@@ -30,12 +30,12 @@ export function Topbar({ companyName }: { companyName: string }) {
 
       {open && (
         <div className="fixed inset-0 z-40 flex animate-fade-in">
-          <div className="glass-solid h-full w-72 animate-scale-in overflow-y-auto rounded-none p-4">
+          <div className="h-full w-72 animate-scale-in overflow-y-auto border-r border-hairline bg-night-900 p-4">
             <div className="mb-4 flex items-center justify-between">
-              <span className="font-semibold text-slate-900">Menu</span>
+              <span className="font-semibold text-slate-100">Menu</span>
               <button
                 onClick={() => setOpen(false)}
-                className="rounded-lg p-1.5 transition-colors hover:bg-slate-900/5"
+                className="rounded-lg p-1.5 text-slate-300 transition-colors hover:bg-white/5"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -44,7 +44,7 @@ export function Topbar({ companyName }: { companyName: string }) {
               <Sidebar />
             </div>
           </div>
-          <div className="flex-1 bg-slate-900/40 backdrop-blur-sm" onClick={() => setOpen(false)} />
+          <div className="flex-1 bg-night-950/70 backdrop-blur-sm" onClick={() => setOpen(false)} />
         </div>
       )}
     </>

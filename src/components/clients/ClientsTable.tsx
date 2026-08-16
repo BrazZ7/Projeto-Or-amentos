@@ -59,9 +59,9 @@ export function ClientsTable({ clients }: { clients: ClientRow[] }) {
           description="Cadastre clientes pessoa física ou jurídica para vincular aos orçamentos."
         />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-2xl border border-hairline bg-night-800">
           <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+            <thead className="bg-night-850 text-xs uppercase tracking-wide text-slate-400">
               <tr>
                 <th className="px-4 py-3">Nome</th>
                 <th className="hidden px-4 py-3 sm:table-cell">Documento</th>
@@ -69,33 +69,33 @@ export function ClientsTable({ clients }: { clients: ClientRow[] }) {
                 <th className="px-4 py-3 text-right">Ações</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-hairline">
               {filtered.map((client) => (
-                <tr key={client.id} className="hover:bg-slate-50">
+                <tr key={client.id} className="hover:bg-night-850">
                   <td className="px-4 py-3">
-                    <p className="font-medium text-slate-900">{client.name}</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="font-medium text-slate-100">{client.name}</p>
+                    <p className="text-xs text-slate-400">
                       {client.type === 'PF' ? 'Pessoa física' : 'Pessoa jurídica'}
                     </p>
                   </td>
-                  <td className="hidden px-4 py-3 text-slate-600 sm:table-cell">
+                  <td className="hidden px-4 py-3 text-slate-400 sm:table-cell">
                     {formatDocument(client.document)}
                   </td>
-                  <td className="hidden px-4 py-3 text-slate-600 md:table-cell">
+                  <td className="hidden px-4 py-3 text-slate-400 md:table-cell">
                     {client.email || client.phone || '—'}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-2">
                       <Link
                         href={`/dashboard/clients/${client.id}`}
-                        className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-brand-600"
+                        className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-brand-600"
                       >
                         <Pencil className="h-4 w-4" />
                       </Link>
                       <button
                         onClick={() => handleDelete(client.id)}
                         disabled={deletingId === client.id}
-                        className="rounded-lg p-2 text-slate-500 hover:bg-rose-50 hover:text-rose-600"
+                        className="rounded-lg p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>

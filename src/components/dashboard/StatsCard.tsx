@@ -1,64 +1,74 @@
-import { LucideIcon, ArrowUpRight, ArrowDownRight } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/Card';
-import { StatsSparkline } from '@/components/dashboard/StatsSparkline';
+import type { LucideIcon } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-type Accent = 'purple' | 'emerald' | 'violet' | 'orange';
+type Accent = 'blue' | 'emerald' | 'amber' | 'violet';
 
-const ACCENTS: Record<Accent, { badge: string; stroke: string }> = {
-  purple: { badge: 'bg-gradient-to-br from-indigo-500 to-violet-600', stroke: '#7c3aed' },
-  emerald: { badge: 'bg-gradient-to-br from-emerald-400 to-teal-500', stroke: '#10b981' },
-  violet: { badge: 'bg-gradient-to-br from-violet-500 to-fuchsia-500', stroke: '#a855f7' },
-  orange: { badge: 'bg-gradient-to-br from-orange-400 to-amber-500', stroke: '#f97316' },
+const ACCENTS: Record<Accent, { tile: string; glow: string }> = {
+  blue: { tile: 'bg-blue-500/15 text-blue-300 ring-1 ring-inset ring-blue-400/25', glow: 'bg-blue-500/20' },
+  emerald: {
+    tile: 'bg-emerald-500/15 text-emerald-300 ring-1 ring-inset ring-emerald-400/25',
+    glow: 'bg-emerald-500/20',
+  },
+  amber: {
+    tile: 'bg-amber-500/15 text-amber-300 ring-1 ring-inset ring-amber-400/25',
+    glow: 'bg-amber-500/20',
+  },
+  violet: {
+    tile: 'bg-violet-500/15 text-violet-300 ring-1 ring-inset ring-violet-400/25',
+    glow: 'bg-violet-500/20',
+  },
 };
 
 export function StatsCard({
   icon: Icon,
   label,
   value,
-  accent = 'purple',
+  accent,
   delta,
   spark,
 }: {
   icon: LucideIcon;
   label: string;
   value: string;
-  accent?: Accent;
-  /** Variação percentual assinada vs. o período anterior (7 dias). */
+  accent: Accent;
+  /** Variação percentual contra o período anterior. */
   delta?: number;
-  /** Série diária (últimos 7 dias) para a mini-sparkline. */
   spark?: number[];
 }) {
-  const tone = ACCENTS[accent];
+  const colors = ACCENTS[accent];
+  const hasDelta = typeof delta === 'number' && Number.isFinite(delta);
   const positive = (delta ?? 0) >= 0;
 
   return (
-    <Card hoverable glass glow className="group">
-      <CardContent className="flex flex-col gap-3">
-        <div className="flex items-start justify-between gap-2">
-          <div
-            className={cn(
-              'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-white shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3',
-              tone.badge,
-            )}
-          >
-            <Icon className="h-5 w-5" />
-          </div>
-          {spark && spark.length > 0 && (
-            <StatsSparkline data={spark} color={tone.stroke} id={accent} />
-          )}
-        </div>
+    <div className="panel group relative overflow-hidden p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-hairline-strong">
+      <span
+        className={cn(
+          'pointer-events-none absolute -right-8 -top-10 h-28 w-28 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100',
+          colors.glow,
+        )}
+      />
 
-        <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</p>
-          <p className="mt-0.5 text-xl font-semibold text-slate-900">{value}</p>
-        </div>
+      <div className="relative flex items-start justify-between gap-3">
+        <span className={cn('flex h-11 w-11 items-center justify-center rounded-xl', colors.tile)}>
+          <Icon className="h-5 w-5" />
+        </span>
+        {spark && spark.length > 1 && <Sparkline values={spark} positive={positive} />}
+      </div>
 
-        {delta !== undefined && (
-          <div
+      <p className="relative mt-4 truncate text-sm text-slate-400">{label}</p>
+      {/* Entre lg e 2xl são 4 cards dividindo a largura com a coluna da
+          direita; o valor em reais só cabe em corpo menor. */}
+      <p className="relative mt-1 text-2xl font-semibold tracking-tight text-white 2xl:text-3xl">
+        {value}
+      </p>
+
+      {hasDelta && (
+        <p className="relative mt-3 flex flex-wrap items-center gap-x-1.5 text-xs">
+          <span
             className={cn(
-              'flex items-center gap-1 text-xs font-medium',
-              positive ? 'text-emerald-600' : 'text-rose-600',
+              'flex shrink-0 items-center gap-0.5 font-semibold',
+              positive ? 'text-emerald-400' : 'text-rose-400',
             )}
           >
             {positive ? (
@@ -66,11 +76,39 @@ export function StatsCard({
             ) : (
               <ArrowDownRight className="h-3.5 w-3.5" />
             )}
-            {Math.abs(delta).toFixed(1)}%
-            <span className="font-normal text-slate-400">vs período anterior</span>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+            {Math.abs(delta as number).toFixed(1)}%
+          </span>
+          <span className="whitespace-nowrap text-slate-400">vs. mês anterior</span>
+        </p>
+      )}
+    </div>
+  );
+}
+
+/** Linha de tendência dos últimos dias, desenhada sem dependência de gráfico. */
+function Sparkline({ values, positive }: { values: number[]; positive: boolean }) {
+  const max = Math.max(...values, 1);
+  const min = Math.min(...values, 0);
+  const range = max - min || 1;
+  const points = values
+    .map((value, index) => {
+      const x = (index / (values.length - 1)) * 100;
+      const y = 24 - ((value - min) / range) * 20 - 2;
+      return `${x.toFixed(2)},${y.toFixed(2)}`;
+    })
+    .join(' ');
+
+  return (
+    <svg viewBox="0 0 100 24" className="h-6 w-20 shrink-0" preserveAspectRatio="none" aria-hidden>
+      <polyline
+        points={points}
+        fill="none"
+        stroke={positive ? '#34d399' : '#fb7185'}
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
   );
 }

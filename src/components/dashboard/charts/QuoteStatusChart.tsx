@@ -26,7 +26,7 @@ export function QuoteStatusChart({ data }: { data: QuoteStatusDatum[] }) {
           <div key={d.status} className="group">
             <div className="mb-1.5 flex items-center justify-between gap-3">
               <Badge className={QUOTE_STATUS_COLORS[d.status]}>{d.label}</Badge>
-              <span className="whitespace-nowrap text-sm font-semibold text-slate-700">
+              <span className="whitespace-nowrap text-sm font-semibold text-slate-300">
                 {d.count}
                 <span className="ml-1 font-normal text-slate-400">· {share}%</span>
               </span>

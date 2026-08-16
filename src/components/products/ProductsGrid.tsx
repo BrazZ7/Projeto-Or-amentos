@@ -68,7 +68,7 @@ export function ProductsGrid({ products }: { products: ProductRow[] }) {
           {filtered.map((product) => (
             <div
               key={product.id}
-              className="flex gap-3 rounded-2xl border border-slate-200 bg-white p-4"
+              className="flex gap-3 rounded-2xl border border-hairline bg-night-800 p-4"
             >
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-slate-100">
                 {product.imageUrl ? (
@@ -81,12 +81,12 @@ export function ProductsGrid({ products }: { products: ProductRow[] }) {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
-                  <p className="truncate font-medium text-slate-900">{product.name}</p>
+                  <p className="truncate font-medium text-slate-100">{product.name}</p>
                   {!product.active && (
-                    <Badge className="shrink-0 bg-slate-100 text-slate-500">Inativo</Badge>
+                    <Badge className="shrink-0 bg-slate-100 text-slate-400">Inativo</Badge>
                   )}
                 </div>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-400">
                   {product.code ? `Cód. ${product.code} · ` : ''}
                   {product.category || 'Sem categoria'}
                 </p>
@@ -100,7 +100,7 @@ export function ProductsGrid({ products }: { products: ProductRow[] }) {
                       className={
                         product.minStockAlert != null && product.stockQuantity < product.minStockAlert
                           ? 'font-semibold text-amber-700'
-                          : 'text-slate-500'
+                          : 'text-slate-400'
                       }
                     >
                       Estoque: {product.stockQuantity} {product.unit}
@@ -113,14 +113,14 @@ export function ProductsGrid({ products }: { products: ProductRow[] }) {
                 <div className="mt-2 flex gap-2">
                   <Link
                     href={`/dashboard/products/${product.id}`}
-                    className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-brand-600"
+                    className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-brand-600"
                   >
                     <Pencil className="h-4 w-4" />
                   </Link>
                   <button
                     onClick={() => handleDelete(product.id)}
                     disabled={deletingId === product.id}
-                    className="rounded-lg p-1.5 text-slate-500 hover:bg-rose-50 hover:text-rose-600"
+                    className="rounded-lg p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>

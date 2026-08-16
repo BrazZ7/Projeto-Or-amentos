@@ -29,11 +29,11 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  PENDING: 'bg-slate-100 text-slate-700',
+  PENDING: 'bg-slate-100 text-slate-300',
   PROCESSING: 'bg-amber-100 text-amber-700',
   AUTHORIZED: 'bg-emerald-100 text-emerald-700',
   REJECTED: 'bg-rose-100 text-rose-700',
-  CANCELED: 'bg-slate-200 text-slate-600',
+  CANCELED: 'bg-slate-200 text-slate-400',
   ERROR: 'bg-rose-100 text-rose-700',
 };
 
@@ -86,7 +86,7 @@ export function InvoiceActions({
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
         {invoice && (
-          <Badge className={STATUS_COLORS[invoice.status] || 'bg-slate-100 text-slate-700'}>
+          <Badge className={STATUS_COLORS[invoice.status] || 'bg-slate-100 text-slate-300'}>
             NF-e {invoice.number}/{invoice.series} · {STATUS_LABELS[invoice.status] || invoice.status}
           </Badge>
         )}
@@ -128,7 +128,7 @@ export function InvoiceActions({
       </div>
 
       {invoice?.accessKey && (
-        <p className="break-all font-mono text-xs text-slate-500">
+        <p className="break-all font-mono text-xs text-slate-400">
           Chave de acesso: {invoice.accessKey}
         </p>
       )}

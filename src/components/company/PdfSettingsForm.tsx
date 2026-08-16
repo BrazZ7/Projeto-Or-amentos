@@ -74,20 +74,20 @@ export function PdfSettingsForm({
                   className={cn(
                     'relative rounded-xl border p-4 text-left transition-colors',
                     locked
-                      ? 'cursor-not-allowed border-slate-200 bg-slate-50 opacity-70'
+                      ? 'cursor-not-allowed border-hairline bg-night-850 opacity-70'
                       : selected
                         ? 'border-brand-500 bg-brand-50'
-                        : 'border-slate-200 hover:border-slate-300',
+                        : 'border-hairline hover:border-slate-300',
                   )}
                 >
                   {selected && !locked && (
                     <Check className="absolute right-3 top-3 h-4 w-4 text-brand-600" />
                   )}
                   {locked && <Lock className="absolute right-3 top-3 h-4 w-4 text-slate-400" />}
-                  <p className={cn('font-medium', locked ? 'text-slate-500' : 'text-slate-900')}>
+                  <p className={cn('font-medium', locked ? 'text-slate-400' : 'text-slate-100')}>
                     {tpl.label}
                   </p>
-                  <p className="mt-1 text-xs text-slate-500">{tpl.description}</p>
+                  <p className="mt-1 text-xs text-slate-400">{tpl.description}</p>
                   {locked && (
                     <p className="mt-2 text-[11px] font-medium uppercase tracking-wide text-amber-600">
                       Plano Starter
@@ -99,7 +99,7 @@ export function PdfSettingsForm({
           </div>
 
           {!premiumAllowed && (
-            <p className="mt-4 text-sm text-slate-500">
+            <p className="mt-4 text-sm text-slate-400">
               Os modelos Executivo, Lateral e Catálogo fazem parte dos planos com identidade visual
               personalizada.{' '}
               <Link href="/dashboard/settings/plan" className="font-medium text-brand-600 hover:underline">
@@ -162,7 +162,7 @@ export function PdfSettingsForm({
         <CardContent className="space-y-4">
           <div>
             <div className="mb-1.5 flex items-center justify-between">
-              <label className="text-sm font-medium text-slate-700">Condições de pagamento</label>
+              <label className="text-sm font-medium text-slate-300">Condições de pagamento</label>
               <AiTextActions
                 text={form.defaultPaymentTerms || ''}
                 onResult={(r) => update('defaultPaymentTerms', r)}
@@ -176,7 +176,7 @@ export function PdfSettingsForm({
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-700">
+            <label className="mb-1.5 block text-sm font-medium text-slate-300">
               Prazo de entrega
             </label>
             <Input
@@ -186,7 +186,7 @@ export function PdfSettingsForm({
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-700">Garantia</label>
+            <label className="mb-1.5 block text-sm font-medium text-slate-300">Garantia</label>
             <Input
               name="defaultWarranty"
               value={form.defaultWarranty || ''}
@@ -195,7 +195,7 @@ export function PdfSettingsForm({
           </div>
           <div>
             <div className="mb-1.5 flex items-center justify-between">
-              <label className="text-sm font-medium text-slate-700">Observações comerciais</label>
+              <label className="text-sm font-medium text-slate-300">Observações comerciais</label>
               <AiTextActions
                 text={form.defaultNotes || ''}
                 onResult={(r) => update('defaultNotes', r)}

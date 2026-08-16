@@ -14,8 +14,8 @@ export default async function PdfSettingsPage() {
   return (
     <div className="max-w-4xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Modelos de PDF</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-2xl font-semibold text-slate-100">Modelos de PDF</h1>
+        <p className="mt-1 text-sm text-slate-400">
           Personalize o modelo, layout e textos padrão usados na geração dos orçamentos.
         </p>
       </div>

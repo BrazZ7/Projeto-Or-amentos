@@ -35,14 +35,14 @@ function ChartTooltip({ active, payload, label }: TooltipProps<number, string>) 
   const value = payload.find((p) => p.dataKey === 'value')?.value ?? 0;
   return (
     <div className="glass-solid rounded-xl px-3.5 py-2.5 text-sm">
-      <p className="mb-1.5 text-xs font-medium capitalize text-slate-500">{label}</p>
-      <p className="flex items-center gap-1.5 text-slate-600">
+      <p className="mb-1.5 text-xs font-medium capitalize text-slate-400">{label}</p>
+      <p className="flex items-center gap-1.5 text-slate-400">
         <span className="h-2 w-2 rounded-full" style={{ background: PURPLE }} />
-        Orçamentos: <span className="font-semibold text-slate-900">{quotes}</span>
+        Orçamentos: <span className="font-semibold text-slate-100">{quotes}</span>
       </p>
-      <p className="mt-1 flex items-center gap-1.5 text-slate-600">
+      <p className="mt-1 flex items-center gap-1.5 text-slate-400">
         <span className="h-2 w-2 rounded-full" style={{ background: CYAN }} />
-        Valor aprovado: <span className="font-semibold text-slate-900">{formatCurrency(Number(value))}</span>
+        Valor aprovado: <span className="font-semibold text-slate-100">{formatCurrency(Number(value))}</span>
       </p>
     </div>
   );

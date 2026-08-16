@@ -32,8 +32,8 @@ export default async function PlanPage() {
   return (
     <div className="max-w-4xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Plano e assinatura</h1>
-        <p className="mt-1 text-sm text-slate-500">Gerencie os limites de uso da sua conta.</p>
+        <h1 className="text-2xl font-semibold text-slate-100">Plano e assinatura</h1>
+        <p className="mt-1 text-sm text-slate-400">Gerencie os limites de uso da sua conta.</p>
       </div>
 
       {subscription && (
@@ -46,7 +46,7 @@ export default async function PlanPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {subscription.currentPeriodEnd && (
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-400">
                 Renovação/expiração em {formatDate(subscription.currentPeriodEnd)}
               </p>
             )}
@@ -70,13 +70,13 @@ export default async function PlanPage() {
             <Card key={plan.id} className={isCurrent ? 'border-brand-400 ring-1 ring-brand-100' : ''}>
               <CardContent className="flex flex-col gap-3">
                 <div>
-                  <p className="font-semibold text-slate-900">{plan.name}</p>
-                  <p className="mt-1 text-2xl font-semibold text-slate-900">
+                  <p className="font-semibold text-slate-100">{plan.name}</p>
+                  <p className="mt-1 text-2xl font-semibold text-slate-100">
                     {formatCurrency(Number(plan.priceMonthly))}
                     <span className="text-sm font-normal text-slate-400">/mês</span>
                   </p>
                 </div>
-                <ul className="space-y-1 text-sm text-slate-600">
+                <ul className="space-y-1 text-sm text-slate-400">
                   <li>Até {plan.maxQuotesPerMonth} orçamentos/mês</li>
                   <li>Até {plan.maxClients} clientes</li>
                   <li>Até {plan.maxProducts} produtos</li>
@@ -99,7 +99,7 @@ function UsageBar({ label, used, limit }: { label: string; used: number; limit: 
   const over = used > limit;
   return (
     <div>
-      <div className="flex justify-between text-xs text-slate-500">
+      <div className="flex justify-between text-xs text-slate-400">
         <span>{label}</span>
         <span className={over ? 'font-medium text-rose-600' : ''}>
           {used} / {limit}

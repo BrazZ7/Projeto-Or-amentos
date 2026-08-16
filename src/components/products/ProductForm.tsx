@@ -138,11 +138,11 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
   return (
     <form onSubmit={handleSubmit} className="glass space-y-6 rounded-2xl p-6 sm:p-8">
       <div className="glass-solid rounded-xl p-4">
-        <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-slate-700">
+        <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-slate-300">
           <Link2 className="h-4 w-4 text-brand-600" />
           Importar de um link (opcional)
         </label>
-        <p className="mb-2 text-xs text-slate-500">
+        <p className="mb-2 text-xs text-slate-400">
           Cole o link do produto em outro site — a IA identifica nome, preço e características automaticamente.
         </p>
         <div className="flex flex-col gap-2 sm:flex-row">
@@ -199,7 +199,7 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
 
       <div>
         <div className="mb-1.5 flex items-center justify-between">
-          <label className="text-sm font-medium text-slate-700">Descrição</label>
+          <label className="text-sm font-medium text-slate-300">Descrição</label>
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -254,7 +254,7 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
         />
       </div>
 
-      <label className="flex items-center gap-2 text-sm text-slate-700">
+      <label className="flex items-center gap-2 text-sm text-slate-300">
         <input
           type="checkbox"
           checked={form.active}
@@ -264,9 +264,9 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
         Ativo (disponível para uso em orçamentos)
       </label>
 
-      <div className="rounded-xl border border-slate-200 p-4">
+      <div className="rounded-xl border border-hairline p-4">
         <div className="flex items-center justify-between">
-          <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+          <label className="flex items-center gap-2 text-sm font-medium text-slate-300">
             <input
               type="checkbox"
               checked={form.trackStock}
@@ -290,8 +290,8 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {productId && (
               <div>
-                <p className="mb-1.5 text-sm font-medium text-slate-700">Estoque atual</p>
-                <p className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
+                <p className="mb-1.5 text-sm font-medium text-slate-300">Estoque atual</p>
+                <p className="rounded-lg border border-hairline bg-night-850 px-3 py-2 text-sm text-slate-300">
                   {currentStock ?? 0} {form.unit}
                 </p>
               </div>
@@ -312,12 +312,12 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
         )}
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-5">
+      <div className="rounded-xl border border-hairline bg-night-800 p-5">
         <div className="mb-1 flex items-baseline justify-between gap-3">
-          <h2 className="text-sm font-semibold text-slate-900">Dados fiscais (NF-e)</h2>
+          <h2 className="text-sm font-semibold text-slate-100">Dados fiscais (NF-e)</h2>
           <span className="text-xs text-slate-400">Necessários apenas para emitir nota</span>
         </div>
-        <p className="mb-4 text-xs text-slate-500">
+        <p className="mb-4 text-xs text-slate-400">
           Sem NCM e CFOP a SEFAZ rejeita a nota. Você pode salvar o produto sem eles e preencher
           depois — a emissão avisa exatamente o que estiver faltando.
         </p>

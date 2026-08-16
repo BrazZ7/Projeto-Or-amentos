@@ -7,10 +7,11 @@ export function SignOutButton() {
   return (
     <button
       onClick={() => signOut({ callbackUrl: '/login' })}
-      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100"
+      className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-white/5 hover:text-rose-300"
+      aria-label="Sair"
+      title="Sair"
     >
       <LogOut className="h-4 w-4" />
-      Sair
     </button>
   );
 }

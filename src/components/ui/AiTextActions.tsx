@@ -62,13 +62,13 @@ export function AiTextActions({
       </button>
 
       {open && (
-        <div className="absolute right-0 z-20 mt-1 w-48 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
+        <div className="absolute right-0 z-20 mt-1 w-48 rounded-lg border border-hairline bg-night-800 py-1 shadow-lg">
           {(Object.keys(actionLabels) as TextAiAction[]).map((action) => (
             <button
               key={action}
               type="button"
               onClick={() => run(action)}
-              className="block w-full px-3 py-1.5 text-left text-xs text-slate-700 hover:bg-slate-50"
+              className="block w-full px-3 py-1.5 text-left text-xs text-slate-300 hover:bg-night-850"
             >
               {actionLabels[action]}
             </button>

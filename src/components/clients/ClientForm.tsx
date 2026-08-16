@@ -168,7 +168,7 @@ export function ClientForm({ clientId, initialData }: ClientFormProps) {
 
       <div>
         <div className="mb-1 flex items-baseline justify-between gap-3">
-          <h2 className="text-sm font-semibold text-slate-900">Dados fiscais (NF-e)</h2>
+          <h2 className="text-sm font-semibold text-slate-100">Dados fiscais (NF-e)</h2>
           <span className="text-xs text-slate-400">Necessários apenas para emitir nota</span>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

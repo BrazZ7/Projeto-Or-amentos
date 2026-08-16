@@ -1,10 +1,14 @@
 import { redirect } from 'next/navigation';
-import { FileText } from 'lucide-react';
+import { addDays, startOfDay } from 'date-fns';
 import { getSession } from '@/lib/session';
+import { prisma } from '@/lib/prisma';
 import { Sidebar } from '@/components/dashboard/Sidebar';
+import { SidebarBrand } from '@/components/dashboard/SidebarBrand';
+import { SidebarFooter } from '@/components/dashboard/SidebarFooter';
 import { Topbar } from '@/components/dashboard/Topbar';
-import { SignOutButton } from '@/components/dashboard/SignOutButton';
-import { BackgroundBlobs } from '@/components/ui/BackgroundBlobs';
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
+import type { NotificationItem } from '@/components/dashboard/NotificationsMenu';
+import { formatCurrency } from '@/lib/utils';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
@@ -12,29 +16,83 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect('/login');
   }
 
-  return (
-    <div className="relative min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 lg:flex">
-      <BackgroundBlobs position="fixed" vivid />
+  const companyId = session.user.companyId;
+  const today = startOfDay(new Date());
 
-      <aside className="sticky top-0 hidden h-screen w-64 flex-col border-r border-white/50 bg-white/50 px-4 py-6 shadow-glass backdrop-blur-xl lg:flex">
-        <div className="mb-6 flex items-center gap-2 px-2 text-lg font-semibold text-slate-900">
-          <FileText className="h-6 w-6 text-brand-600" />
-          OrcaFacil
-        </div>
-        <Sidebar className="flex-1" />
-        <div className="border-t border-slate-900/10 pt-3">
-          <p className="truncate px-3 pb-2 text-xs font-medium text-slate-400">
-            {session.user.companyName}
-          </p>
-          <SignOutButton />
-        </div>
+  // O sino mostra o que realmente pede ação: orçamento perto de vencer,
+  // esperando resposta ou já visto pelo cliente sem decisão.
+  const [expiring, pending, viewed, subscription] = await Promise.all([
+    prisma.quote.findMany({
+      where: {
+        companyId,
+        status: { in: ['DRAFT', 'SENT', 'VIEWED'] },
+        validUntil: { gte: new Date(), lte: addDays(today, 7) },
+      },
+      include: { client: { select: { name: true } } },
+      orderBy: { validUntil: 'asc' },
+      take: 5,
+    }),
+    prisma.quote.findMany({
+      where: { companyId, status: 'SENT' },
+      include: { client: { select: { name: true } } },
+      orderBy: { sentAt: 'desc' },
+      take: 3,
+    }),
+    prisma.quote.findMany({
+      where: { companyId, status: 'VIEWED' },
+      include: { client: { select: { name: true } } },
+      orderBy: { viewedAt: 'desc' },
+      take: 3,
+    }),
+    prisma.subscription.findUnique({ where: { companyId }, include: { plan: true } }),
+  ]);
+
+  const notifications: NotificationItem[] = [
+    ...expiring.map((quote) => ({
+      id: `exp-${quote.id}`,
+      kind: 'EXPIRING' as const,
+      title: `Orçamento #${quote.number} vence em breve`,
+      detail: `${quote.client.name} · ${formatCurrency(Number(quote.total))}`,
+      href: `/dashboard/quotes/${quote.id}`,
+    })),
+    ...viewed.map((quote) => ({
+      id: `viw-${quote.id}`,
+      kind: 'VIEWED' as const,
+      title: `#${quote.number} foi visualizado`,
+      detail: `${quote.client.name} ainda não respondeu`,
+      href: `/dashboard/quotes/${quote.id}`,
+    })),
+    ...pending.map((quote) => ({
+      id: `pen-${quote.id}`,
+      kind: 'PENDING' as const,
+      title: `#${quote.number} aguardando resposta`,
+      detail: quote.client.name,
+      href: `/dashboard/quotes/${quote.id}`,
+    })),
+  ];
+
+  return (
+    <div className="relative min-h-screen lg:flex">
+      {/* A aresta direita da sidebar é um gradiente prateado, não uma borda
+          uniforme: no mockup ela brilha mais na altura do conteúdo e some nas
+          pontas. */}
+      <aside className="sticky top-0 hidden h-screen w-[264px] shrink-0 flex-col bg-gradient-to-b from-night-850/90 via-night-900/85 to-night-950/90 px-4 py-6 backdrop-blur-xl after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-gradient-to-b after:from-transparent after:via-slate-300/25 after:to-transparent lg:flex">
+        <SidebarBrand />
+        <Sidebar className="mt-8 flex-1" />
+        <SidebarFooter
+          userName={session.user.name || 'Usuário'}
+          companyName={session.user.companyName}
+          planName={subscription?.plan.name ?? null}
+          planComplete={!!subscription?.plan.hasCustomBrand}
+        />
       </aside>
 
-      <div className="flex-1">
+      <div className="min-w-0 flex-1">
         <Topbar companyName={session.user.companyName} />
-        <main className="mx-auto max-w-7xl animate-fade-in-up px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-          {children}
-        </main>
+        <div className="px-4 pb-10 pt-4 sm:px-6 lg:px-8">
+          <DashboardHeader userName={session.user.name || 'Usuário'} notifications={notifications} />
+          <main className="animate-fade-in-up pt-4">{children}</main>
+        </div>
       </div>
     </div>
   );

@@ -18,8 +18,8 @@ export default async function ClientsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Clientes</h1>
-          <p className="mt-1 text-sm text-slate-500">Gerencie seus clientes pessoa física e jurídica.</p>
+          <h1 className="text-2xl font-semibold text-slate-100">Clientes</h1>
+          <p className="mt-1 text-sm text-slate-400">Gerencie seus clientes pessoa física e jurídica.</p>
         </div>
         <Link href="/dashboard/clients/new">
           <Button>

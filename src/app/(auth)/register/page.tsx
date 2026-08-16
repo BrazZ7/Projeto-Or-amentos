@@ -66,8 +66,8 @@ export default function RegisterPage() {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-slate-900">Criar conta grátis</h2>
-      <p className="mt-1 text-sm text-slate-500">Comece a criar orçamentos profissionais hoje.</p>
+      <h2 className="text-2xl font-semibold text-slate-100">Criar conta grátis</h2>
+      <p className="mt-1 text-sm text-slate-400">Comece a criar orçamentos profissionais hoje.</p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <Input
@@ -130,7 +130,7 @@ export default function RegisterPage() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-slate-500">
+      <p className="mt-6 text-center text-sm text-slate-400">
         Já tem conta?{' '}
         <Link href="/login" className="font-medium text-brand-600 hover:underline">
           Entrar

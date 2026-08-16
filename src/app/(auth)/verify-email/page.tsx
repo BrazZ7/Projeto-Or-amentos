@@ -39,14 +39,14 @@ function VerifyEmailContent() {
       {status === 'loading' && (
         <>
           <Loader2 className="mx-auto h-10 w-10 animate-spin text-brand-600" />
-          <p className="mt-4 text-sm text-slate-500">Confirmando seu e-mail...</p>
+          <p className="mt-4 text-sm text-slate-400">Confirmando seu e-mail...</p>
         </>
       )}
       {status === 'success' && (
         <>
           <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-600" />
-          <h2 className="mt-4 text-xl font-semibold text-slate-900">E-mail confirmado!</h2>
-          <p className="mt-2 text-sm text-slate-500">Sua conta está ativa. Você já pode entrar.</p>
+          <h2 className="mt-4 text-xl font-semibold text-slate-100">E-mail confirmado!</h2>
+          <p className="mt-2 text-sm text-slate-400">Sua conta está ativa. Você já pode entrar.</p>
           <Link href="/login" className="mt-6 inline-block text-sm font-medium text-brand-600 hover:underline">
             Ir para o login
           </Link>
@@ -55,8 +55,8 @@ function VerifyEmailContent() {
       {status === 'error' && (
         <>
           <XCircle className="mx-auto h-10 w-10 text-rose-600" />
-          <h2 className="mt-4 text-xl font-semibold text-slate-900">Não foi possível confirmar</h2>
-          <p className="mt-2 text-sm text-slate-500">{message}</p>
+          <h2 className="mt-4 text-xl font-semibold text-slate-100">Não foi possível confirmar</h2>
+          <p className="mt-2 text-sm text-slate-400">{message}</p>
         </>
       )}
     </div>

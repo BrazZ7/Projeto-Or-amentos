@@ -36,11 +36,11 @@ export function ImageUpload({ label, value, onChange, aspect = 'square' }: Image
 
   return (
     <div>
-      {label && <p className="mb-1.5 text-sm font-medium text-slate-700">{label}</p>}
+      {label && <p className="mb-1.5 text-sm font-medium text-slate-300">{label}</p>}
       <div
         className={`relative flex ${
           aspect === 'square' ? 'h-28 w-28' : 'h-24 w-48'
-        } items-center justify-center overflow-hidden rounded-xl border border-dashed border-slate-300 bg-slate-50`}
+        } items-center justify-center overflow-hidden rounded-xl border border-dashed border-slate-300 bg-night-850`}
       >
         {loading ? (
           <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
@@ -50,7 +50,7 @@ export function ImageUpload({ label, value, onChange, aspect = 'square' }: Image
             <button
               type="button"
               onClick={() => onChange(null)}
-              className="absolute right-1 top-1 rounded-full bg-white/90 p-1 text-slate-500 shadow hover:text-rose-600"
+              className="absolute right-1 top-1 rounded-full bg-white/90 p-1 text-slate-400 shadow hover:text-rose-600"
             >
               <X className="h-3.5 w-3.5" />
             </button>

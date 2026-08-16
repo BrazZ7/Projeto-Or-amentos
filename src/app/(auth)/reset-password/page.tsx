@@ -41,8 +41,8 @@ function ResetPasswordForm() {
   if (done) {
     return (
       <div className="text-center">
-        <h2 className="text-2xl font-semibold text-slate-900">Senha redefinida!</h2>
-        <p className="mt-3 text-sm text-slate-500">Você já pode entrar com sua nova senha.</p>
+        <h2 className="text-2xl font-semibold text-slate-100">Senha redefinida!</h2>
+        <p className="mt-3 text-sm text-slate-400">Você já pode entrar com sua nova senha.</p>
         <Link href="/login" className="mt-6 inline-block text-sm font-medium text-brand-600 hover:underline">
           Ir para o login
         </Link>
@@ -52,7 +52,7 @@ function ResetPasswordForm() {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-slate-900">Definir nova senha</h2>
+      <h2 className="text-2xl font-semibold text-slate-100">Definir nova senha</h2>
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <Input
           label="Nova senha"

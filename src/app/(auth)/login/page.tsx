@@ -39,8 +39,8 @@ function LoginForm() {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-slate-900">Entrar</h2>
-      <p className="mt-1 text-sm text-slate-500">Acesse o painel da sua empresa.</p>
+      <h2 className="text-2xl font-semibold text-slate-100">Entrar</h2>
+      <p className="mt-1 text-sm text-slate-400">Acesse o painel da sua empresa.</p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <Input
@@ -75,7 +75,7 @@ function LoginForm() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-slate-500">
+      <p className="mt-6 text-center text-sm text-slate-400">
         Ainda não tem conta?{' '}
         <Link href="/register" className="font-medium text-brand-600 hover:underline">
           Criar conta grátis

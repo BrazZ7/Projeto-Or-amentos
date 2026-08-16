@@ -38,8 +38,8 @@ export default async function NewQuotePage() {
   return (
     <div className="max-w-4xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Novo orçamento</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-2xl font-semibold text-slate-100">Novo orçamento</h1>
+        <p className="mt-1 text-sm text-slate-400">
           Monte manualmente ou peça para a IA montar um rascunho a partir de um pedido em texto.
         </p>
       </div>

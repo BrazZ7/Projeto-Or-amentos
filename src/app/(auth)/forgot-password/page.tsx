@@ -25,8 +25,8 @@ export default function ForgotPasswordPage() {
   if (done) {
     return (
       <div className="text-center">
-        <h2 className="text-2xl font-semibold text-slate-900">Verifique seu e-mail</h2>
-        <p className="mt-3 text-sm text-slate-500">
+        <h2 className="text-2xl font-semibold text-slate-100">Verifique seu e-mail</h2>
+        <p className="mt-3 text-sm text-slate-400">
           Se existir uma conta com o e-mail <strong>{email}</strong>, enviamos um link para
           redefinir sua senha.
         </p>
@@ -39,8 +39,8 @@ export default function ForgotPasswordPage() {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-slate-900">Recuperar senha</h2>
-      <p className="mt-1 text-sm text-slate-500">
+      <h2 className="text-2xl font-semibold text-slate-100">Recuperar senha</h2>
+      <p className="mt-1 text-sm text-slate-400">
         Informe seu e-mail para receber um link de redefinição.
       </p>
 
@@ -58,7 +58,7 @@ export default function ForgotPasswordPage() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-slate-500">
+      <p className="mt-6 text-center text-sm text-slate-400">
         <Link href="/login" className="font-medium text-brand-600 hover:underline">
           Voltar para o login
         </Link>

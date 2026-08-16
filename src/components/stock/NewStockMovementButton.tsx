@@ -132,7 +132,7 @@ export function NewStockMovementButton({ products, defaultProductId }: NewStockM
               className={`rounded-lg border px-3 py-2 text-sm font-medium ${
                 type === 'IN'
                   ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
-                  : 'border-slate-200 text-slate-600'
+                  : 'border-hairline text-slate-400'
               }`}
             >
               Entrada
@@ -143,7 +143,7 @@ export function NewStockMovementButton({ products, defaultProductId }: NewStockM
               className={`rounded-lg border px-3 py-2 text-sm font-medium ${
                 type === 'OUT'
                   ? 'border-rose-500 bg-rose-50 text-rose-700'
-                  : 'border-slate-200 text-slate-600'
+                  : 'border-hairline text-slate-400'
               }`}
             >
               Saída

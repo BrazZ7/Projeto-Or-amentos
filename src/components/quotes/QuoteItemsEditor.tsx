@@ -78,7 +78,7 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
           linkedProduct?.trackStock && (linkedProduct.stockQuantity ?? 0) < item.quantity;
 
         return (
-        <div key={index} className="rounded-xl border border-slate-200 p-3">
+        <div key={index} className="rounded-xl border border-hairline p-3">
           <div className="grid gap-3 sm:grid-cols-12">
             <div className="sm:col-span-5">
               <Input
@@ -142,7 +142,7 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
             ) : (
               <span />
             )}
-            <p className="text-right text-xs font-medium text-slate-500">
+            <p className="text-right text-xs font-medium text-slate-400">
               Total do item: {formatCurrency(calculateItemTotal(item))}
             </p>
           </div>

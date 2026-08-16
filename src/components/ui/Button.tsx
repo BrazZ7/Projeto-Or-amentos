@@ -13,13 +13,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    'sheen-hover bg-[length:200%_100%] bg-gradient-to-r from-brand-600 via-brand-500 to-brand-600 text-white shadow-sm hover:bg-right hover:shadow-glow-brand',
+    'sheen-hover bg-[length:200%_100%] bg-gradient-to-r from-brand-600 via-brand-500 to-brand-600 text-white shadow-glow-brand hover:bg-right hover:shadow-glow-brand-lg',
   secondary:
-    'sheen-hover border border-white/10 bg-slate-900/80 text-white shadow-sm backdrop-blur-md hover:bg-slate-900/90',
+    'sheen-hover border border-hairline-strong bg-night-700/80 text-slate-100 backdrop-blur-md hover:bg-night-600/80',
   outline:
-    'sheen-hover border border-white/70 bg-white/60 text-slate-700 shadow-sm backdrop-blur-md hover:bg-white/85',
-  ghost: 'text-slate-600 backdrop-blur-sm hover:bg-white/60',
-  danger: 'sheen-hover bg-rose-600 text-white hover:bg-rose-700 shadow-sm',
+    'sheen-hover border border-hairline-strong bg-night-800/60 text-slate-300 backdrop-blur-md hover:border-brand-500/40 hover:bg-night-700/70 hover:text-white',
+  ghost: 'text-slate-400 hover:bg-white/5 hover:text-slate-100',
+  danger: 'sheen-hover bg-rose-600 text-white shadow-sm hover:bg-rose-500',
 };
 
 const sizeClasses: Record<Size, string> = {

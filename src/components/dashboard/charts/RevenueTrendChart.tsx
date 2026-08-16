@@ -35,8 +35,8 @@ function ChartTooltip({ active, payload, label }: TooltipProps<number, string>) 
   const value = payload[0]?.value ?? 0;
   return (
     <div className="glass-solid rounded-xl px-3.5 py-2.5 text-sm">
-      <p className="text-base font-semibold text-slate-900">{formatCurrency(Number(value))}</p>
-      <p className="text-xs capitalize text-slate-500">{label}</p>
+      <p className="text-base font-semibold text-slate-100">{formatCurrency(Number(value))}</p>
+      <p className="text-xs capitalize text-slate-400">{label}</p>
     </div>
   );
 }

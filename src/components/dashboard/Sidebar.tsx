@@ -8,6 +8,7 @@ import {
   Users,
   Package,
   Boxes,
+  BarChart3,
   Building2,
   Palette,
   CreditCard,
@@ -15,11 +16,12 @@ import {
 import { cn } from '@/lib/utils';
 
 const links = [
-  { href: '/dashboard', label: 'Painel', icon: LayoutDashboard },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/dashboard/quotes', label: 'Orçamentos', icon: FileText },
   { href: '/dashboard/clients', label: 'Clientes', icon: Users },
-  { href: '/dashboard/products', label: 'Produtos e serviços', icon: Package },
+  { href: '/dashboard/products', label: 'Produtos', icon: Package },
   { href: '/dashboard/stock', label: 'Estoque', icon: Boxes },
+  { href: '/dashboard/reports', label: 'Relatórios', icon: BarChart3 },
   { href: '/dashboard/company', label: 'Minha empresa', icon: Building2 },
   { href: '/dashboard/settings/pdf', label: 'Modelos de PDF', icon: Palette },
   { href: '/dashboard/settings/plan', label: 'Plano e assinatura', icon: CreditCard },
@@ -39,16 +41,20 @@ export function Sidebar({ className }: { className?: string }) {
             href={link.href}
             style={{ animationDelay: `${index * 35}ms` }}
             className={cn(
-              'group relative flex animate-fade-in-up items-center gap-3 overflow-hidden rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ease-out',
+              'group relative flex animate-fade-in-up items-center gap-3 overflow-hidden rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ease-out',
               active
-                ? 'sheen-hover bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-glow-brand'
-                : 'text-slate-600 hover:translate-x-0.5 hover:bg-slate-900/5 hover:text-slate-900',
+                ? 'sheen-hover border border-brand-400/30 bg-gradient-to-r from-brand-600/90 to-brand-500/70 text-white shadow-glow-brand'
+                : 'border border-transparent text-slate-400 hover:translate-x-0.5 hover:bg-white/[0.04] hover:text-slate-100',
             )}
           >
+            {/* Marcador vertical no item ativo, como no mockup. */}
+            {active && (
+              <span className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-brand-300 shadow-glow-soft" />
+            )}
             <link.icon
               className={cn(
-                'h-4 w-4 shrink-0 transition-transform duration-200',
-                !active && 'group-hover:scale-110',
+                'h-[18px] w-[18px] shrink-0 transition-transform duration-200',
+                active ? 'text-white' : 'text-slate-400 group-hover:scale-110 group-hover:text-brand-300',
               )}
             />
             <span className="truncate">{link.label}</span>

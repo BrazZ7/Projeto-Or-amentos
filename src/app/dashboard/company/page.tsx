@@ -12,8 +12,8 @@ export default async function CompanyPage() {
   return (
     <div className="max-w-4xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Minha empresa</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-2xl font-semibold text-slate-100">Minha empresa</h1>
+        <p className="mt-1 text-sm text-slate-400">
           Esses dados aparecem nos orçamentos gerados em PDF.
         </p>
       </div>

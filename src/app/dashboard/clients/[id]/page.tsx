@@ -15,8 +15,8 @@ export default async function EditClientPage({ params }: { params: { id: string 
   return (
     <div className="max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Editar cliente</h1>
-        <p className="mt-1 text-sm text-slate-500">Atualize os dados de {client.name}.</p>
+        <h1 className="text-2xl font-semibold text-slate-100">Editar cliente</h1>
+        <p className="mt-1 text-sm text-slate-400">Atualize os dados de {client.name}.</p>
       </div>
       <ClientForm
         clientId={client.id}

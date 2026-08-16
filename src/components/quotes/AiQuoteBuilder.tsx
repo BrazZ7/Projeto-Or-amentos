@@ -41,7 +41,7 @@ export function AiQuoteBuilder({ onGenerated }: { onGenerated: (result: AiGenera
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-400">
           Descreva o que o cliente pediu e a IA monta um rascunho com os itens, valores estimados e
           condições — depois é só revisar e ajustar.
         </p>

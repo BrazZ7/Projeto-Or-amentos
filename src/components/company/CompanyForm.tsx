@@ -180,7 +180,7 @@ export function CompanyForm({ initialData }: { initialData: CompanyInput }) {
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">
+              <label className="mb-1.5 block text-sm font-medium text-slate-300">
                 Cor primária
               </label>
               <input
@@ -191,7 +191,7 @@ export function CompanyForm({ initialData }: { initialData: CompanyInput }) {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">
+              <label className="mb-1.5 block text-sm font-medium text-slate-300">
                 Cor secundária
               </label>
               <input
@@ -260,7 +260,7 @@ export function CompanyForm({ initialData }: { initialData: CompanyInput }) {
           <CardTitle>Dados fiscais (NF-e)</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="mb-4 text-xs text-slate-500">
+          <p className="mb-4 text-xs text-slate-400">
             Necessários apenas para emitir nota fiscal. A NF-e exige CNPJ — empresa cadastrada com
             CPF não emite.
           </p>

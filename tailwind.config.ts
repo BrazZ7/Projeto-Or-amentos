@@ -6,20 +6,35 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          50: '#f0f5ff',
-          100: '#e0eaff',
-          200: '#c7d7fe',
-          300: '#a4bcfd',
-          400: '#8098f9',
-          500: '#6172f3',
-          600: '#4a54e1',
-          700: '#3d42c6',
-          800: '#34399f',
-          900: '#2f337e',
+          50: '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          300: '#93c5fd',
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          800: '#1e40af',
+          900: '#1e3a8a',
+        },
+        // Superfícies do tema escuro, do fundo da página ao painel elevado.
+        night: {
+          950: '#05080f', // fundo da página
+          900: '#080d18', // sidebar
+          850: '#0b1120',
+          800: '#0e1626', // painel
+          700: '#131d31', // painel elevado / hover
+          600: '#1a2540',
+        },
+        // Fio prateado das bordas. Bem mais claro que um cinza discreto: no
+        // mockup é ele que "pega luz" e dá o aspecto de vidro polido.
+        hairline: {
+          DEFAULT: 'rgba(203, 213, 225, 0.22)',
+          strong: 'rgba(226, 232, 240, 0.38)',
         },
         surface: {
-          DEFAULT: '#ffffff',
-          muted: '#f8fafc',
+          DEFAULT: '#0e1626',
+          muted: '#0b1120',
         },
       },
       borderRadius: {
@@ -27,9 +42,16 @@ const config: Config = {
         '2xl': '1.25rem',
       },
       boxShadow: {
-        card: '0 1px 2px 0 rgba(15, 23, 42, 0.06), 0 1px 3px 0 rgba(15, 23, 42, 0.08)',
-        glass: '0 8px 32px 0 rgba(15, 23, 42, 0.10), inset 0 1px 0 0 rgba(255, 255, 255, 0.6)',
-        'glow-brand': '0 8px 24px -6px rgba(74, 84, 225, 0.45)',
+        card: '0 1px 2px 0 rgba(0, 0, 0, 0.4), 0 8px 24px -12px rgba(0, 0, 0, 0.6)',
+        // Duas luzes internas — um filete branco no topo (specular) e um halo
+        // frio embaixo — mais a sombra externa. É a combinação que faz o painel
+        // parecer vidro polido em vez de um retângulo fosco.
+        panel:
+          'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 -1px 0 0 rgba(148, 163, 184, 0.06), 0 16px 40px -20px rgba(0, 0, 0, 0.9)',
+        glass: '0 8px 32px 0 rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.07)',
+        'glow-brand': '0 8px 28px -6px rgba(37, 99, 235, 0.55)',
+        'glow-brand-lg': '0 0 0 1px rgba(59, 130, 246, 0.35), 0 12px 40px -8px rgba(37, 99, 235, 0.65)',
+        'glow-soft': '0 0 24px -4px rgba(59, 130, 246, 0.35)',
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],

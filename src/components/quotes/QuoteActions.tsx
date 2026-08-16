@@ -120,7 +120,7 @@ export function QuoteActions({
           </Button>
         )}
       </div>
-      {message && <p className="text-sm text-slate-600">{message}</p>}
+      {message && <p className="text-sm text-slate-400">{message}</p>}
     </div>
   );
 }

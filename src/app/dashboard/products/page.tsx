@@ -30,8 +30,8 @@ export default async function ProductsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Produtos e serviços</h1>
-          <p className="mt-1 text-sm text-slate-500">Catálogo usado na montagem dos orçamentos.</p>
+          <h1 className="text-2xl font-semibold text-slate-100">Produtos e serviços</h1>
+          <p className="mt-1 text-sm text-slate-400">Catálogo usado na montagem dos orçamentos.</p>
         </div>
         <Link href="/dashboard/products/new">
           <Button>

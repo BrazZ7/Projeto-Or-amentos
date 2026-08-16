@@ -200,20 +200,20 @@ export function QuoteForm({
             />
           </div>
 
-          <div className="ml-auto w-full max-w-xs space-y-1 rounded-xl bg-slate-50 p-4 text-sm">
-            <div className="flex justify-between text-slate-600">
+          <div className="ml-auto w-full max-w-xs space-y-1 rounded-xl bg-night-850 p-4 text-sm">
+            <div className="flex justify-between text-slate-400">
               <span>Subtotal</span>
               <span>{formatCurrency(totals.subtotal)}</span>
             </div>
-            <div className="flex justify-between text-slate-600">
+            <div className="flex justify-between text-slate-400">
               <span>Desconto</span>
               <span>- {formatCurrency(totals.discountAmount)}</span>
             </div>
-            <div className="flex justify-between text-slate-600">
+            <div className="flex justify-between text-slate-400">
               <span>Frete</span>
               <span>{formatCurrency(totals.freight)}</span>
             </div>
-            <div className="flex justify-between border-t border-slate-200 pt-2 text-base font-semibold text-slate-900">
+            <div className="flex justify-between border-t border-hairline pt-2 text-base font-semibold text-slate-100">
               <span>Total</span>
               <span>{formatCurrency(totals.total)}</span>
             </div>
@@ -228,7 +228,7 @@ export function QuoteForm({
         <CardContent className="space-y-4">
           <div>
             <div className="mb-1.5 flex items-center justify-between">
-              <label className="text-sm font-medium text-slate-700">Condições de pagamento</label>
+              <label className="text-sm font-medium text-slate-300">Condições de pagamento</label>
               <AiTextActions
                 text={form.paymentTerms || ''}
                 onResult={(r) => update('paymentTerms', r)}
@@ -255,7 +255,7 @@ export function QuoteForm({
           />
           <div>
             <div className="mb-1.5 flex items-center justify-between">
-              <label className="text-sm font-medium text-slate-700">Observações</label>
+              <label className="text-sm font-medium text-slate-300">Observações</label>
               <AiTextActions text={form.notes || ''} onResult={(r) => update('notes', r)} />
             </div>
             <Textarea
@@ -284,7 +284,7 @@ export function QuoteForm({
             })}
           </Select>
           {!premiumAllowed && (
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-400">
               Modelos Executivo, Lateral e Catálogo exigem um plano com identidade visual
               personalizada.{' '}
               <Link href="/dashboard/settings/plan" className="font-medium text-brand-600 hover:underline">
