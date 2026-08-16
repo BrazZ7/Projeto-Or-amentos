@@ -42,14 +42,14 @@ export function RecentQuotesTable({ quotes }: { quotes: RecentQuoteRow[] }) {
       </div>
 
       {quotes.length === 0 ? (
-        <p className="px-5 pb-8 pt-2 text-center text-sm text-slate-400">
+        <p className="px-5 pb-8 pt-2 text-center text-sm text-slate-500">
           Nenhum orçamento criado ainda.
         </p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[560px]">
             <thead>
-              <tr className="border-y border-hairline px-2 text-left text-[11px] uppercase tracking-wider text-slate-400">
+              <tr className="border-y border-hairline px-2 text-left text-[11px] uppercase tracking-wider text-slate-500">
                 <th className="px-2 py-3 font-medium">Nº do orçamento</th>
                 <th className="px-2 py-3 font-medium">Cliente</th>
                 <th className="px-2 py-3 font-medium">Data</th>

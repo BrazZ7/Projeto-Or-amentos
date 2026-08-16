@@ -24,7 +24,7 @@ export function RecentActivity({ items }: { items: ActivityItem[] }) {
       <h2 className="text-base font-semibold text-slate-100">Atividades recentes</h2>
 
       {items.length === 0 ? (
-        <p className="py-6 text-center text-sm text-slate-400">Nenhuma atividade ainda.</p>
+        <p className="py-6 text-center text-sm text-slate-500">Nenhuma atividade ainda.</p>
       ) : (
         <>
           <ul className="mt-4 space-y-4">
@@ -48,7 +48,7 @@ export function RecentActivity({ items }: { items: ActivityItem[] }) {
                       </Link>{' '}
                       {meta.text}
                     </p>
-                    <p className="mt-0.5 text-xs text-slate-400">{formatRelativeTime(item.at)}</p>
+                    <p className="mt-0.5 text-xs text-slate-500">{formatRelativeTime(item.at)}</p>
                   </div>
                 </li>
               );

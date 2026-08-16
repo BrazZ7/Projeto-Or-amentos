@@ -78,7 +78,7 @@ export function StatsCard({
             )}
             {Math.abs(delta as number).toFixed(1)}%
           </span>
-          <span className="whitespace-nowrap text-slate-400">vs. mês anterior</span>
+          <span className="whitespace-nowrap text-slate-500">vs. mês anterior</span>
         </p>
       )}
     </div>

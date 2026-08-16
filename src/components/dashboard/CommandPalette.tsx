@@ -101,7 +101,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
           {loading ? (
             <Loader2 className="h-4 w-4 shrink-0 animate-spin text-brand-300" />
           ) : (
-            <Search className="h-4 w-4 shrink-0 text-slate-400" />
+            <Search className="h-4 w-4 shrink-0 text-slate-500" />
           )}
           <input
             ref={inputRef}
@@ -109,7 +109,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
             onChange={(e) => setTerm(e.target.value)}
             onKeyDown={onKeyDown}
             placeholder="Buscar orçamentos, clientes, produtos..."
-            className="w-full bg-transparent text-sm text-slate-100 placeholder:text-slate-400 focus:outline-none"
+            className="w-full bg-transparent text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none"
           />
           <kbd className="shrink-0 rounded-md border border-hairline-strong bg-night-700/80 px-1.5 py-0.5 font-sans text-[11px] text-slate-400">
             ESC
@@ -117,11 +117,11 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
         </div>
 
         {term.trim().length < 2 ? (
-          <p className="px-4 py-8 text-center text-sm text-slate-400">
+          <p className="px-4 py-8 text-center text-sm text-slate-500">
             Digite ao menos 2 caracteres para buscar.
           </p>
         ) : results.length === 0 && !loading ? (
-          <p className="px-4 py-8 text-center text-sm text-slate-400">
+          <p className="px-4 py-8 text-center text-sm text-slate-500">
             Nada encontrado para “{term.trim()}”.
           </p>
         ) : (
@@ -147,13 +147,13 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
                       <span className="block truncate text-sm font-medium text-slate-100">
                         {result.title}
                       </span>
-                      <span className="block truncate text-xs text-slate-400">{result.subtitle}</span>
+                      <span className="block truncate text-xs text-slate-500">{result.subtitle}</span>
                     </span>
-                    <span className="shrink-0 text-[11px] uppercase tracking-wide text-slate-400">
+                    <span className="shrink-0 text-[11px] uppercase tracking-wide text-slate-500">
                       {meta.label}
                     </span>
                     {index === active && (
-                      <CornerDownLeft className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                      <CornerDownLeft className="h-3.5 w-3.5 shrink-0 text-slate-500" />
                     )}
                   </button>
                 </li>

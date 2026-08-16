@@ -18,13 +18,15 @@ const config: Config = {
           900: '#1e3a8a',
         },
         // Superfícies do tema escuro, do fundo da página ao painel elevado.
+        // Todas puxam para o azul-ardósia: cinza neutro no escuro lê como
+        // sujo ao lado do azul da marca.
         night: {
           950: '#05080f', // fundo da página
-          900: '#080d18', // sidebar
-          850: '#0b1120',
-          800: '#0e1626', // painel
-          700: '#131d31', // painel elevado / hover
-          600: '#1a2540',
+          900: '#0a101c', // sidebar
+          850: '#0e1626',
+          800: '#131c2b', // painel
+          700: '#1a2436', // painel elevado / hover
+          600: '#243044',
         },
         // Fio prateado das bordas. Bem mais claro que um cinza discreto: no
         // mockup é ele que "pega luz" e dá o aspecto de vidro polido.

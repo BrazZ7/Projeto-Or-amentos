@@ -51,11 +51,13 @@ body {
      borda prateada é o que reproduz o vidro polido do mockup. */
   .panel {
     @apply relative rounded-2xl border border-hairline shadow-panel backdrop-blur-xl;
+    /* Queda curta: o painel precisa ler como uma superfície de cor única com
+       luz vindo de cima, não como um degradê. */
     background-image: linear-gradient(
       to bottom,
-      rgba(30, 41, 59, 0.92) 0%,
-      rgba(14, 22, 38, 0.88) 45%,
-      rgba(11, 17, 32, 0.92) 100%
+      rgba(31, 42, 60, 0.9) 0%,
+      rgba(21, 30, 45, 0.9) 38%,
+      rgba(18, 26, 40, 0.9) 100%
     );
   }
 

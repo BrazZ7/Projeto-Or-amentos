@@ -77,7 +77,7 @@ export function DashboardHeader({
           >
             <Search className="h-4 w-4 shrink-0" />
             <span className="flex-1 truncate text-left">Buscar orçamentos, clientes, produtos...</span>
-            <kbd className="hidden shrink-0 rounded-md border border-hairline-strong bg-night-700/80 px-1.5 py-0.5 font-sans text-[11px] text-slate-400 sm:block">
+            <kbd className="hidden shrink-0 rounded-md border border-hairline-strong bg-night-700/80 px-1.5 py-0.5 font-sans text-[11px] text-slate-500 sm:block">
               ⌘ K
             </kbd>
           </button>

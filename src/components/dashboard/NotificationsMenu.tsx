@@ -54,7 +54,7 @@ export function NotificationsMenu({
       </div>
 
       {items.length === 0 ? (
-        <p className="px-4 py-6 text-center text-sm text-slate-400">Nada precisa da sua atenção.</p>
+        <p className="px-4 py-6 text-center text-sm text-slate-500">Nada precisa da sua atenção.</p>
       ) : (
         <ul className="max-h-80 divide-y divide-hairline overflow-y-auto">
           {items.map((item) => {
@@ -73,7 +73,7 @@ export function NotificationsMenu({
                     <span className="block truncate text-sm font-medium text-slate-200">
                       {item.title}
                     </span>
-                    <span className="block truncate text-xs text-slate-400">{item.detail}</span>
+                    <span className="block truncate text-xs text-slate-500">{item.detail}</span>
                   </span>
                 </Link>
               </li>
