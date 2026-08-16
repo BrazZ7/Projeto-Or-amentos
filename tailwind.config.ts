@@ -17,22 +17,22 @@ const config: Config = {
           800: '#1e40af',
           900: '#1e3a8a',
         },
-        // Superfícies do tema escuro, do fundo da página ao painel elevado.
-        // Todas puxam para o azul-ardósia: cinza neutro no escuro lê como
-        // sujo ao lado do azul da marca.
+        // Cinza grafite neutro — sem o azul-marinho de antes. Serve de base
+        // para o vidro: o painel é branco translúcido sobre estes tons, não
+        // uma cor sólida própria.
         night: {
-          950: '#05080f', // fundo da página
-          900: '#0a101c', // sidebar
-          850: '#0e1626',
-          800: '#131c2b', // painel
-          700: '#1a2436', // painel elevado / hover
-          600: '#243044',
+          950: '#0d0f12', // fundo da página
+          900: '#111317', // sidebar
+          850: '#16191d',
+          800: '#1b1e23', // base do painel
+          700: '#23272d', // elevado / hover
+          600: '#2e333a',
         },
-        // Fio prateado das bordas. Bem mais claro que um cinza discreto: no
-        // mockup é ele que "pega luz" e dá o aspecto de vidro polido.
+        // Aresta do vidro. Branco puro em baixa opacidade — é o que separa um
+        // painel translúcido do que está atrás dele.
         hairline: {
-          DEFAULT: 'rgba(203, 213, 225, 0.22)',
-          strong: 'rgba(226, 232, 240, 0.38)',
+          DEFAULT: 'rgba(255, 255, 255, 0.14)',
+          strong: 'rgba(255, 255, 255, 0.26)',
         },
         surface: {
           DEFAULT: '#0e1626',

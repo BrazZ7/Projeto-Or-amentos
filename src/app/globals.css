@@ -8,14 +8,14 @@
 
 body {
   @apply bg-night-950 text-slate-200;
-  /* Duas faixas de luz diagonais + dois halos frios. As faixas são o que dá o
-     aspecto de superfície polida do mockup: sem elas o fundo fica chapado e as
-     bordas prateadas dos painéis não têm de onde "pegar" luz. */
+  /* Fundo grafite com clareamento difuso e uma faixa diagonal de luz. Os tons
+     são o que o vidro dos painéis borra por trás — num fundo chapado o
+     backdrop-blur não tem o que fazer e o efeito some. */
   background-image:
-    linear-gradient(115deg, transparent 30%, rgba(226, 232, 240, 0.05) 44%, transparent 58%),
-    linear-gradient(115deg, transparent 62%, rgba(148, 163, 184, 0.035) 72%, transparent 82%),
-    radial-gradient(80rem 50rem at 12% -10%, rgba(37, 99, 235, 0.18), transparent 60%),
-    radial-gradient(60rem 40rem at 95% 0%, rgba(56, 189, 248, 0.12), transparent 55%);
+    linear-gradient(118deg, transparent 26%, rgba(255, 255, 255, 0.045) 42%, transparent 56%),
+    radial-gradient(70rem 45rem at 10% -8%, rgba(255, 255, 255, 0.07), transparent 62%),
+    radial-gradient(55rem 38rem at 92% 4%, rgba(148, 163, 184, 0.06), transparent 58%),
+    radial-gradient(60rem 40rem at 60% 100%, rgba(255, 255, 255, 0.035), transparent 60%);
   background-attachment: fixed;
 }
 
@@ -49,16 +49,27 @@ body {
   /* Painel padrão do app. O gradiente de cima para baixo (mais claro no topo)
      simula luz vindo de cima; junto do filete branco do shadow-panel e da
      borda prateada é o que reproduz o vidro polido do mockup. */
+  /* Vidro: branco translúcido sobre o grafite, com blur forte. Opacidade
+     bem baixa para o fundo atravessar — o blur é que sustenta a legibilidade,
+     não a camada de cor. */
   .panel {
-    @apply relative rounded-2xl border border-hairline shadow-panel backdrop-blur-xl;
-    /* Queda curta: o painel precisa ler como uma superfície de cor única com
-       luz vindo de cima, não como um degradê. */
+    @apply relative rounded-2xl border border-hairline shadow-panel backdrop-blur-2xl backdrop-saturate-150;
     background-image: linear-gradient(
       to bottom,
-      rgba(31, 42, 60, 0.9) 0%,
-      rgba(21, 30, 45, 0.9) 38%,
-      rgba(18, 26, 40, 0.9) 100%
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.025) 45%,
+      rgba(255, 255, 255, 0.015) 100%
     );
+  }
+
+  /* Menus, diálogos e tooltips. Mesma linguagem, mais corpo: sobre conteúdo
+     em movimento um painel a 5% deixa o texto de trás competir com o da
+     frente.
+     Sem `relative` de propósito: como utilitário custom ele venceria a classe
+     `absolute` do JSX na cascata, e o menu ficaria no fluxo em vez de
+     sobreposto. */
+  .panel-overlay {
+    @apply rounded-2xl border border-hairline-strong bg-night-850/90 shadow-glass backdrop-blur-2xl backdrop-saturate-150;
   }
 
   /* Realce prateado na aresta superior de todo painel — no mockup o
@@ -76,23 +87,25 @@ body {
   }
 
   .panel-raised {
-    @apply relative rounded-2xl border border-hairline-strong bg-night-700/70 shadow-glass backdrop-blur-xl;
+    @apply relative rounded-2xl border border-hairline-strong bg-white/[0.09] shadow-glass backdrop-blur-2xl;
   }
 
   .glass {
-    @apply relative border border-hairline bg-night-800/70 shadow-glass backdrop-blur-lg;
+    @apply relative border border-hairline bg-white/[0.06] shadow-glass backdrop-blur-xl;
   }
 
   .glass-strong {
-    @apply relative border border-hairline-strong bg-night-800/85 shadow-glass backdrop-blur-xl;
+    @apply relative border border-hairline-strong bg-white/[0.1] shadow-glass backdrop-blur-2xl;
   }
 
+  /* Para menus e diálogos sobrepostos: precisa de mais corpo que um painel,
+     senão o conteúdo por baixo compete com o texto. */
   .glass-solid {
-    @apply relative border border-hairline bg-night-800 shadow-glass;
+    @apply relative border border-hairline bg-night-850/95 shadow-glass backdrop-blur-2xl;
   }
 
   .glass-dark {
-    @apply relative border border-hairline bg-night-900/60 shadow-glass backdrop-blur-lg;
+    @apply relative border border-hairline bg-black/30 shadow-glass backdrop-blur-xl;
   }
 
   .bg-grid-fade {

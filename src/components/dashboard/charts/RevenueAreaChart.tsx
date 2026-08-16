@@ -124,7 +124,7 @@ export function RevenueAreaChart({ data }: { data: RevenuePoint[] }) {
                 if (!active || !payload?.length) return null;
                 const point = payload[0].payload as RevenuePoint;
                 return (
-                  <div className="panel px-3 py-2">
+                  <div className="panel-overlay px-3 py-2">
                     <p className="text-xs text-slate-400">{point.fullLabel}</p>
                     <p className="mt-0.5 text-sm font-semibold text-white">
                       {meta.format(metric === 'revenue' ? point.revenue : point.quotes)}

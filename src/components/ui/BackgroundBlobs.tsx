@@ -4,12 +4,30 @@ export function BackgroundBlobs({
   className,
   position = 'absolute',
   vivid = false,
+  dim = false,
 }: {
   className?: string;
   position?: 'absolute' | 'fixed';
   /** Mistura mais saturada (rosa/violeta/azul) para telas com fundo em gradiente. */
   vivid?: boolean;
+  /** Versão para o tema escuro: manchas frias e fracas, apenas o suficiente
+      para o backdrop-blur dos painéis ter o que borrar. */
+  dim?: boolean;
 }) {
+  if (dim) {
+    return (
+      <div
+        aria-hidden
+        className={cn('pointer-events-none inset-0 -z-10 overflow-hidden', position, className)}
+      >
+        <div className="absolute -left-32 -top-32 h-[28rem] w-[28rem] animate-blob rounded-full bg-slate-400/[0.07] blur-3xl" />
+        <div className="absolute right-[-8rem] top-1/4 h-[26rem] w-[26rem] animate-blob-delay rounded-full bg-brand-400/[0.06] blur-3xl" />
+        <div className="absolute bottom-[-10rem] left-1/3 h-[30rem] w-[30rem] animate-blob-delay-2 rounded-full bg-slate-300/[0.05] blur-3xl" />
+        <div className="bg-noise absolute inset-0 opacity-[0.03] mix-blend-overlay" />
+      </div>
+    );
+  }
+
   return (
     <div
       aria-hidden

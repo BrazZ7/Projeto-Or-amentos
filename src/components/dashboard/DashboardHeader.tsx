@@ -49,8 +49,15 @@ export function DashboardHeader({
     function onPointerDown(event: MouseEvent) {
       if (!(event.target as HTMLElement).closest('[data-create-menu]')) setCreateOpen(false);
     }
+    function onEscape(event: KeyboardEvent) {
+      if (event.key === 'Escape') setCreateOpen(false);
+    }
     document.addEventListener('mousedown', onPointerDown, true);
-    return () => document.removeEventListener('mousedown', onPointerDown, true);
+    document.addEventListener('keydown', onEscape);
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown, true);
+      document.removeEventListener('keydown', onEscape);
+    };
   }, [createOpen]);
 
   return (
@@ -121,7 +128,7 @@ export function DashboardHeader({
             </button>
 
             {createOpen && (
-              <div className="panel absolute right-0 top-full z-40 mt-2 w-52 animate-scale-in overflow-hidden p-0">
+              <div className="panel-overlay absolute right-0 top-full z-40 mt-2 w-52 animate-scale-in overflow-hidden p-0">
                 {CREATE_LINKS.map((item) => (
                   <Link
                     key={item.href}

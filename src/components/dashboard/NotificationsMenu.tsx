@@ -47,7 +47,7 @@ export function NotificationsMenu({
   return (
     <div
       ref={ref}
-      className="panel absolute right-0 top-full z-40 mt-2 w-80 animate-scale-in overflow-hidden p-0"
+      className="panel-overlay absolute right-0 top-full z-40 mt-2 w-80 animate-scale-in overflow-hidden p-0"
     >
       <div className="border-b border-hairline px-4 py-3">
         <p className="text-sm font-semibold text-slate-100">Notificações</p>

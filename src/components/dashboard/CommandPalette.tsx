@@ -92,7 +92,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
       <div className="absolute inset-0 bg-night-950/80 backdrop-blur-sm" onClick={onClose} />
 
       <div
-        className="panel relative w-full max-w-xl animate-scale-in overflow-hidden p-0"
+        className="panel-overlay relative w-full max-w-xl animate-scale-in overflow-hidden p-0"
         role="dialog"
         aria-modal="true"
         aria-label="Busca"

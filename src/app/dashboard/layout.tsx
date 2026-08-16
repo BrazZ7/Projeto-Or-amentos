@@ -6,6 +6,7 @@ import { Sidebar } from '@/components/dashboard/Sidebar';
 import { SidebarBrand } from '@/components/dashboard/SidebarBrand';
 import { SidebarFooter } from '@/components/dashboard/SidebarFooter';
 import { Topbar } from '@/components/dashboard/Topbar';
+import { BackgroundBlobs } from '@/components/ui/BackgroundBlobs';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import type { NotificationItem } from '@/components/dashboard/NotificationsMenu';
 import { formatCurrency } from '@/lib/utils';
@@ -80,10 +81,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="relative min-h-screen lg:flex">
+      {/* Fica atrás de tudo: é o que o backdrop-blur dos painéis borra. */}
+      <BackgroundBlobs position="fixed" dim />
       {/* A aresta direita da sidebar é um gradiente prateado, não uma borda
           uniforme: no mockup ela brilha mais na altura do conteúdo e some nas
           pontas. */}
-      <aside className="sticky top-0 hidden h-screen w-[264px] shrink-0 flex-col bg-gradient-to-b from-night-850/90 via-night-900/85 to-night-950/90 px-4 py-6 backdrop-blur-xl after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-gradient-to-b after:from-transparent after:via-slate-300/25 after:to-transparent lg:flex">
+      <aside className="sticky top-0 hidden h-screen w-[264px] shrink-0 flex-col bg-white/[0.04] px-4 py-6 backdrop-blur-2xl backdrop-saturate-150 after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-gradient-to-b after:from-transparent after:via-white/20 after:to-transparent lg:flex">
         <SidebarBrand />
         <Sidebar className="mt-8 flex-1" />
         <SidebarFooter

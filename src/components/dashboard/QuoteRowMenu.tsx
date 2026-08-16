@@ -47,7 +47,7 @@ export function QuoteRowMenu({ quoteId, publicToken }: { quoteId: string; public
       </button>
 
       {open && (
-        <div className="panel absolute right-0 top-full z-30 mt-1 w-48 animate-scale-in overflow-hidden p-0">
+        <div className="panel-overlay absolute right-0 top-full z-30 mt-1 w-48 animate-scale-in overflow-hidden p-0">
           <Link
             href={`/dashboard/quotes/${quoteId}`}
             className="flex items-center gap-2.5 px-3 py-2 text-sm text-slate-300 transition-colors hover:bg-white/[0.05] hover:text-white"
