@@ -12,6 +12,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         >
           <div className="absolute -left-20 -top-20 h-72 w-72 animate-blob rounded-full bg-white/10 blur-3xl" />
           <div className="absolute -bottom-24 right-0 h-80 w-80 animate-blob-delay rounded-full bg-brand-300/20 blur-3xl" />
+          <div className="bg-noise absolute inset-0 opacity-[0.04] mix-blend-overlay" />
         </div>
         <Link href="/" className="flex animate-fade-in-up items-center gap-2 text-lg font-semibold">
           <FileText className="h-6 w-6" />
@@ -30,7 +31,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </div>
       <div className="relative flex w-full flex-col items-center justify-center bg-surface-muted px-6 py-12 lg:w-1/2">
         <BackgroundBlobs className="opacity-60" />
-        <div className="glass-strong w-full max-w-sm animate-scale-in rounded-2xl p-6 sm:p-8">
+        <div className="glow-ring glass-strong w-full max-w-sm animate-scale-in rounded-2xl p-6 sm:p-8">
           {children}
         </div>
       </div>

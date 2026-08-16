@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { registerSchema } from '@/lib/validations/auth';
-import { generateToken, addHours } from '@/lib/tokens';
-import { sendMail } from '@/lib/mail';
+import { addHours } from '@/lib/tokens';
 import { handleApiError } from '@/lib/api-utils';
 
 export async function POST(request: NextRequest) {
@@ -39,6 +38,8 @@ export async function POST(request: NextRequest) {
         });
       }
 
+      // Conta já criada com e-mail confirmado — sem etapa de verificação por
+      // e-mail por enquanto, para permitir cadastro e login imediatos.
       return tx.user.create({
         data: {
           companyId: company.id,
@@ -46,23 +47,12 @@ export async function POST(request: NextRequest) {
           email: data.email.toLowerCase(),
           passwordHash,
           role: 'OWNER',
+          emailVerified: new Date(),
         },
       });
     });
 
-    const token = generateToken();
-    await prisma.emailVerificationToken.create({
-      data: { token, userId: user.id, expiresAt: addHours(new Date(), 48) },
-    });
-
-    const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-email?token=${token}`;
-    await sendMail({
-      to: user.email,
-      subject: 'Confirme seu e-mail — OrcaFacil',
-      html: `<p>Olá, ${user.name}!</p><p>Confirme seu e-mail para ativar sua conta no OrcaFacil:</p><p><a href="${verifyUrl}">${verifyUrl}</a></p><p>Este link expira em 48 horas.</p>`,
-    });
-
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, email: user.email });
   } catch (error) {
     return handleApiError(error);
   }

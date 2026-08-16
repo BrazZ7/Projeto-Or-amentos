@@ -28,6 +28,9 @@ const emptyForm: ClientInput = {
   addressState: '',
   addressZipCode: '',
   notes: '',
+  stateRegistration: '',
+  stateRegistrationType: 'NAO_CONTRIBUINTE',
+  cityCode: '',
 };
 
 export function ClientForm({ clientId, initialData }: ClientFormProps) {
@@ -64,7 +67,7 @@ export function ClientForm({ clientId, initialData }: ClientFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="glass space-y-6 rounded-2xl p-6 sm:p-8">
       <div className="grid gap-4 sm:grid-cols-3">
         <Select
           label="Tipo de cliente"
@@ -161,6 +164,43 @@ export function ClientForm({ clientId, initialData }: ClientFormProps) {
           value={form.addressZipCode || ''}
           onChange={(e) => update('addressZipCode', e.target.value)}
         />
+      </div>
+
+      <div>
+        <div className="mb-1 flex items-baseline justify-between gap-3">
+          <h2 className="text-sm font-semibold text-slate-900">Dados fiscais (NF-e)</h2>
+          <span className="text-xs text-slate-400">Necessários apenas para emitir nota</span>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Select
+            label="Contribuinte de ICMS"
+            name="stateRegistrationType"
+            value={form.stateRegistrationType}
+            onChange={(e) =>
+              update('stateRegistrationType', e.target.value as ClientInput['stateRegistrationType'])
+            }
+          >
+            <option value="NAO_CONTRIBUINTE">Não contribuinte</option>
+            <option value="CONTRIBUINTE">Contribuinte</option>
+            <option value="ISENTO">Isento</option>
+          </Select>
+          <Input
+            label="Inscrição Estadual"
+            name="stateRegistration"
+            value={form.stateRegistration || ''}
+            onChange={(e) => update('stateRegistration', e.target.value)}
+            placeholder={
+              form.stateRegistrationType === 'CONTRIBUINTE' ? 'Obrigatória para contribuinte' : 'Opcional'
+            }
+          />
+          <Input
+            label="Código IBGE do município"
+            name="cityCode"
+            value={form.cityCode || ''}
+            onChange={(e) => update('cityCode', e.target.value.replace(/\D/g, '').slice(0, 7))}
+            placeholder="7 dígitos, ex: 3550308"
+          />
+        </div>
       </div>
 
       <Textarea

@@ -41,7 +41,7 @@ export function Sidebar({ className }: { className?: string }) {
             className={cn(
               'group relative flex animate-fade-in-up items-center gap-3 overflow-hidden rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ease-out',
               active
-                ? 'bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-glow-brand'
+                ? 'sheen-hover bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-glow-brand'
                 : 'text-slate-600 hover:translate-x-0.5 hover:bg-slate-900/5 hover:text-slate-900',
             )}
           >

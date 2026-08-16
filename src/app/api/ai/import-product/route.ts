@@ -1,0 +1,30 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { requireSession } from '@/lib/session';
+import { handleApiError } from '@/lib/api-utils';
+import { safeFetchHtml, htmlToPlainText } from '@/lib/url-fetch';
+import { extractProductFromPageText } from '@/lib/ai';
+
+const schema = z.object({ url: z.string().url('Informe um link válido.') });
+
+export async function POST(request: NextRequest) {
+  try {
+    await requireSession();
+    const { url } = schema.parse(await request.json());
+
+    const { html, finalUrl } = await safeFetchHtml(url);
+    const pageText = htmlToPlainText(html);
+
+    if (!pageText.trim()) {
+      return NextResponse.json(
+        { error: 'Não foi possível extrair conteúdo dessa página.' },
+        { status: 422 },
+      );
+    }
+
+    const info = await extractProductFromPageText(pageText, finalUrl);
+    return NextResponse.json(info);
+  } catch (error) {
+    return handleApiError(error);
+  }
+}

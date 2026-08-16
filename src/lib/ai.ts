@@ -114,3 +114,50 @@ Estime valores de mercado plausíveis em reais (BRL) quando o usuário não info
   }
   return parsed;
 }
+
+export interface ImportedProductInfo {
+  name: string;
+  price: number | null;
+  description: string;
+  category: string | null;
+}
+
+/**
+ * Lê o texto (já extraído em src/lib/url-fetch.ts) da página de um produto em
+ * outro site e identifica nome, preço e um resumo das características, para
+ * pré-preencher o cadastro de produto.
+ */
+export async function extractProductFromPageText(
+  pageText: string,
+  sourceUrl: string,
+): Promise<ImportedProductInfo> {
+  const system = `Você é um assistente que extrai informações de produtos/serviços a partir do conteúdo de uma página de e-commerce ou catálogo, para preencher um cadastro de produto em um sistema de orçamentos de uma empresa brasileira.
+Responda APENAS com um JSON válido, sem comentários, sem markdown, no seguinte formato:
+{
+  "name": "nome do produto, curto e claro",
+  "price": number (apenas o valor numérico, sem símbolo de moeda) ou null se não encontrar um preço claro,
+  "description": "resumo objetivo das principais características em 2 a 4 frases curtas, em português do Brasil",
+  "category": "categoria/tipo do produto, ou null"
+}
+Nunca invente um preço que não apareça no texto — nesse caso retorne null. Se houver preço "de/por" (promocional), use o preço "por" (atual).`;
+
+  const prompt = `URL de origem: ${sourceUrl}\n\nConteúdo da página:\n"""\n${pageText.slice(0, 12000)}\n"""`;
+
+  const raw = await ask(system, prompt, 700);
+  const jsonMatch = raw.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) {
+    throw new Error('Não foi possível interpretar os dados do produto a partir do link.');
+  }
+
+  const parsed = JSON.parse(jsonMatch[0]);
+  if (!parsed.name || typeof parsed.name !== 'string') {
+    throw new Error('Não foi possível identificar um produto nessa página.');
+  }
+
+  return {
+    name: parsed.name.slice(0, 200),
+    price: typeof parsed.price === 'number' && Number.isFinite(parsed.price) ? parsed.price : null,
+    description: typeof parsed.description === 'string' ? parsed.description : '',
+    category: typeof parsed.category === 'string' ? parsed.category : null,
+  };
+}

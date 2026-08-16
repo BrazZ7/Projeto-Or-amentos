@@ -35,6 +35,9 @@ export default async function EditClientPage({ params }: { params: { id: string 
           addressState: client.addressState || '',
           addressZipCode: client.addressZipCode || '',
           notes: client.notes || '',
+          stateRegistration: client.stateRegistration || '',
+          stateRegistrationType: client.stateRegistrationType,
+          cityCode: client.cityCode || '',
         }}
       />
     </div>

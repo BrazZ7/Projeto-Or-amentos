@@ -4,6 +4,7 @@ import { requireSession } from '@/lib/session';
 import { quoteSchema } from '@/lib/validations/quote';
 import { handleApiError } from '@/lib/api-utils';
 import { calculateQuoteTotals } from '@/lib/calculations';
+import { assertItemsBelongToCompany } from '@/lib/quote-items';
 import { assertTemplateAllowed } from '@/lib/plan-limits';
 
 async function getOwnedQuote(companyId: string, id: string) {
@@ -43,6 +44,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     if (!client) {
       return NextResponse.json({ error: 'Cliente inválido.' }, { status: 422 });
     }
+    await assertItemsBelongToCompany(companyId, data.items);
 
     // Só barra a troca para um modelo premium. O formulário reenvia o modelo
     // atual do orçamento, então validar sempre impediria uma empresa que

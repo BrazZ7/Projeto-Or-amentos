@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { companyAllowsPremiumTemplates } from '@/lib/plan-limits';
 import { QuoteForm } from '@/components/quotes/QuoteForm';
 import { QuoteActions } from '@/components/quotes/QuoteActions';
+import { InvoiceActions } from '@/components/quotes/InvoiceActions';
 import { Badge } from '@/components/ui/Badge';
 import { formatCurrency, QUOTE_STATUS_COLORS, QUOTE_STATUS_LABELS } from '@/lib/utils';
 
@@ -40,6 +41,13 @@ export default async function QuoteDetailPage({ params }: { params: { id: string
   ]);
   const premiumAllowed = await companyAllowsPremiumTemplates(companyId);
 
+  // Última tentativa de emissão: é ela que define se cabe emitir, reemitir ou
+  // só consultar o retorno.
+  const invoice = await prisma.invoice.findFirst({
+    where: { quoteId: quote.id, companyId },
+    orderBy: { createdAt: 'desc' },
+  });
+
   return (
     <div className="max-w-4xl space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -63,6 +71,25 @@ export default async function QuoteDetailPage({ params }: { params: { id: string
         clientEmail={quote.client.email}
         clientWhatsapp={quote.client.whatsapp}
         total={formatCurrency(Number(quote.total))}
+      />
+
+      <InvoiceActions
+        quoteId={quote.id}
+        quoteStatus={quote.status}
+        invoice={
+          invoice && {
+            id: invoice.id,
+            status: invoice.status,
+            number: invoice.number,
+            series: invoice.series,
+            environment: invoice.environment,
+            accessKey: invoice.accessKey,
+            danfeUrl: invoice.danfeUrl,
+            xmlUrl: invoice.xmlUrl,
+            rejectionCode: invoice.rejectionCode,
+            rejectionMessage: invoice.rejectionMessage,
+          }
+        }
       />
 
       <QuoteForm

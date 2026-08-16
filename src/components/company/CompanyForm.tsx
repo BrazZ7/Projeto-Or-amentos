@@ -255,6 +255,44 @@ export function CompanyForm({ initialData }: { initialData: CompanyInput }) {
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader>
+          <CardTitle>Dados fiscais (NF-e)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="mb-4 text-xs text-slate-500">
+            Necessários apenas para emitir nota fiscal. A NF-e exige CNPJ — empresa cadastrada com
+            CPF não emite.
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Input
+              label="Inscrição Estadual"
+              name="stateRegistration"
+              value={form.stateRegistration || ''}
+              onChange={(e) => update('stateRegistration', e.target.value)}
+              placeholder="Use ISENTO quando não houver"
+            />
+            <Select
+              label="Regime tributário"
+              name="taxRegime"
+              value={form.taxRegime || 'SIMPLES'}
+              onChange={(e) => update('taxRegime', e.target.value as CompanyInput['taxRegime'])}
+            >
+              <option value="SIMPLES">Simples Nacional</option>
+              <option value="SIMPLES_EXCESSO">Simples Nacional — excesso de sublimite</option>
+              <option value="NORMAL">Regime normal (Lucro Presumido ou Real)</option>
+            </Select>
+            <Input
+              label="Código IBGE do município"
+              name="cityCode"
+              value={form.cityCode || ''}
+              onChange={(e) => update('cityCode', e.target.value.replace(/\D/g, '').slice(0, 7))}
+              placeholder="7 dígitos, ex: 3550308"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
       {error && <p className="text-sm text-rose-600">{error}</p>}
       {success && <p className="text-sm text-emerald-600">Dados salvos com sucesso.</p>}
 

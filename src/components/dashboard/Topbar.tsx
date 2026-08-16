@@ -10,7 +10,7 @@ export function Topbar({ companyName }: { companyName: string }) {
 
   return (
     <>
-      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-white/60 bg-white/70 px-4 py-3 shadow-sm backdrop-blur-lg lg:hidden">
+      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-white/50 bg-white/50 px-4 py-3 shadow-sm backdrop-blur-xl lg:hidden">
         <button
           onClick={() => setOpen(true)}
           className="rounded-lg p-2 transition-colors hover:bg-slate-900/5"

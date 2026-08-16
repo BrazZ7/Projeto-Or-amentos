@@ -5,6 +5,7 @@ import { quoteSchema } from '@/lib/validations/quote';
 import { handleApiError } from '@/lib/api-utils';
 import { assertWithinPlanLimit, resolveQuoteTemplate } from '@/lib/plan-limits';
 import { calculateQuoteTotals } from '@/lib/calculations';
+import { assertItemsBelongToCompany } from '@/lib/quote-items';
 
 export async function GET(request: NextRequest) {
   try {
@@ -39,6 +40,7 @@ export async function POST(request: NextRequest) {
     if (!client) {
       return NextResponse.json({ error: 'Cliente inválido.' }, { status: 422 });
     }
+    await assertItemsBelongToCompany(companyId, data.items);
 
     const company = await prisma.company.findUniqueOrThrow({ where: { id: companyId } });
     const template = await resolveQuoteTemplate(companyId, data.template, company.pdfTemplate);

@@ -34,6 +34,11 @@ export default async function EditProductPage({ params }: { params: { id: string
           active: product.active,
           trackStock: product.trackStock,
           minStockAlert: product.minStockAlert ? Number(product.minStockAlert) : null,
+          ncm: product.ncm || '',
+          cest: product.cest || '',
+          cfop: product.cfop || '',
+          taxOrigin: product.taxOrigin,
+          taxSituation: product.taxSituation || '',
         }}
       />
     </div>

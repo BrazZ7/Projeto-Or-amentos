@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
@@ -19,7 +20,6 @@ export default function RegisterPage() {
   });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [done, setDone] = useState(false);
 
   function update<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -37,29 +37,31 @@ export default function RegisterPage() {
     });
 
     const data = await res.json();
-    setLoading(false);
 
     if (!res.ok) {
+      setLoading(false);
       setError(data.error || 'Não foi possível concluir o cadastro.');
       return;
     }
 
-    setDone(true);
-  }
+    // Sem etapa de confirmação por e-mail por enquanto: loga direto após o
+    // cadastro e manda para o painel.
+    const result = await signIn('credentials', {
+      email: form.email,
+      password: form.password,
+      redirect: false,
+    });
 
-  if (done) {
-    return (
-      <div className="text-center">
-        <h2 className="text-2xl font-semibold text-slate-900">Confira seu e-mail</h2>
-        <p className="mt-3 text-sm text-slate-500">
-          Enviamos um link de confirmação para <strong>{form.email}</strong>. Clique nele para
-          ativar sua conta e fazer login.
-        </p>
-        <Link href="/login" className="mt-6 inline-block text-sm font-medium text-brand-600 hover:underline">
-          Voltar para o login
-        </Link>
-      </div>
-    );
+    setLoading(false);
+
+    if (result?.error) {
+      setError('Conta criada, mas não foi possível entrar automaticamente. Faça login.');
+      router.push('/login');
+      return;
+    }
+
+    router.push('/dashboard');
+    router.refresh();
   }
 
   return (

@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Sparkles, Loader2, Boxes } from 'lucide-react';
+import { Sparkles, Loader2, Boxes, Link2 } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
 import { Button } from '@/components/ui/Button';
 import { ImageUpload } from '@/components/ui/ImageUpload';
@@ -30,6 +31,11 @@ const emptyForm: ProductInput = {
   active: true,
   trackStock: true,
   minStockAlert: null,
+  ncm: '',
+  cest: '',
+  cfop: '',
+  taxOrigin: 0,
+  taxSituation: '',
 };
 
 export function ProductForm({ productId, initialData, currentStock }: ProductFormProps) {
@@ -38,9 +44,49 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
   const [loading, setLoading] = useState(false);
   const [generatingDesc, setGeneratingDesc] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [importUrl, setImportUrl] = useState('');
+  const [importing, setImporting] = useState(false);
+  const [importMessage, setImportMessage] = useState<string | null>(null);
+  const [importError, setImportError] = useState<string | null>(null);
 
   function update<K extends keyof ProductInput>(key: K, value: ProductInput[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
+  async function handleImportFromUrl() {
+    if (!importUrl.trim()) {
+      setImportError('Cole o link do produto para importar.');
+      return;
+    }
+    setImporting(true);
+    setImportError(null);
+    setImportMessage(null);
+
+    const res = await fetch('/api/ai/import-product', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: importUrl.trim() }),
+    });
+    const data = await res.json();
+    setImporting(false);
+
+    if (!res.ok) {
+      setImportError(data.error || 'Não foi possível importar os dados desse link.');
+      return;
+    }
+
+    setForm((prev) => ({
+      ...prev,
+      name: data.name || prev.name,
+      price: typeof data.price === 'number' ? data.price : prev.price,
+      description: data.description || prev.description,
+      category: data.category || prev.category,
+    }));
+    setImportMessage(
+      data.price == null
+        ? 'Dados importados, mas não encontramos um preço nessa página — confira o valor.'
+        : 'Dados importados do link. Revise as informações antes de salvar.',
+    );
   }
 
   async function handleGenerateDescription() {
@@ -90,7 +136,31 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="glass space-y-6 rounded-2xl p-6 sm:p-8">
+      <div className="glass-solid rounded-xl p-4">
+        <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-slate-700">
+          <Link2 className="h-4 w-4 text-brand-600" />
+          Importar de um link (opcional)
+        </label>
+        <p className="mb-2 text-xs text-slate-500">
+          Cole o link do produto em outro site — a IA identifica nome, preço e características automaticamente.
+        </p>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Input
+            className="flex-1"
+            placeholder="https://..."
+            value={importUrl}
+            onChange={(e) => setImportUrl(e.target.value)}
+          />
+          <Button type="button" variant="outline" onClick={handleImportFromUrl} loading={importing}>
+            <Sparkles className="h-4 w-4" />
+            Buscar dados
+          </Button>
+        </div>
+        {importMessage && <p className="mt-2 text-xs text-emerald-600">{importMessage}</p>}
+        {importError && <p className="mt-2 text-xs text-rose-600">{importError}</p>}
+      </div>
+
       <div className="flex gap-5">
         <ImageUpload
           label="Imagem"
@@ -240,6 +310,64 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
             />
           </div>
         )}
+      </div>
+
+      <div className="rounded-xl border border-slate-200 bg-white p-5">
+        <div className="mb-1 flex items-baseline justify-between gap-3">
+          <h2 className="text-sm font-semibold text-slate-900">Dados fiscais (NF-e)</h2>
+          <span className="text-xs text-slate-400">Necessários apenas para emitir nota</span>
+        </div>
+        <p className="mb-4 text-xs text-slate-500">
+          Sem NCM e CFOP a SEFAZ rejeita a nota. Você pode salvar o produto sem eles e preencher
+          depois — a emissão avisa exatamente o que estiver faltando.
+        </p>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Input
+            label="NCM"
+            name="ncm"
+            value={form.ncm || ''}
+            onChange={(e) => update('ncm', e.target.value.replace(/\D/g, '').slice(0, 8))}
+            placeholder="8 dígitos, ex: 85176294"
+          />
+          <Input
+            label="CFOP"
+            name="cfop"
+            value={form.cfop || ''}
+            onChange={(e) => update('cfop', e.target.value.replace(/\D/g, '').slice(0, 4))}
+            placeholder="Padrão: 5102"
+          />
+          <Input
+            label="CEST"
+            name="cest"
+            value={form.cest || ''}
+            onChange={(e) => update('cest', e.target.value.replace(/\D/g, '').slice(0, 7))}
+            placeholder="Só com substituição tributária"
+          />
+          <Select
+            label="Origem da mercadoria"
+            name="taxOrigin"
+            value={String(form.taxOrigin ?? 0)}
+            onChange={(e) => update('taxOrigin', Number(e.target.value))}
+          >
+            <option value="0">0 — Nacional</option>
+            <option value="1">1 — Estrangeira, importação direta</option>
+            <option value="2">2 — Estrangeira, adquirida no mercado interno</option>
+            <option value="3">3 — Nacional, importação entre 40% e 70%</option>
+            <option value="4">4 — Nacional, produção conforme processos produtivos</option>
+            <option value="5">5 — Nacional, importação até 40%</option>
+            <option value="6">6 — Estrangeira, importação direta sem similar nacional</option>
+            <option value="7">7 — Estrangeira, mercado interno sem similar nacional</option>
+            <option value="8">8 — Nacional, importação superior a 70%</option>
+          </Select>
+          <Input
+            label="CSOSN / CST de ICMS"
+            name="taxSituation"
+            value={form.taxSituation || ''}
+            onChange={(e) => update('taxSituation', e.target.value.replace(/\D/g, '').slice(0, 4))}
+            placeholder="Simples: 102 · Normal: 00"
+          />
+        </div>
       </div>
 
       {error && <p className="text-sm text-rose-600">{error}</p>}

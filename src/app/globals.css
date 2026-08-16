@@ -16,24 +16,66 @@ body {
 
 @layer utilities {
   .glass {
-    @apply border border-white/60 bg-white/70 shadow-glass backdrop-blur-lg;
+    @apply relative border border-white/60 bg-white/70 shadow-glass backdrop-blur-lg;
   }
 
   .glass-strong {
-    @apply border border-white/70 bg-white/80 shadow-glass backdrop-blur-xl;
+    @apply relative border border-white/70 bg-white/80 shadow-glass backdrop-blur-xl;
   }
 
   .glass-solid {
-    @apply border border-white/70 bg-white/95 shadow-glass backdrop-blur-xl;
+    @apply relative border border-white/70 bg-white/95 shadow-glass backdrop-blur-xl;
   }
 
   .glass-dark {
-    @apply border border-white/10 bg-slate-900/40 shadow-glass backdrop-blur-lg;
+    @apply relative border border-white/10 bg-slate-900/40 shadow-glass backdrop-blur-lg;
   }
 
   .bg-grid-fade {
     background-image: radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.06) 1px, transparent 0);
     background-size: 24px 24px;
+  }
+
+  /* Textura de ruído sutil para tirar a "planura" digital do glassmorphism —
+     aplicada em baixa opacidade sobre superfícies de vidro/fundos. */
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+
+  /* Brilho ambiente colorido ao redor do elemento, revelado no hover — usar
+     junto de `group` no ancestral. Só usa box-shadow (sem pseudo-elemento
+     nem mask), então nunca é cortado por overflow-hidden de irmãos como o
+     .sheen-hover. */
+  .glow-ring {
+    transition: box-shadow 0.5s ease;
+  }
+
+  .group:hover .glow-ring,
+  .glow-ring:hover {
+    box-shadow:
+      0 0 0 1px rgba(129, 140, 248, 0.35),
+      0 10px 40px -10px rgba(139, 92, 246, 0.5),
+      0 0 60px -18px rgba(97, 114, 243, 0.55);
+  }
+
+  /* Sweep de brilho especular sobre superfícies de vidro/botões no hover. */
+  .sheen-hover {
+    @apply relative overflow-hidden;
+  }
+
+  .sheen-hover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.55) 50%, transparent 60%);
+    transform: translateX(-120%);
+    pointer-events: none;
+  }
+
+  .group:hover .sheen-hover::after,
+  .sheen-hover:hover::after {
+    animation: sheen 1s ease-out;
   }
 }
 

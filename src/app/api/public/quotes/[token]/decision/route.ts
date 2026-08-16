@@ -51,7 +51,7 @@ export async function POST(request: NextRequest, { params }: { params: { token: 
   const productIds = itemsWithProduct.map((item) => item.productId);
   const trackedProducts = productIds.length
     ? await prisma.product.findMany({
-        where: { id: { in: productIds }, trackStock: true },
+        where: { id: { in: productIds }, companyId: quote.companyId, trackStock: true },
         select: { id: true },
       })
     : [];

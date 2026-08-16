@@ -43,6 +43,9 @@ export default async function CompanyPage() {
           bankAccount: company.bankAccount || '',
           pixKey: company.pixKey || '',
           paymentNotes: company.paymentNotes || '',
+          stateRegistration: company.stateRegistration || '',
+          taxRegime: company.taxRegime,
+          cityCode: company.cityCode || '',
         }}
       />
     </div>

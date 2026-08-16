@@ -69,8 +69,19 @@ export default function LandingPage() {
 
       <main>
         <section className="mx-auto max-w-4xl px-6 pb-16 pt-16 text-center">
+          <div className="glass mb-6 inline-flex animate-fade-in-up items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-brand-700">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-glow-pulse rounded-full bg-brand-500" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand-600" />
+            </span>
+            Novo: orçamentos gerados por IA a partir de um pedido em texto livre
+          </div>
           <h1 className="animate-fade-in-up text-4xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-5xl">
-            Orçamentos profissionais em PDF, prontos em minutos.
+            Orçamentos{' '}
+            <span className="animate-gradient-x bg-[length:200%_auto] bg-gradient-to-r from-brand-600 via-purple-500 to-brand-600 bg-clip-text text-transparent">
+              profissionais em PDF
+            </span>
+            , prontos em minutos.
           </h1>
           <p
             className="mx-auto mt-5 max-w-2xl animate-fade-in-up text-lg text-slate-600"
@@ -101,11 +112,12 @@ export default function LandingPage() {
                 key={feature.title}
                 glass
                 hoverable
+                glow
                 className="group animate-fade-in-up"
                 style={{ animationDelay: `${index * 60}ms` }}
               >
                 <CardContent className="flex flex-col gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600 transition-transform duration-300 group-hover:scale-110">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600 transition-transform duration-300 group-hover:scale-110 group-hover:animate-float">
                     <feature.icon className="h-5 w-5" />
                   </div>
                   <h3 className="font-semibold text-slate-900">{feature.title}</h3>

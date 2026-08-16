@@ -4,15 +4,20 @@ import { cn } from '@/lib/utils';
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   glass?: boolean;
   hoverable?: boolean;
+  /** Anel de gradiente rotativo revelado no hover, para cards de destaque. */
+  glow?: boolean;
 }
 
-export function Card({ className, glass, hoverable, ...props }: CardProps) {
+export function Card({ className, glass, hoverable, glow, ...props }: CardProps) {
   return (
     <div
       className={cn(
         'rounded-2xl transition-all duration-300 ease-out',
-        glass ? 'glass' : 'border border-slate-200 bg-white shadow-card',
+        glass
+          ? 'glass sheen-hover'
+          : 'border border-white/80 bg-white/85 shadow-card backdrop-blur-md',
         hoverable && 'hover:-translate-y-0.5 hover:shadow-glass',
+        glow && 'glow-ring',
         className,
       )}
       {...props}

@@ -56,6 +56,30 @@ const config: Config = {
           from: { backgroundPosition: '200% 0' },
           to: { backgroundPosition: '-200% 0' },
         },
+        sheen: {
+          from: { transform: 'translateX(-150%) skewX(-20deg)' },
+          to: { transform: 'translateX(150%) skewX(-20deg)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-6px)' },
+        },
+        'gradient-x': {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+        'spin-slow': {
+          from: { transform: 'rotate(0deg)' },
+          to: { transform: 'rotate(360deg)' },
+        },
+        'glow-pulse': {
+          '0%, 100%': { opacity: '0.5', transform: 'scale(1)' },
+          '50%': { opacity: '0.9', transform: 'scale(1.05)' },
+        },
+        'grow-x': {
+          from: { transform: 'scaleX(0)' },
+          to: { transform: 'scaleX(1)' },
+        },
       },
       animation: {
         'fade-in': 'fade-in 0.4s ease-out backwards',
@@ -63,7 +87,14 @@ const config: Config = {
         'scale-in': 'scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) backwards',
         blob: 'blob 16s ease-in-out infinite',
         'blob-delay': 'blob 16s ease-in-out infinite 5s',
+        'blob-delay-2': 'blob 20s ease-in-out infinite 2.5s',
         shimmer: 'shimmer 2.5s linear infinite',
+        sheen: 'sheen 1.1s ease-in-out',
+        float: 'float 5s ease-in-out infinite',
+        'gradient-x': 'gradient-x 6s ease infinite',
+        'spin-slow': 'spin-slow 24s linear infinite',
+        'glow-pulse': 'glow-pulse 3.5s ease-in-out infinite',
+        'grow-x': 'grow-x 0.8s cubic-bezier(0.16, 1, 0.3, 1) backwards',
       },
       backdropBlur: {
         xs: '2px',
