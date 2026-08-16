@@ -15,5 +15,17 @@ export const clientSchema = z.object({
   addressState: z.string().optional().nullable(),
   addressZipCode: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
+
+  // Fiscais (NF-e)
+  stateRegistration: z.string().optional().nullable(),
+  stateRegistrationType: z
+    .enum(['CONTRIBUINTE', 'ISENTO', 'NAO_CONTRIBUINTE'])
+    .default('NAO_CONTRIBUINTE'),
+  cityCode: z
+    .string()
+    .regex(/^\d{7}$/, 'O código IBGE do município tem 7 dígitos.')
+    .optional()
+    .nullable()
+    .or(z.literal('')),
 });
 export type ClientInput = z.infer<typeof clientSchema>;

@@ -30,6 +30,17 @@ export const companySchema = z.object({
   bankAccount: z.string().optional().nullable(),
   pixKey: z.string().optional().nullable(),
   paymentNotes: z.string().optional().nullable(),
+
+  // Fiscais (NF-e). Opcionais aqui: só viram obrigatórios na emissão, que
+  // lista exatamente o que falta.
+  stateRegistration: z.string().optional().nullable(),
+  taxRegime: z.enum(['SIMPLES', 'SIMPLES_EXCESSO', 'NORMAL']).optional(),
+  cityCode: z
+    .string()
+    .regex(/^\d{7}$/, 'O código IBGE do município tem 7 dígitos.')
+    .optional()
+    .nullable()
+    .or(z.literal('')),
 });
 export type CompanyInput = z.infer<typeof companySchema>;
 
