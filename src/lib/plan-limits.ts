@@ -23,6 +23,32 @@ export async function companyAllowsPremiumTemplates(companyId: string) {
   return subscription.plan.hasCustomBrand;
 }
 
+/**
+ * Recursos de IA acompanham o campo hasAiFeatures do plano. Empresas sem
+ * assinatura ficam liberadas, mesma política de assertWithinPlanLimit, para não
+ * travar o ambiente de desenvolvimento.
+ */
+export async function companyAllowsAi(companyId: string) {
+  const subscription = await prisma.subscription.findUnique({
+    where: { companyId },
+    include: { plan: true },
+  });
+  if (!subscription) return true;
+  return subscription.plan.hasAiFeatures;
+}
+
+/**
+ * Barra as rotas de IA para quem não tem plano com IA. Sem isso qualquer
+ * usuário autenticado consome a chave da Anthropic do operador, inclusive no
+ * plano gratuito — o custo é por chamada.
+ */
+export async function assertAiAllowed(companyId: string) {
+  if (await companyAllowsAi(companyId)) return;
+  throw new PlanLimitError(
+    'Os recursos de IA estão disponíveis a partir do plano Starter. Faça upgrade do seu plano para usá-los.',
+  );
+}
+
 function premiumTemplateError(template: string) {
   return new PlanLimitError(
     `O modelo "${templateLabel(template)}" está disponível a partir do plano Starter. Faça upgrade do seu plano para usá-lo.`,

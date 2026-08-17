@@ -7,6 +7,7 @@ import { SidebarBrand } from '@/components/dashboard/SidebarBrand';
 import { SidebarFooter } from '@/components/dashboard/SidebarFooter';
 import { Topbar } from '@/components/dashboard/Topbar';
 import { BackgroundBlobs } from '@/components/ui/BackgroundBlobs';
+import { PlanFeaturesProvider } from '@/components/providers/PlanFeaturesProvider';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import type { NotificationItem } from '@/components/dashboard/NotificationsMenu';
 import { formatCurrency } from '@/lib/utils';
@@ -101,7 +102,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <Topbar companyName={session.user.companyName} />
         <div className="px-4 pb-10 pt-4 sm:px-6 lg:px-8">
           <DashboardHeader userName={session.user.name || 'Usuário'} notifications={notifications} />
-          <main className="animate-fade-in-up pt-4">{children}</main>
+          <main className="animate-fade-in-up pt-4">
+            <PlanFeaturesProvider aiAllowed={subscription?.plan.hasAiFeatures ?? true}>
+              {children}
+            </PlanFeaturesProvider>
+          </main>
         </div>
       </div>
     </div>

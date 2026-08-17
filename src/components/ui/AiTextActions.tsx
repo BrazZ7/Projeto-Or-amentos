@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Sparkles, Loader2, ChevronDown } from 'lucide-react';
 import type { TextAiAction } from '@/lib/ai';
+import { usePlanFeatures } from '@/components/providers/PlanFeaturesProvider';
 
 const actionLabels: Record<TextAiAction, string> = {
   improve: 'Melhorar texto',
@@ -24,6 +25,7 @@ export function AiTextActions({
   onResult: (result: string) => void;
   disabled?: boolean;
 }) {
+  const { aiAllowed } = usePlanFeatures();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState<TextAiAction | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -47,6 +49,11 @@ export function AiTextActions({
     }
     onResult(data.result);
   }
+
+  // Este controle aparece ao lado de vários campos. Sem plano de IA ele
+  // simplesmente não é renderizado: um botão desabilitado repetido seis vezes
+  // na mesma tela viraria ruído, e a tela de planos já explica o que falta.
+  if (!aiAllowed) return null;
 
   return (
     <div className="relative inline-block">

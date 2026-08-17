@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Button } from '@/components/ui/Button';
 import { ImageUpload } from '@/components/ui/ImageUpload';
 import { AiTextActions } from '@/components/ui/AiTextActions';
+import { usePlanFeatures } from '@/components/providers/PlanFeaturesProvider';
 import type { ProductInput } from '@/lib/validations/product';
 
 interface ProductFormProps {
@@ -44,6 +45,7 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
   const [loading, setLoading] = useState(false);
   const [generatingDesc, setGeneratingDesc] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { aiAllowed } = usePlanFeatures();
   const [importUrl, setImportUrl] = useState('');
   const [importing, setImporting] = useState(false);
   const [importMessage, setImportMessage] = useState<string | null>(null);
@@ -137,6 +139,8 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
 
   return (
     <form onSubmit={handleSubmit} className="glass space-y-6 rounded-2xl p-6 sm:p-8">
+      {/* O bloco inteiro depende da IA: sem plano, nem o campo de URL aparece. */}
+      {aiAllowed && (
       <div className="glass-solid rounded-xl p-4">
         <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-slate-300">
           <Link2 className="h-4 w-4 text-brand-600" />
@@ -160,6 +164,7 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
         {importMessage && <p className="mt-2 text-xs text-emerald-600">{importMessage}</p>}
         {importError && <p className="mt-2 text-xs text-rose-600">{importError}</p>}
       </div>
+      )}
 
       <div className="flex gap-5">
         <ImageUpload
@@ -201,19 +206,21 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
         <div className="mb-1.5 flex items-center justify-between">
           <label className="text-sm font-medium text-slate-300">Descrição</label>
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={handleGenerateDescription}
-              disabled={generatingDesc}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-brand-200 bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-700 hover:bg-brand-100 disabled:opacity-50"
-            >
-              {generatingDesc ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <Sparkles className="h-3.5 w-3.5" />
-              )}
-              Gerar com IA
-            </button>
+            {aiAllowed && (
+              <button
+                type="button"
+                onClick={handleGenerateDescription}
+                disabled={generatingDesc}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-brand-200 bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-700 hover:bg-brand-100 disabled:opacity-50"
+              >
+                {generatingDesc ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Sparkles className="h-3.5 w-3.5" />
+                )}
+                Gerar com IA
+              </button>
+            )}
             <AiTextActions text={form.description || ''} onResult={(r) => update('description', r)} />
           </div>
         </div>
