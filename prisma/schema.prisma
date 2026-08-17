@@ -423,6 +423,21 @@ model StockMovement {
   @@index([quoteItemId])
 }
 
+/// Contador de requisições por janela, usado no rate limiting.
+///
+/// Fica no banco e não em memória de propósito: em serverless cada instância
+/// tem a própria memória, então um Map global não limita nada — dois pedidos
+/// atendidos por instâncias diferentes nunca se veriam.
+model RateLimit {
+  id          String   @id @default(cuid())
+  /// Ação + identificador (IP, e-mail ou empresa), ex: "login:a@b.com".
+  key         String   @unique
+  count       Int      @default(0)
+  windowStart DateTime @default(now())
+
+  @@index([windowStart])
+}
+
 // ---------------------------------------------------------------------------
 // Notas fiscais (NF-e modelo 55)
 // ---------------------------------------------------------------------------

@@ -5,6 +5,7 @@ import { randomUUID } from 'crypto';
 import { put } from '@vercel/blob';
 import { requireSession } from '@/lib/session';
 import { handleApiError } from '@/lib/api-utils';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 // SVG é deliberadamente excluído: por ser XML, pode conter <script> e seria
 // executado se aberto diretamente na mesma origem (armazenamento estático
@@ -43,7 +44,8 @@ function matchesDeclaredType(buffer: Buffer, type: string) {
 // local. Ambos os caminhos retornam o mesmo contrato de resposta ({ url }).
 export async function POST(request: NextRequest) {
   try {
-    await requireSession();
+    const session = await requireSession();
+    await enforceRateLimit('upload', session.user.companyId);
 
     const formData = await request.formData();
     const file = formData.get('file');

@@ -2,6 +2,7 @@ import { type NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: 'jwt' },
@@ -15,13 +16,23 @@ export const authOptions: NextAuthOptions = {
         email: { label: 'E-mail', type: 'email' },
         password: { label: 'Senha', type: 'password' },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) {
           throw new Error('Informe e-mail e senha.');
         }
 
+        const email = credentials.email.toLowerCase().trim();
+
+        // Duas chaves: por e-mail barra força bruta contra uma conta; por IP
+        // barra o ataque que espalha uma senha comum por muitos e-mails, que
+        // a chave por e-mail sozinha não pegaria.
+        const forwarded = req?.headers?.['x-forwarded-for'];
+        const ip = (Array.isArray(forwarded) ? forwarded[0] : forwarded)?.split(',')[0]?.trim();
+        await enforceRateLimit('login', email);
+        if (ip) await enforceRateLimit('login', `ip:${ip}`);
+
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email.toLowerCase().trim() },
+          where: { email },
           include: { company: true },
         });
 

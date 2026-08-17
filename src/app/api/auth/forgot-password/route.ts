@@ -4,9 +4,11 @@ import { forgotPasswordSchema } from '@/lib/validations/auth';
 import { generateToken, addHours } from '@/lib/tokens';
 import { sendMail } from '@/lib/mail';
 import { handleApiError } from '@/lib/api-utils';
+import { enforceRateLimit, clientIp } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
   try {
+    await enforceRateLimit('forgotPassword', clientIp(request));
     const body = await request.json();
     const { email } = forgotPasswordSchema.parse(body);
 

@@ -1,10 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
+import { enforceRateLimit, clientIp } from '@/lib/rate-limit';
+import { handleApiError } from '@/lib/api-utils';
 
 const schema = z.object({ decision: z.enum(['APPROVE', 'REJECT']) });
 
 export async function POST(request: NextRequest, { params }: { params: { token: string } }) {
+  // Endpoint sem autenticação: o limite por IP é o que impede varrer tokens
+  // públicos em volume.
+  try {
+    await enforceRateLimit('publicDecision', clientIp(request));
+  } catch (error) {
+    return handleApiError(error);
+  }
+
   const body = await request.json().catch(() => null);
   const parsed = schema.safeParse(body);
   if (!parsed.success) {

@@ -4,9 +4,11 @@ import { prisma } from '@/lib/prisma';
 import { registerSchema } from '@/lib/validations/auth';
 import { addHours } from '@/lib/tokens';
 import { handleApiError } from '@/lib/api-utils';
+import { enforceRateLimit, clientIp } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
   try {
+    await enforceRateLimit('register', clientIp(request));
     const body = await request.json();
     const data = registerSchema.parse(body);
 
