@@ -3,10 +3,14 @@ import { ZodError } from 'zod';
 import { UnauthorizedError } from '@/lib/session';
 import { PlanLimitError } from '@/lib/plan-limits';
 import { RateLimitError } from '@/lib/rate-limit';
+import { ForbiddenError } from '@/lib/rbac';
 
 export function handleApiError(error: unknown) {
   if (error instanceof UnauthorizedError) {
     return NextResponse.json({ error: error.message }, { status: 401 });
+  }
+  if (error instanceof ForbiddenError) {
+    return NextResponse.json({ error: error.message }, { status: 403 });
   }
   if (error instanceof RateLimitError) {
     return NextResponse.json(

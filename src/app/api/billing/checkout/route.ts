@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
-import { requireSession } from '@/lib/session';
+import { requireRole } from '@/lib/rbac';
 import { handleApiError } from '@/lib/api-utils';
 import { getStripe } from '@/lib/stripe';
 
@@ -15,7 +15,7 @@ const schema = z.object({ planId: z.string().min(1) });
  */
 export async function POST(request: NextRequest) {
   try {
-    const session = await requireSession();
+    const session = await requireRole('OWNER');
     const { planId } = schema.parse(await request.json());
 
     const plan = await prisma.plan.findUnique({ where: { id: planId } });

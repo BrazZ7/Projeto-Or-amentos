@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
+import { useRole } from '@/components/auth/RoleGate';
 
 export function PlanSubscribeButton({ planId, isCurrent }: { planId: string; isCurrent: boolean }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const canSubscribe = useRole().can('OWNER');
 
   async function handleClick() {
     setLoading(true);
@@ -35,10 +37,15 @@ export function PlanSubscribeButton({ planId, isCurrent }: { planId: string; isC
         className="w-full"
         onClick={handleClick}
         loading={loading}
-        disabled={isCurrent}
+        disabled={isCurrent || !canSubscribe}
       >
         {isCurrent ? 'Plano atual' : 'Assinar'}
       </Button>
+      {!isCurrent && !canSubscribe && (
+        <p className="mt-1 text-xs text-slate-400">
+          Só o proprietário da conta pode trocar de plano.
+        </p>
+      )}
       {error && <p className="mt-1 text-xs text-rose-600">{error}</p>}
     </div>
   );

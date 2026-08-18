@@ -5,6 +5,8 @@ import { createContext, useContext } from 'react';
 interface PlanFeatures {
   /** Plano permite os recursos de IA (Plan.hasAiFeatures). */
   aiAllowed: boolean;
+  /** Cargo do usuário na empresa, para esconder ação que ele não pode fazer. */
+  role: string;
 }
 
 /**
@@ -18,17 +20,21 @@ interface PlanFeatures {
  * (assertAiAllowed nas rotas), e isto aqui só evita oferecer um botão que vai
  * falhar.
  */
-const PlanFeaturesContext = createContext<PlanFeatures>({ aiAllowed: true });
+const PlanFeaturesContext = createContext<PlanFeatures>({ aiAllowed: true, role: 'OWNER' });
 
 export function PlanFeaturesProvider({
   aiAllowed,
+  role,
   children,
 }: {
   aiAllowed: boolean;
+  role: string;
   children: React.ReactNode;
 }) {
   return (
-    <PlanFeaturesContext.Provider value={{ aiAllowed }}>{children}</PlanFeaturesContext.Provider>
+    <PlanFeaturesContext.Provider value={{ aiAllowed, role }}>
+      {children}
+    </PlanFeaturesContext.Provider>
   );
 }
 

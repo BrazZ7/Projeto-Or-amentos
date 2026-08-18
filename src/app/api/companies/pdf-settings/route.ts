@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { requireSession } from '@/lib/session';
+import { requireRole } from '@/lib/rbac';
 import { pdfSettingsSchema } from '@/lib/validations/company';
 import { handleApiError } from '@/lib/api-utils';
 import { assertTemplateAllowed } from '@/lib/plan-limits';
 
 export async function PUT(request: NextRequest) {
   try {
-    const session = await requireSession();
+    const session = await requireRole('ADMIN');
     const body = await request.json();
     const data = pdfSettingsSchema.parse(body);
 

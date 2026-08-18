@@ -49,8 +49,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
     prisma.subscription.findUnique({ where: { companyId }, include: { plan: true } }),
   ]);
 
-  // O cargo não está no JWT; buscar aqui evita forçar novo login de quem já
-  // tem sessão aberta.
+  // O cargo até está no JWT, mas congelado no login: ler do banco faz a
+  // interface concordar com o requireRole das rotas, que também lê daqui.
   const currentUser = await prisma.user.findUnique({
     where: { id: session.user.id },
     select: { role: true },
@@ -103,7 +103,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <div className="px-4 pb-10 pt-4 sm:px-6 lg:px-8">
           <DashboardHeader userName={session.user.name || 'Usuário'} notifications={notifications} />
           <main className="animate-fade-in-up pt-4">
-            <PlanFeaturesProvider aiAllowed={subscription?.plan.hasAiFeatures ?? true}>
+            <PlanFeaturesProvider
+              aiAllowed={subscription?.plan.hasAiFeatures ?? true}
+              role={currentUser?.role ?? 'MEMBER'}
+            >
               {children}
             </PlanFeaturesProvider>
           </main>

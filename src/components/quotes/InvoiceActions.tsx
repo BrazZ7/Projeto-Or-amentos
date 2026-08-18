@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { FileCheck2, AlertTriangle, RefreshCw, Download } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { RoleGate } from '@/components/auth/RoleGate';
 
 export interface InvoiceSummary {
   id: string;
@@ -96,10 +97,12 @@ export function InvoiceActions({
         )}
 
         {canIssue && (
-          <Button size="sm" onClick={handleIssue} loading={loading}>
-            <FileCheck2 className="h-4 w-4" />
-            {invoice ? 'Emitir novamente' : 'Emitir NF-e'}
-          </Button>
+          <RoleGate minimum="ADMIN" notice="Emissão de NF-e restrita a administradores.">
+            <Button size="sm" onClick={handleIssue} loading={loading}>
+              <FileCheck2 className="h-4 w-4" />
+              {invoice ? 'Emitir novamente' : 'Emitir NF-e'}
+            </Button>
+          </RoleGate>
         )}
 
         {invoice?.status === 'PROCESSING' && (
