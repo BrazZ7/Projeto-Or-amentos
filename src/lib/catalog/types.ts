@@ -20,7 +20,8 @@ export type CatalogCategory =
   | 'HIDRAULICA'
   | 'FIXACAO'
   | 'EPI_SEGURANCA'
-  | 'CFTV';
+  | 'CFTV'
+  | 'SOLAR';
 
 export const CATEGORY_LABELS: Record<CatalogCategory, string> = {
   FERRAMENTA_MANUAL: 'Ferramentas manuais',
@@ -33,6 +34,7 @@ export const CATEGORY_LABELS: Record<CatalogCategory, string> = {
   FIXACAO: 'Fixação e parafusos',
   EPI_SEGURANCA: 'EPI e segurança',
   CFTV: 'Câmeras e CFTV',
+  SOLAR: 'Energia solar',
 };
 
 export interface CatalogItem {
@@ -52,4 +54,11 @@ export interface CatalogItem {
   ncm: string | null;
   /** Sugestão de código interno; o usuário pode trocar. */
   code: string;
+  /**
+   * Termos alternativos pelos quais o item é procurado, separados por espaço.
+   * O mesmo produto tem nome técnico e nome de balcão — "módulo fotovoltaico"
+   * é pedido como "painel solar" — e sem isso a busca falha justamente para
+   * quem usa o termo do dia a dia.
+   */
+  keywords?: string;
 }

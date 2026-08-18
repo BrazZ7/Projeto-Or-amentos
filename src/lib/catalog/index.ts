@@ -1,11 +1,16 @@
 import { CATALOG_ITEMS as BASE_ITEMS } from './items';
 import { CATALOG_ITEMS_EXTRA } from './items-extra';
 import { CATALOG_ITEMS_CFTV } from './items-cftv';
+import { CATALOG_ITEMS_SOLAR } from './items-solar';
 import { CATEGORY_LABELS, type CatalogCategory, type CatalogItem } from './types';
 
 export * from './types';
 
-export const CATALOG_ITEMS = [...BASE_ITEMS, ...CATALOG_ITEMS_EXTRA, ...CATALOG_ITEMS_CFTV];
+export const CATALOG_ITEMS = [
+  ...BASE_ITEMS,
+  ...CATALOG_ITEMS_EXTRA, ...CATALOG_ITEMS_CFTV,
+  ...CATALOG_ITEMS_SOLAR,
+];
 
 const BY_ID = new Map(CATALOG_ITEMS.map((item) => [item.id, item]));
 
@@ -46,7 +51,7 @@ export function filterCatalog({
     // Inclui o rótulo da categoria: sem isso, buscar "elétrico" não acha nada
     // mesmo existindo a categoria "Material elétrico".
     const haystack = normalize(
-      `${item.name} ${item.brand} ${item.description} ${item.code} ${CATEGORY_LABELS[item.category]}`,
+      `${item.name} ${item.brand} ${item.description} ${item.code} ${CATEGORY_LABELS[item.category]} ${item.keywords ?? ''}`,
     );
     // Cada palavra precisa aparecer, em qualquer ordem: "cabo 2,5" encontra
     // "Cabo flexivel 2,5mm2" sem depender da sequência digitada.

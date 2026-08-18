@@ -77,6 +77,17 @@ describe('busca no catalogo', () => {
     expect(filterCatalog({ term: 'eletrico' }).length).toBeGreaterThan(0);
   });
 
+  // O mesmo produto tem nome tecnico e nome de balcao: quem procura "painel
+  // solar" precisa achar o modulo fotovoltaico.
+  it('encontra pelo sinonimo do item', () => {
+    const porSinonimo = filterCatalog({ term: 'painel solar' });
+    const modulos = porSinonimo.filter((item) => item.name.startsWith('Módulo fotovoltaico'));
+    expect(modulos.length).toBeGreaterThan(5);
+
+    // Nao se exige que todo resultado seja da categoria solar: a camera com
+    // painel solar tambem casa, e casa corretamente.
+  });
+
   it('filtra por categoria', () => {
     const itens = filterCatalog({ category: 'HIDRAULICA' });
     expect(itens.length).toBeGreaterThan(0);
