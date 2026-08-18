@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Plus } from 'lucide-react';
+import { Plus, Sparkles } from 'lucide-react';
 import { requireSession } from '@/lib/session';
 import { prisma } from '@/lib/prisma';
 import { Button } from '@/components/ui/Button';
@@ -33,12 +33,20 @@ export default async function ProductsPage() {
           <h1 className="text-2xl font-semibold text-slate-100">Produtos e serviços</h1>
           <p className="mt-1 text-sm text-slate-400">Catálogo usado na montagem dos orçamentos.</p>
         </div>
-        <Link href="/dashboard/products/new">
-          <Button>
-            <Plus className="h-4 w-4" />
-            Novo produto
-          </Button>
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link href="/dashboard/products/catalog">
+            <Button variant="outline">
+              <Sparkles className="h-4 w-4" />
+              Catálogo de sugestões
+            </Button>
+          </Link>
+          <Link href="/dashboard/products/new">
+            <Button>
+              <Plus className="h-4 w-4" />
+              Novo produto
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <ProductsGrid
