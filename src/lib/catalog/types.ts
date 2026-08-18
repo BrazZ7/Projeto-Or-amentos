@@ -19,7 +19,8 @@ export type CatalogCategory =
   | 'ILUMINACAO'
   | 'HIDRAULICA'
   | 'FIXACAO'
-  | 'EPI_SEGURANCA';
+  | 'EPI_SEGURANCA'
+  | 'CFTV';
 
 export const CATEGORY_LABELS: Record<CatalogCategory, string> = {
   FERRAMENTA_MANUAL: 'Ferramentas manuais',
@@ -31,6 +32,7 @@ export const CATEGORY_LABELS: Record<CatalogCategory, string> = {
   HIDRAULICA: 'Hidráulica',
   FIXACAO: 'Fixação e parafusos',
   EPI_SEGURANCA: 'EPI e segurança',
+  CFTV: 'Câmeras e CFTV',
 };
 
 export interface CatalogItem {

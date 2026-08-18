@@ -1,10 +1,11 @@
 import { CATALOG_ITEMS as BASE_ITEMS } from './items';
 import { CATALOG_ITEMS_EXTRA } from './items-extra';
+import { CATALOG_ITEMS_CFTV } from './items-cftv';
 import { CATEGORY_LABELS, type CatalogCategory, type CatalogItem } from './types';
 
 export * from './types';
 
-export const CATALOG_ITEMS = [...BASE_ITEMS, ...CATALOG_ITEMS_EXTRA];
+export const CATALOG_ITEMS = [...BASE_ITEMS, ...CATALOG_ITEMS_EXTRA, ...CATALOG_ITEMS_CFTV];
 
 const BY_ID = new Map(CATALOG_ITEMS.map((item) => [item.id, item]));
 
