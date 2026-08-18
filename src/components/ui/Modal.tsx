@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { X } from 'lucide-react';
 
 interface ModalProps {
@@ -12,6 +12,19 @@ interface ModalProps {
 }
 
 export function Modal({ open, onClose, title, children, maxWidth = 'max-w-lg' }: ModalProps) {
+  // Escape fecha. Sem isto o único jeito de sair é achar o X ou o Cancelar, e
+  // quem abriu o modal por engano fica procurando.
+  // Clique no fundo não fecha de propósito: estes modais contêm formulário, e
+  // um clique fora perdido apagaria o que foi digitado sem confirmação.
+  useEffect(() => {
+    if (!open) return;
+    const aoTeclar = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', aoTeclar);
+    return () => document.removeEventListener('keydown', aoTeclar);
+  }, [open, onClose]);
+
   if (!open) return null;
 
   return (
