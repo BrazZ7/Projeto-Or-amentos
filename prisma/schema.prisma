@@ -335,7 +335,11 @@ model Quote {
 
   template PdfTemplate @default(CLASSIC)
 
-  publicToken String @unique @default(cuid())
+  /// Token do link público. Sem @default: é gerado na aplicação com
+  /// randomBytes(32) (ver generateToken em src/lib/tokens.ts). cuid embute
+  /// timestamp e contador, o que torna o link adivinhável — e esta rota é a
+  /// única sem autenticação.
+  publicToken String @unique
 
   sentAt      DateTime?
   viewedAt    DateTime?

@@ -4,6 +4,7 @@ import { requireSession } from '@/lib/session';
 import { quoteSchema } from '@/lib/validations/quote';
 import { handleApiError } from '@/lib/api-utils';
 import { assertWithinPlanLimit, resolveQuoteTemplate } from '@/lib/plan-limits';
+import { generateToken } from '@/lib/tokens';
 import { calculateQuoteTotals } from '@/lib/calculations';
 import { assertItemsBelongToCompany } from '@/lib/quote-items';
 
@@ -77,6 +78,9 @@ export async function POST(request: NextRequest) {
           warranty: data.warranty,
           notes: data.notes,
           template,
+          // Gerado aqui e não no banco: cuid é adivinhável e este token é a
+          // única credencial do link público.
+          publicToken: generateToken(),
           items: {
             create: data.items.map((item, index) => ({
               productId: item.productId || null,
