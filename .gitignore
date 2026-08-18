@@ -13,3 +13,6 @@ public/uploads/*
 .vercel
 next-env.d.ts
 *.tsbuildinfo
+
+# Vitest
+coverage

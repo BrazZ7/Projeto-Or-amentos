@@ -102,6 +102,24 @@ PORT=3005 npm run dev
 
 No Docker o equivalente é `APP_HOST_PORT` (veja `docker-compose.yml`).
 
+## Testes
+
+```bash
+npm test
+```
+
+A suíte usa Vitest e cobre catálogo, formatação, resolução de imagem do PDF,
+limites de plano, gate de IA, rate limiting e o fluxo de NF-e.
+
+Os testes de integração precisam de um Postgres e criam um banco próprio
+(`orcafacil_test`), derivado da `DATABASE_URL` trocando apenas o nome — o banco
+de desenvolvimento não é tocado. As migrações são aplicadas automaticamente
+antes da execução.
+
+A emissão de NF-e roda sempre no provedor de teste: a suíte força
+`NFE_PROVIDER=sandbox`, então uma máquina com `FOCUS_NFE_TOKEN` configurado não
+envia nota de verdade ao rodar os testes.
+
 ## Deploy na Vercel
 
 O projeto está pronto para deploy na Vercel (o `npm run build` já roda
