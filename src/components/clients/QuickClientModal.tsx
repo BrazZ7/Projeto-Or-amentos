@@ -5,6 +5,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
+import { sendJson } from '@/lib/http';
 
 export interface CreatedClient {
   id: string;
@@ -46,10 +47,10 @@ export function QuickClientModal({
     setLoading(true);
     setError(null);
 
-    const res = await fetch('/api/clients', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    const result = await sendJson<{ id: string; name: string }>(
+      '/api/clients',
+      'POST',
+      {
         type,
         name: name.trim(),
         document: document.trim() || null,
@@ -58,17 +59,17 @@ export function QuickClientModal({
         // serve para os dois.
         whatsapp: phone.trim() || null,
         email: email.trim(),
-      }),
-    });
-    const data = await res.json();
+      },
+      'Não foi possível cadastrar o cliente.',
+    );
     setLoading(false);
 
-    if (!res.ok) {
-      setError(data.error || 'Não foi possível cadastrar o cliente.');
+    if (!result.ok) {
+      setError(result.error);
       return;
     }
 
-    onCreated({ id: data.id, name: data.name });
+    onCreated({ id: result.data.id, name: result.data.name });
     setType('PJ');
     setName('');
     setDocument('');

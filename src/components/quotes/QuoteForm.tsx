@@ -14,6 +14,7 @@ import { QuoteItemsEditor, type ProductOption } from '@/components/quotes/QuoteI
 import { AiQuoteBuilder } from '@/components/quotes/AiQuoteBuilder';
 import { QuickClientModal } from '@/components/clients/QuickClientModal';
 import { calculateQuoteTotals } from '@/lib/calculations';
+import { sendJson } from '@/lib/http';
 import { PDF_TEMPLATE_OPTIONS } from '@/lib/pdf/template-options';
 import { formatCurrency } from '@/lib/utils';
 import type { QuoteInput } from '@/lib/validations/quote';
@@ -93,22 +94,21 @@ export function QuoteForm({
 
     const payload = { ...form, status: statusOverride || form.status };
 
-    const res = await fetch(quoteId ? `/api/quotes/${quoteId}` : '/api/quotes', {
-      method: quoteId ? 'PUT' : 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    const result = await sendJson<{ id: string }>(
+      quoteId ? `/api/quotes/${quoteId}` : '/api/quotes',
+      quoteId ? 'PUT' : 'POST',
+      payload,
+      'Não foi possível salvar o orçamento.',
+    );
 
     setLoading(false);
 
-    if (!res.ok) {
-      const data = await res.json();
-      setError(data.error || 'Não foi possível salvar o orçamento.');
+    if (!result.ok) {
+      setError(result.error);
       return;
     }
 
-    const saved = await res.json();
-    router.push(`/dashboard/quotes/${saved.id}`);
+    router.push(`/dashboard/quotes/${result.data.id}`);
     router.refresh();
   }
 
