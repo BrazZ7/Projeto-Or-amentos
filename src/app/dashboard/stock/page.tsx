@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { NewStockMovementButton } from '@/components/stock/NewStockMovementButton';
+import { EditStockItemButton } from '@/components/stock/EditStockItemButton';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { STOCK_MOVEMENT_REASON_LABELS } from '@/lib/stock-labels';
 
@@ -20,7 +21,15 @@ export default async function StockPage({
     prisma.product.findMany({
       where: { companyId, trackStock: true },
       orderBy: { name: 'asc' },
-      select: { id: true, name: true, unit: true, stockQuantity: true, minStockAlert: true },
+      select: {
+        id: true,
+        name: true,
+        unit: true,
+        stockQuantity: true,
+        minStockAlert: true,
+        price: true,
+        cost: true,
+      },
     }),
     prisma.stockMovement.findMany({
       where: { companyId },
@@ -88,6 +97,9 @@ export default async function StockPage({
                     <th className="px-2 py-2">Produto</th>
                     <th className="px-2 py-2 text-right">Estoque atual</th>
                     <th className="px-2 py-2 text-right">Estoque mínimo</th>
+                    <th className="px-2 py-2 text-right">Custo</th>
+                    <th className="px-2 py-2 text-right">Venda</th>
+                    <th className="w-10 px-2 py-2" />
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-hairline">
@@ -108,6 +120,24 @@ export default async function StockPage({
                         </td>
                         <td className="px-2 py-2 text-right text-slate-400">
                           {product.minStockAlert != null ? Number(product.minStockAlert) : '—'}
+                        </td>
+                        <td className="px-2 py-2 text-right text-slate-400">
+                          {formatCurrency(Number(product.cost))}
+                        </td>
+                        <td className="px-2 py-2 text-right font-medium text-slate-200">
+                          {formatCurrency(Number(product.price))}
+                        </td>
+                        <td className="px-2 py-2 text-right">
+                          <EditStockItemButton
+                            item={{
+                              id: product.id,
+                              name: product.name,
+                              unit: product.unit,
+                              price: Number(product.price),
+                              cost: Number(product.cost),
+                              stockQuantity: Number(product.stockQuantity),
+                            }}
+                          />
                         </td>
                       </tr>
                     );
