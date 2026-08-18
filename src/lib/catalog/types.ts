@@ -15,7 +15,11 @@ export type CatalogCategory =
   | 'FERRAMENTA_ELETRICA'
   | 'FIO_CABO'
   | 'MATERIAL_ELETRICO'
-  | 'REDE_ISP';
+  | 'REDE_ISP'
+  | 'ILUMINACAO'
+  | 'HIDRAULICA'
+  | 'FIXACAO'
+  | 'EPI_SEGURANCA';
 
 export const CATEGORY_LABELS: Record<CatalogCategory, string> = {
   FERRAMENTA_MANUAL: 'Ferramentas manuais',
@@ -23,6 +27,10 @@ export const CATEGORY_LABELS: Record<CatalogCategory, string> = {
   FIO_CABO: 'Fios e cabos',
   MATERIAL_ELETRICO: 'Material elétrico',
   REDE_ISP: 'Redes e ISP',
+  ILUMINACAO: 'Iluminação',
+  HIDRAULICA: 'Hidráulica',
+  FIXACAO: 'Fixação e parafusos',
+  EPI_SEGURANCA: 'EPI e segurança',
 };
 
 export interface CatalogItem {

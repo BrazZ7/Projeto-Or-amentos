@@ -1,8 +1,10 @@
-import { CATALOG_ITEMS } from './items';
+import { CATALOG_ITEMS as BASE_ITEMS } from './items';
+import { CATALOG_ITEMS_EXTRA } from './items-extra';
 import { CATEGORY_LABELS, type CatalogCategory, type CatalogItem } from './types';
 
 export * from './types';
-export { CATALOG_ITEMS };
+
+export const CATALOG_ITEMS = [...BASE_ITEMS, ...CATALOG_ITEMS_EXTRA];
 
 const BY_ID = new Map(CATALOG_ITEMS.map((item) => [item.id, item]));
 
