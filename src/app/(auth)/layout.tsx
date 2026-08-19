@@ -1,39 +1,67 @@
 import Link from 'next/link';
-import { FileText } from 'lucide-react';
-import { BackgroundBlobs } from '@/components/ui/BackgroundBlobs';
+
+/** O que o produto faz, em substantivo. Sem adjetivo e sem promessa. */
+const RECURSOS = [
+  'Orçamento em PDF com a identidade da sua empresa',
+  'Cadastro de clientes, produtos e controle de estoque',
+  'Aprovação do cliente por link, sem exigir cadastro',
+  'Emissão de NF-e modelo 55',
+];
+
+/** Mesma marca da sidebar: entrar e usar o sistema têm que parecer o mesmo produto. */
+function Marca({ className }: { className?: string }) {
+  return (
+    <Link href="/" className={`group inline-flex items-center gap-3 ${className ?? ''}`}>
+      <span className="relative flex h-9 w-9 items-center justify-center">
+        <span className="absolute inset-0 rounded-xl bg-brand-500/30 blur-lg transition-opacity duration-300 group-hover:opacity-80" />
+        <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 shadow-glow-brand">
+          <svg viewBox="0 0 24 24" className="h-5 w-5 text-white" fill="none" aria-hidden>
+            <path d="M12 3v18M3 12h18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="2" opacity="0.55" />
+          </svg>
+        </span>
+      </span>
+      <span className="text-lg font-semibold tracking-tight text-white">
+        Orça<span className="text-brand-300">Fácil</span>
+      </span>
+    </Link>
+  );
+}
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen">
-      <div className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-gradient-to-br from-brand-700 via-brand-600 to-brand-800 p-12 text-white lg:flex">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
-        >
-          <div className="absolute -left-20 -top-20 h-72 w-72 animate-blob rounded-full bg-white/10 blur-3xl" />
-          <div className="absolute -bottom-24 right-0 h-80 w-80 animate-blob-delay rounded-full bg-brand-300/20 blur-3xl" />
-          <div className="bg-noise absolute inset-0 opacity-[0.04] mix-blend-overlay" />
-        </div>
-        <Link href="/" className="flex animate-fade-in-up items-center gap-2 text-lg font-semibold">
-          <FileText className="h-6 w-6" />
-          OrcaFacil
-        </Link>
-        <div className="animate-fade-in-up" style={{ animationDelay: '80ms' }}>
-          <h1 className="text-3xl font-semibold leading-tight">
-            Orçamentos profissionais em minutos, para sua empresa crescer.
-          </h1>
-          <p className="mt-4 max-w-md text-brand-100">
-            Cadastre clientes, produtos e gere PDFs personalizados com identidade visual própria,
-            acompanhamento de status e aprovação online.
+    // Sem manchas flutuantes: o fundo é só o grafite do body, com o clareamento
+    // difuso e a faixa de luz que ele já pinta. Quem carrega o vidro aqui são o
+    // cartão e os campos.
+    <div className="relative min-h-screen">
+      <div className="mx-auto flex min-h-screen max-w-6xl flex-col justify-center gap-10 px-6 py-12 lg:flex-row lg:items-center lg:gap-16 lg:py-16">
+        {/* Coluna de apresentação. Separada por um filete prateado, não por um
+            bloco de cor: a divisa em gradiente é a mesma linguagem da aresta
+            da sidebar. */}
+        <aside className="relative hidden flex-1 flex-col justify-center lg:flex lg:after:absolute lg:after:inset-y-6 lg:after:right-[-2rem] lg:after:w-px lg:after:bg-gradient-to-b lg:after:from-transparent lg:after:via-white/15 lg:after:to-transparent">
+          <Marca />
+
+          <p className="mt-8 max-w-md text-lg leading-relaxed text-slate-300">
+            Sistema de orçamentos para quem presta serviço e vende material.
           </p>
-        </div>
-        <p className="text-sm text-brand-200">© {new Date().getFullYear()} OrcaFacil</p>
-      </div>
-      <div className="relative flex w-full flex-col items-center justify-center bg-surface-muted px-6 py-12 lg:w-1/2">
-        <BackgroundBlobs className="opacity-60" />
-        <div className="glow-ring glass-strong w-full max-w-sm animate-scale-in rounded-2xl p-6 sm:p-8">
-          {children}
-        </div>
+
+          <ul className="mt-8 max-w-md divide-y divide-hairline border-y border-hairline">
+            {RECURSOS.map((recurso) => (
+              <li key={recurso} className="py-3 text-sm text-slate-400">
+                {recurso}
+              </li>
+            ))}
+          </ul>
+
+          <p className="mt-8 text-xs text-slate-500">
+            © {new Date().getFullYear()} OrçaFácil
+          </p>
+        </aside>
+
+        <main className="flex w-full flex-col items-center lg:w-[26rem] lg:shrink-0">
+          <Marca className="mb-8 lg:hidden" />
+          <div className="panel glass-fields w-full animate-scale-in p-6 sm:p-8">{children}</div>
+        </main>
       </div>
     </div>
   );

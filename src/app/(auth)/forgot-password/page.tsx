@@ -30,7 +30,7 @@ export default function ForgotPasswordPage() {
           Se existir uma conta com o e-mail <strong>{email}</strong>, enviamos um link para
           redefinir sua senha.
         </p>
-        <Link href="/login" className="mt-6 inline-block text-sm font-medium text-brand-600 hover:underline">
+        <Link href="/login" className="mt-6 inline-block text-sm font-medium text-brand-400 hover:underline">
           Voltar para o login
         </Link>
       </div>
@@ -59,7 +59,7 @@ export default function ForgotPasswordPage() {
       </form>
 
       <p className="mt-6 text-center text-sm text-slate-400">
-        <Link href="/login" className="font-medium text-brand-600 hover:underline">
+        <Link href="/login" className="font-medium text-brand-400 hover:underline">
           Voltar para o login
         </Link>
       </p>

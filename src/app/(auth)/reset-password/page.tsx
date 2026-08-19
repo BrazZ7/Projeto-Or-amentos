@@ -35,7 +35,7 @@ function ResetPasswordForm() {
   }
 
   if (!token) {
-    return <p className="text-sm text-rose-600">Link inválido. Solicite uma nova recuperação de senha.</p>;
+    return <p className="text-sm text-rose-400">Link inválido. Solicite uma nova recuperação de senha.</p>;
   }
 
   if (done) {
@@ -43,7 +43,7 @@ function ResetPasswordForm() {
       <div className="text-center">
         <h2 className="text-2xl font-semibold text-slate-100">Senha redefinida!</h2>
         <p className="mt-3 text-sm text-slate-400">Você já pode entrar com sua nova senha.</p>
-        <Link href="/login" className="mt-6 inline-block text-sm font-medium text-brand-600 hover:underline">
+        <Link href="/login" className="mt-6 inline-block text-sm font-medium text-brand-400 hover:underline">
           Ir para o login
         </Link>
       </div>
@@ -63,7 +63,7 @@ function ResetPasswordForm() {
           minLength={8}
           required
         />
-        {error && <p className="text-sm text-rose-600">{error}</p>}
+        {error && <p className="text-sm text-rose-400">{error}</p>}
         <Button type="submit" loading={loading} className="w-full">
           Redefinir senha
         </Button>

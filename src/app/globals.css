@@ -119,6 +119,51 @@ body {
     background-size: 180px 180px;
   }
 
+  /* Campos de vidro: em vez de caixa escura chapada, o campo é branco
+     translúcido que deixa o fundo passar e reage ao toque — escurece no hover
+     e ganha corpo mais claro, aro e halo no foco.
+     O seletor é composto (.glass-fields input) de propósito: precisa vencer o
+     `bg-night-850/80` que o componente Input aplica pela className, e utilitário
+     de uma classe só perderia na especificidade.
+     Aplicado onde o campo é o elemento principal da tela — hoje a área de
+     acesso. Nos formulários longos do painel a caixa opaca separa melhor um
+     campo do outro. */
+  .glass-fields input,
+  .glass-fields select,
+  .glass-fields textarea {
+    background-color: rgba(255, 255, 255, 0.045);
+    border-color: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(12px) saturate(1.4);
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .glass-fields input:hover:not(:focus),
+  .glass-fields select:hover:not(:focus),
+  .glass-fields textarea:hover:not(:focus) {
+    background-color: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.24);
+  }
+
+  .glass-fields input:focus,
+  .glass-fields select:focus,
+  .glass-fields textarea:focus {
+    background-color: rgba(255, 255, 255, 0.09);
+    box-shadow:
+      0 0 0 3px rgba(59, 130, 246, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  }
+
+  /* O autofill do Chrome pinta o campo de azul sólido e apagaria o vidro. */
+  .glass-fields input:-webkit-autofill,
+  .glass-fields input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #e2e8f0;
+    -webkit-box-shadow: 0 0 0 1000px rgba(38, 42, 48, 0.92) inset;
+    caret-color: #e2e8f0;
+  }
+
   /* Brilho ambiente ao redor do elemento, revelado no hover — usar junto de
      `group` no ancestral. Só box-shadow, então nunca é cortado por
      overflow-hidden de irmãos. */

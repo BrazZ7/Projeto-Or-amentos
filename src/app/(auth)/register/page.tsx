@@ -67,7 +67,9 @@ export default function RegisterPage() {
   return (
     <div>
       <h2 className="text-2xl font-semibold text-slate-100">Criar conta grátis</h2>
-      <p className="mt-1 text-sm text-slate-400">Comece a criar orçamentos profissionais hoje.</p>
+      <p className="mt-1 text-sm text-slate-400">
+        Cadastre a sua empresa e o primeiro usuário.
+      </p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <Input
@@ -123,7 +125,7 @@ export default function RegisterPage() {
           minLength={8}
         />
 
-        {error && <p className="text-sm text-rose-600">{error}</p>}
+        {error && <p className="text-sm text-rose-400">{error}</p>}
 
         <Button type="submit" loading={loading} className="w-full">
           Criar conta
@@ -132,7 +134,7 @@ export default function RegisterPage() {
 
       <p className="mt-6 text-center text-sm text-slate-400">
         Já tem conta?{' '}
-        <Link href="/login" className="font-medium text-brand-600 hover:underline">
+        <Link href="/login" className="font-medium text-brand-400 hover:underline">
           Entrar
         </Link>
       </p>

@@ -62,10 +62,10 @@ function LoginForm() {
           autoComplete="current-password"
         />
 
-        {error && <p className="text-sm text-rose-600">{error}</p>}
+        {error && <p className="text-sm text-rose-400">{error}</p>}
 
         <div className="flex items-center justify-end">
-          <Link href="/forgot-password" className="text-sm text-brand-600 hover:underline">
+          <Link href="/forgot-password" className="text-sm text-brand-400 hover:underline">
             Esqueceu a senha?
           </Link>
         </div>
@@ -77,7 +77,7 @@ function LoginForm() {
 
       <p className="mt-6 text-center text-sm text-slate-400">
         Ainda não tem conta?{' '}
-        <Link href="/register" className="font-medium text-brand-600 hover:underline">
+        <Link href="/register" className="font-medium text-brand-400 hover:underline">
           Criar conta grátis
         </Link>
       </p>
