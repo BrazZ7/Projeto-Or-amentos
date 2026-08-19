@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { AiTextActions } from '@/components/ui/AiTextActions';
 import { QuoteItemsEditor, type ProductOption } from '@/components/quotes/QuoteItemsEditor';
 import { AiQuoteBuilder } from '@/components/quotes/AiQuoteBuilder';
+import { ImportQuoteButton } from '@/components/quotes/ImportQuoteButton';
 import { QuickClientModal } from '@/components/clients/QuickClientModal';
 import { calculateQuoteTotals } from '@/lib/calculations';
 import { sendJson } from '@/lib/http';
@@ -126,7 +127,19 @@ export function QuoteForm({
         }}
       />
       <form onSubmit={(e) => handleSubmit(e)} className="space-y-6">
-        {!quoteId && <AiQuoteBuilder onGenerated={applyAiResult} />}
+        {!quoteId && (
+          <>
+            <AiQuoteBuilder onGenerated={applyAiResult} />
+            <div className="flex flex-wrap items-center gap-3">
+              <ImportQuoteButton
+                onImport={(importados) => update('items', [...form.items, ...importados])}
+              />
+              <p className="text-xs text-slate-500">
+                Leia um orçamento em PDF ou foto e traga os itens já identificados.
+              </p>
+            </div>
+          </>
+        )}
 
         <Card>
           <CardHeader>
