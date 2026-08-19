@@ -110,6 +110,7 @@ export default async function QuoteDetailPage({ params }: { params: { id: string
             productId: item.productId,
             description: item.description,
             imageUrl: item.imageUrl,
+            unit: item.unit,
             quantity: Number(item.quantity),
             unitPrice: Number(item.unitPrice),
             discount: Number(item.discount),

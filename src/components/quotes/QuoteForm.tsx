@@ -69,6 +69,7 @@ export function QuoteForm({
         productId: null,
         description: item.description,
         imageUrl: null,
+        unit: item.unit?.trim() || 'un',
         quantity: item.quantity,
         unitPrice: item.unitPrice,
         discount: 0,

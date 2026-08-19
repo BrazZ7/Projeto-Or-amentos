@@ -57,7 +57,7 @@ export function CatalogTemplate({ data }: { data: QuotePdfData }) {
               <View style={styles.itemBody}>
                 <Text style={styles.itemName}>{item.description}</Text>
                 <Text style={styles.itemMeta}>
-                  {item.quantity} × {formatCurrency(item.unitPrice)}
+                  {item.quantity} {item.unit} × {formatCurrency(item.unitPrice)}
                   {item.discount > 0 ? `   ·   desconto ${formatCurrency(item.discount)}` : ''}
                 </Text>
               </View>

@@ -36,7 +36,7 @@ export function ProposalTemplate({ data }: { data: QuotePdfData }) {
                 <View style={{ flex: 1 }}>
                   <Text style={styles.itemName}>{item.description}</Text>
                   <Text style={styles.itemMeta}>
-                    {item.quantity} × {formatCurrency(item.unitPrice)}
+                    {item.quantity} {item.unit} × {formatCurrency(item.unitPrice)}
                   </Text>
                 </View>
                 <Text style={styles.itemTotal}>{formatCurrency(item.total)}</Text>

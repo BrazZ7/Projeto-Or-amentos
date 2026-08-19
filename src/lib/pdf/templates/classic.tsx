@@ -72,7 +72,7 @@ export function ClassicTemplate({ data }: { data: QuotePdfData }) {
                 <Text style={styles.tableCell}>{item.description}</Text>
               </View>
               <Text style={[styles.tableCell, { flex: 1, textAlign: 'center' }]}>
-                {item.quantity}
+                {item.quantity} {item.unit}
               </Text>
               <Text style={[styles.tableCell, { flex: 1.2, textAlign: 'right' }]}>
                 {formatCurrency(item.unitPrice)}

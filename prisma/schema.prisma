@@ -369,6 +369,10 @@ model QuoteItem {
 
   description String
   imageUrl    String?
+  /// Unidade de medida da linha (m, un, pç, kg, h). Fica no item e não só no
+  /// produto: item avulso não tem produto, e a unidade do produto pode mudar
+  /// depois sem que o orçamento já enviado deva mudar junto.
+  unit        String  @default("un")
   quantity    Decimal @default(1) @db.Decimal(12, 2)
   unitPrice   Decimal @default(0) @db.Decimal(12, 2)
   discount    Decimal @default(0) @db.Decimal(12, 2)

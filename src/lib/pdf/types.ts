@@ -34,6 +34,8 @@ export interface QuotePdfClient {
 export interface QuotePdfItem {
   description: string;
   imageUrl: string | null;
+  /** Unidade da linha. Sem ela "50" não diz se são 50 metros ou 50 rolos. */
+  unit: string;
   quantity: number;
   unitPrice: number;
   discount: number;

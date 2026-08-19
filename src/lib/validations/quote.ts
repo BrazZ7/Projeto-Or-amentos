@@ -5,6 +5,7 @@ export const quoteItemSchema = z.object({
   productId: z.string().optional().nullable(),
   description: z.string().min(1, 'Descreva o item.'),
   imageUrl: z.string().optional().nullable(),
+  unit: z.string().min(1).max(10).default('un'),
   quantity: z.coerce.number().positive('Quantidade deve ser maior que zero.'),
   unitPrice: z.coerce.number().min(0, 'Valor unitário não pode ser negativo.'),
   discount: z.coerce.number().min(0).default(0),

@@ -42,6 +42,7 @@ export function buildQuotePdfData(quote: QuoteWithRelations, company: Company): 
       description: item.description,
       imageUrl: item.imageUrl,
       quantity: Number(item.quantity),
+      unit: item.unit,
       unitPrice: Number(item.unitPrice),
       discount: Number(item.discount),
       total: Number(item.total),

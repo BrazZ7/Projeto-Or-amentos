@@ -84,7 +84,7 @@ export function ExecutiveTemplate({ data }: { data: QuotePdfData }) {
                 <View style={{ flex: 1, paddingRight: 10 }}>
                   <Text style={styles.itemName}>{item.description}</Text>
                   <Text style={styles.itemMeta}>
-                    {item.quantity} × {formatCurrency(item.unitPrice)}
+                    {item.quantity} {item.unit} × {formatCurrency(item.unitPrice)}
                     {item.discount > 0 ? `   ·   desconto ${formatCurrency(item.discount)}` : ''}
                   </Text>
                 </View>

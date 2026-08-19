@@ -26,10 +26,15 @@ interface QuoteItemsEditorProps {
   onChange: (items: QuoteItemInput[]) => void;
 }
 
+/** Unidades mais usadas. É datalist, não select: quem vende por unidade que
+    não está aqui (rolo, saco, diária) digita a sua. */
+const UNIDADES = ['un', 'm', 'm²', 'm³', 'pç', 'cx', 'kg', 'L', 'h', 'par', 'jg', 'pct', 'rl'];
+
 const blankItem: QuoteItemInput = {
   productId: null,
   description: '',
   imageUrl: null,
+  unit: 'un',
   quantity: 1,
   unitPrice: 0,
   discount: 0,
@@ -52,6 +57,7 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
       ...items,
       {
         productId: product.id,
+        unit: product.unit,
         description: product.name,
         imageUrl: product.imageUrl,
         quantity: 1,
@@ -73,6 +79,12 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
         </p>
       )}
 
+      <datalist id="unidades-de-medida">
+        {UNIDADES.map((u) => (
+          <option key={u} value={u} />
+        ))}
+      </datalist>
+
       {items.map((item, index) => {
         const linkedProduct = products.find((p) => p.id === item.productId);
         const insufficientStock =
@@ -81,7 +93,7 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
         return (
         <div key={index} className="rounded-xl border border-hairline p-3">
           <div className="grid gap-3 sm:grid-cols-12">
-            <div className="sm:col-span-5">
+            <div className="sm:col-span-4">
               <Input
                 label={index === 0 ? 'Descrição' : undefined}
                 name={`items.${index}.description`}
@@ -102,9 +114,20 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
                 required
               />
             </div>
+            <div className="sm:col-span-1">
+              <Input
+                label={index === 0 ? 'Un.' : undefined}
+                name={`items.${index}.unit`}
+                list="unidades-de-medida"
+                maxLength={10}
+                value={item.unit}
+                onChange={(e) => updateItem(index, { unit: e.target.value })}
+                required
+              />
+            </div>
             <div className="sm:col-span-2">
               <Input
-                label={index === 0 ? 'Vlr. unit.' : undefined}
+                label={index === 0 ? `Vlr. por ${item.unit || 'un'}` : undefined}
                 name={`items.${index}.unitPrice`}
                 type="number"
                 min={0}
@@ -151,7 +174,8 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
               )}
             </div>
             <p className="text-right text-xs font-medium text-slate-400">
-              Total do item: {formatCurrency(calculateItemTotal(item))}
+              {item.quantity} {item.unit} × {formatCurrency(item.unitPrice)} ={' '}
+              <span className="text-slate-200">{formatCurrency(calculateItemTotal(item))}</span>
             </p>
           </div>
         </div>

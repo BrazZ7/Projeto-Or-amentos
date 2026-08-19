@@ -71,6 +71,8 @@ export async function generatePaymentTerms(context: string) {
 export interface AiGeneratedQuoteItem {
   description: string;
   quantity: number;
+  /** Unidade de medida (m, un, h, m²...). "50 metros de cabo" tem que virar 50 m. */
+  unit?: string;
   unitPrice: number;
 }
 
@@ -94,13 +96,14 @@ export async function generateQuoteFromRequest(requestText: string): Promise<AiG
 Responda APENAS com um JSON válido, sem comentários, sem markdown, no seguinte formato:
 {
   "clientName": "nome do cliente se mencionado, ou null",
-  "items": [ { "description": "string", "quantity": number, "unitPrice": number } ],
+  "items": [ { "description": "string", "quantity": number, "unit": "unidade de medida: m, un, h, m2, kg...", "unitPrice": number } ],
   "paymentTerms": "string ou null",
   "deliveryTerms": "string ou null",
   "warranty": "string ou null",
   "notes": "string ou null"
 }
-Estime valores de mercado plausíveis em reais (BRL) quando o usuário não informar preços. Sempre inclua ao menos um item.`;
+Estime valores de mercado plausíveis em reais (BRL) quando o usuário não informar preços. Sempre inclua ao menos um item.
+Em "unit" use a unidade em que o item é vendido e cobre por ela: cabo e fio em "m", pintura e piso em "m2", mão de obra em "h", e "un" quando for peça avulsa. O "unitPrice" é o preço de UMA unidade dessa medida — para 50 metros a R$ 3,20 o metro, quantity é 50, unit é "m" e unitPrice é 3.20.`;
 
   const raw = await ask(system, requestText, 1200);
   const jsonMatch = raw.match(/\{[\s\S]*\}/);

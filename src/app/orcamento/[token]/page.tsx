@@ -38,6 +38,7 @@ interface PublicQuote {
   items: {
     description: string;
     imageUrl: string | null;
+    unit: string;
     quantity: number;
     unitPrice: number;
     total: number;
@@ -162,7 +163,7 @@ export default function PublicQuotePage() {
                   <div>
                     <p className="text-sm font-medium text-slate-900">{item.description}</p>
                     <p className="text-xs text-slate-500">
-                      {item.quantity} × {formatCurrency(item.unitPrice)}
+                      {item.quantity} {item.unit} × {formatCurrency(item.unitPrice)}
                     </p>
                   </div>
                 </div>

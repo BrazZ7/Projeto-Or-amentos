@@ -53,7 +53,9 @@ export function ModernTemplate({ data }: { data: QuotePdfData }) {
             {data.items.map((item, index) => (
               <View key={index} style={styles.tableRow}>
                 <Text style={[styles.tableCell, { flex: 3 }]}>{item.description}</Text>
-                <Text style={[styles.tableCell, { flex: 1, textAlign: 'center' }]}>{item.quantity}</Text>
+                <Text style={[styles.tableCell, { flex: 1, textAlign: 'center' }]}>
+                  {item.quantity} {item.unit}
+                </Text>
                 <Text style={[styles.tableCell, { flex: 1.3, textAlign: 'right' }]}>
                   {formatCurrency(item.unitPrice)}
                 </Text>

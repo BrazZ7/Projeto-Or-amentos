@@ -77,7 +77,7 @@ export function SidebarTemplate({ data }: { data: QuotePdfData }) {
 
           <View style={styles.tableHeader}>
             <Text style={[styles.tableHeadCell, { flex: 1 }]}>Descrição</Text>
-            <Text style={[styles.tableHeadCell, { width: 38, textAlign: 'center' }]}>Qtd.</Text>
+            <Text style={[styles.tableHeadCell, { width: 54, textAlign: 'center' }]}>Qtd.</Text>
             <Text style={[styles.tableHeadCell, { width: 62, textAlign: 'right' }]}>Unit.</Text>
             <Text style={[styles.tableHeadCell, { width: 68, textAlign: 'right' }]}>Total</Text>
           </View>
@@ -85,7 +85,9 @@ export function SidebarTemplate({ data }: { data: QuotePdfData }) {
           {data.items.map((item, index) => (
             <View key={index} style={styles.tableRow} wrap={false}>
               <Text style={[styles.tableCell, { flex: 1, paddingRight: 8 }]}>{item.description}</Text>
-              <Text style={[styles.tableCell, { width: 38, textAlign: 'center' }]}>{item.quantity}</Text>
+              <Text style={[styles.tableCell, { width: 54, textAlign: 'center' }]}>
+                {item.quantity} {item.unit}
+              </Text>
               <Text style={[styles.tableCell, { width: 62, textAlign: 'right' }]}>
                 {formatCurrency(item.unitPrice)}
               </Text>
