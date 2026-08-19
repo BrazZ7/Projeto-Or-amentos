@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
 import { Button } from '@/components/ui/Button';
+import { PriceSearchButton } from '@/components/ui/PriceSearchButton';
 import { ImageUpload } from '@/components/ui/ImageUpload';
 import { AiTextActions } from '@/components/ui/AiTextActions';
 import { usePlanFeatures } from '@/components/providers/PlanFeaturesProvider';
@@ -233,25 +234,40 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Input
-          label="Preço de venda (R$)"
-          name="price"
-          type="number"
-          step="0.01"
-          min={0}
-          value={form.price}
-          onChange={(e) => update('price', Number(e.target.value))}
-          required
-        />
-        <Input
-          label="Custo (R$)"
-          name="cost"
-          type="number"
-          step="0.01"
-          min={0}
-          value={form.cost}
-          onChange={(e) => update('cost', Number(e.target.value))}
-        />
+        <div>
+          <Input
+            label="Preço de venda (R$)"
+            name="price"
+            type="number"
+            step="0.01"
+            min={0}
+            value={form.price}
+            onChange={(e) => update('price', Number(e.target.value))}
+            required
+          />
+          {/* Busca pelo nome do produto: é o que a loja usa para anunciar. */}
+          <PriceSearchButton
+            query={form.name}
+            onPick={(price) => update('price', price)}
+            label="Buscar preço de mercado"
+          />
+        </div>
+        <div>
+          <Input
+            label="Custo (R$)"
+            name="cost"
+            type="number"
+            step="0.01"
+            min={0}
+            value={form.cost}
+            onChange={(e) => update('cost', Number(e.target.value))}
+          />
+          <PriceSearchButton
+            query={form.name}
+            onPick={(price) => update('cost', price)}
+            label="Buscar preço de mercado"
+          />
+        </div>
         <Input
           label="Garantia"
           name="warranty"

@@ -6,6 +6,7 @@ import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { calculateItemTotal } from '@/lib/calculations';
 import { formatCurrency } from '@/lib/utils';
+import { PriceSearchButton } from '@/components/ui/PriceSearchButton';
 import type { QuoteItemInput } from '@/lib/validations/quote';
 
 export interface ProductOption {
@@ -67,7 +68,7 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
   return (
     <div className="space-y-3">
       {items.length === 0 && (
-        <p className="rounded-lg border border-dashed border-slate-300 py-6 text-center text-sm text-slate-400">
+        <p className="rounded-lg border border-dashed border-hairline py-6 text-center text-sm text-slate-400">
           Nenhum item adicionado ainda.
         </p>
       )}
@@ -128,20 +129,27 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
               <button
                 type="button"
                 onClick={() => removeItem(index)}
-                className="rounded-lg p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
+                className="rounded-lg p-2 text-slate-400 hover:bg-rose-500/10 hover:text-rose-400"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
             </div>
           </div>
           <div className="mt-1 flex items-center justify-between">
-            {insufficientStock ? (
-              <p className="text-xs font-medium text-amber-700">
-                Estoque disponível: {linkedProduct?.stockQuantity ?? 0} {linkedProduct?.unit}
-              </p>
-            ) : (
-              <span />
-            )}
+            <div className="flex items-center gap-3">
+              {/* A busca usa a descrição do item — é o que identifica o produto
+                  aqui, inclusive em item avulso sem cadastro. */}
+              <PriceSearchButton
+                query={item.description}
+                onPick={(price) => updateItem(index, { unitPrice: price })}
+                label="Preço de mercado"
+              />
+              {insufficientStock && (
+                <p className="text-xs font-medium text-amber-400">
+                  Estoque disponível: {linkedProduct?.stockQuantity ?? 0} {linkedProduct?.unit}
+                </p>
+              )}
+            </div>
             <p className="text-right text-xs font-medium text-slate-400">
               Total do item: {formatCurrency(calculateItemTotal(item))}
             </p>
