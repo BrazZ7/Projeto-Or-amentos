@@ -1,0 +1,562 @@
+// Schema do banco de dados - OrcaFacil SaaS
+// Cada empresa (Company) é um tenant. Todo dado operacional (clientes, produtos,
+// orçamentos) pertence a exatamente uma empresa e é sempre filtrado por companyId
+// nas consultas da aplicação, garantindo isolamento total entre contas.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Empresa (tenant)
+// ---------------------------------------------------------------------------
+
+enum DocumentType {
+  CPF
+  CNPJ
+}
+
+enum PdfTemplate {
+  CLASSIC
+  MODERN
+  PROPOSAL
+  FORMAL
+  EXECUTIVE
+  SIDEBAR
+  CATALOG
+}
+
+enum LogoPosition {
+  LEFT
+  CENTER
+  RIGHT
+}
+
+// Código de Regime Tributário (CRT) do emitente, campo obrigatório na NF-e.
+// SIMPLES = CRT 1, SIMPLES_EXCESSO = CRT 2, NORMAL = CRT 3. Define se o item
+// leva CSOSN (Simples) ou CST de ICMS (regime normal).
+enum TaxRegime {
+  SIMPLES
+  SIMPLES_EXCESSO
+  NORMAL
+}
+
+// Ambiente da SEFAZ. Homologação emite notas sem valor fiscal, usadas para
+// teste — a razão social do destinatário é substituída por um aviso pela
+// própria SEFAZ.
+enum FiscalEnvironment {
+  HOMOLOGACAO
+  PRODUCAO
+}
+
+model Company {
+  id String @id @default(cuid())
+
+  // Identificação
+  legalName String // Razão social
+  tradeName String? // Nome fantasia
+  documentType DocumentType @default(CNPJ)
+  document     String // CPF ou CNPJ (somente números)
+
+  // Contato
+  email     String?
+  phone     String?
+  whatsapp  String?
+
+  // Dados fiscais do emitente (NF-e)
+  stateRegistration String?   // Inscrição Estadual; "ISENTO" quando não houver
+  taxRegime         TaxRegime @default(SIMPLES)
+  cityCode          String?   // Código IBGE do município (7 dígitos)
+
+  // Endereço
+  addressStreet     String?
+  addressNumber     String?
+  addressComplement String?
+  addressNeighborhood String?
+  addressCity       String?
+  addressState      String?
+  addressZipCode    String?
+
+  // Identidade visual
+  logoUrl        String?
+  signatureUrl   String?
+  primaryColor   String  @default("#4a54e1")
+  secondaryColor String  @default("#1e293b")
+  fontFamily     String  @default("Helvetica")
+
+  // Dados para pagamento (exibidos no orçamento)
+  bankName      String?
+  bankAgency    String?
+  bankAccount   String?
+  pixKey        String?
+  paymentNotes  String?
+
+  // Configurações padrão de documento / PDF
+  pdfTemplate      PdfTemplate  @default(CLASSIC)
+  logoPosition     LogoPosition @default(LEFT)
+  headerText       String?
+  footerText       String?
+  quotePrefix      String       @default("ORC")
+  nextQuoteNumber  Int          @default(1)
+  defaultValidityDays Int       @default(15)
+  defaultPaymentTerms String?
+  defaultDeliveryTerms String?
+  defaultWarranty  String?
+  defaultNotes     String?
+
+  // Emissão de NF-e
+  nfeEnvironment FiscalEnvironment @default(HOMOLOGACAO)
+  nfeSeries      Int               @default(1)
+  nfeNextNumber  Int               @default(1)
+  // Referência da empresa no gateway fiscal. O certificado digital fica no
+  // provedor — nunca neste banco.
+  nfeProviderRef String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users          User[]
+  clients        Client[]
+  products       Product[]
+  quotes         Quote[]
+  subscription   Subscription?
+  stockMovements StockMovement[]
+  invoices       Invoice[]
+
+  @@index([document])
+}
+
+// ---------------------------------------------------------------------------
+// Usuários e autenticação
+// ---------------------------------------------------------------------------
+
+enum UserRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+model User {
+  id           String   @id @default(cuid())
+  companyId    String
+  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(OWNER)
+  image        String?
+
+  emailVerified DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  emailVerificationTokens EmailVerificationToken[]
+  passwordResetTokens     PasswordResetToken[]
+
+  @@index([companyId])
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Clientes (pessoa física ou jurídica)
+// ---------------------------------------------------------------------------
+
+enum ClientType {
+  PF
+  PJ
+}
+
+// Indicador da IE do destinatário (indIEDest da NF-e). Define a tributação
+// aplicada e é obrigatório: CONTRIBUINTE = 1, ISENTO = 2, NAO_CONTRIBUINTE = 9.
+enum StateRegistrationType {
+  CONTRIBUINTE
+  ISENTO
+  NAO_CONTRIBUINTE
+}
+
+model Client {
+  id        String     @id @default(cuid())
+  companyId String
+  company   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  type     ClientType @default(PF)
+  name     String
+  document String?
+  email    String?
+  phone    String?
+  whatsapp String?
+
+  addressStreet       String?
+  addressNumber       String?
+  addressComplement   String?
+  addressNeighborhood String?
+  addressCity         String?
+  addressState        String?
+  addressZipCode      String?
+
+  notes String?
+
+  // Dados fiscais do destinatário (NF-e)
+  stateRegistration     String?
+  stateRegistrationType StateRegistrationType @default(NAO_CONTRIBUINTE)
+  cityCode              String? // Código IBGE do município (7 dígitos)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  quotes   Quote[]
+  invoices Invoice[]
+
+  @@index([companyId])
+  @@index([companyId, name])
+}
+
+// ---------------------------------------------------------------------------
+// Produtos e serviços
+// ---------------------------------------------------------------------------
+
+model Product {
+  id        String  @id @default(cuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  name        String
+  code        String?
+  description String?
+  imageUrl    String?
+  category    String?
+  unit        String  @default("un")
+  price       Decimal @default(0) @db.Decimal(12, 2)
+  cost        Decimal @default(0) @db.Decimal(12, 2)
+  warranty    String?
+  active      Boolean @default(true)
+
+  // Controle de estoque (opcional — desative para serviços, que não têm
+  // estoque físico). stockQuantity é sempre derivado da soma das
+  // movimentações (StockMovement); nunca é editado diretamente por fora
+  // de uma movimentação, para manter o histórico como fonte da verdade.
+  trackStock    Boolean  @default(true)
+  stockQuantity Decimal  @default(0) @db.Decimal(12, 2)
+  minStockAlert Decimal? @db.Decimal(12, 2)
+
+  // Dados fiscais do item (NF-e). Sem NCM e CFOP a SEFAZ rejeita a nota, mas
+  // os campos são opcionais no banco: produtos cadastrados antes da emissão
+  // fiscal existir continuam válidos, e a validação acontece na emissão.
+  ncm           String? // 8 dígitos
+  cest          String? // 7 dígitos, apenas para itens com substituição tributária
+  cfop          String? // 4 dígitos, ex: 5102 (venda dentro do estado)
+  taxOrigin     Int     @default(0) // 0 a 8 — origem da mercadoria
+  taxSituation  String? // CSOSN (Simples) ou CST de ICMS (regime normal)
+  taxableUnit   String? // unidade tributável, quando difere da comercial
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  quoteItems     QuoteItem[]
+  stockMovements StockMovement[]
+
+  @@index([companyId])
+  @@index([companyId, name])
+}
+
+// ---------------------------------------------------------------------------
+// Orçamentos
+// ---------------------------------------------------------------------------
+
+enum QuoteStatus {
+  DRAFT
+  SENT
+  VIEWED
+  APPROVED
+  REJECTED
+  EXPIRED
+  CANCELED
+}
+
+enum DiscountType {
+  PERCENT
+  FIXED
+}
+
+model Quote {
+  id        String  @id @default(cuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  number Int // sequencial por empresa (companyId, number)
+
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id])
+
+  status QuoteStatus @default(DRAFT)
+
+  issueDate  DateTime @default(now())
+  validUntil DateTime
+
+  subtotal     Decimal @default(0) @db.Decimal(12, 2)
+  discountType DiscountType @default(PERCENT)
+  discountValue Decimal @default(0) @db.Decimal(12, 2)
+  freight      Decimal @default(0) @db.Decimal(12, 2)
+  total        Decimal @default(0) @db.Decimal(12, 2)
+
+  paymentTerms   String?
+  deliveryTerms  String?
+  warranty       String?
+  notes          String?
+
+  template PdfTemplate @default(CLASSIC)
+
+  /// Token do link público. Sem @default: é gerado na aplicação com
+  /// randomBytes(32) (ver generateToken em src/lib/tokens.ts). cuid embute
+  /// timestamp e contador, o que torna o link adivinhável — e esta rota é a
+  /// única sem autenticação.
+  publicToken String @unique
+
+  sentAt      DateTime?
+  viewedAt    DateTime?
+  approvedAt  DateTime?
+  rejectedAt  DateTime?
+  canceledAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items    QuoteItem[]
+  invoices Invoice[]
+
+  @@unique([companyId, number])
+  @@index([companyId])
+  @@index([companyId, status])
+  @@index([clientId])
+}
+
+model QuoteItem {
+  id      String  @id @default(cuid())
+  quoteId String
+  quote   Quote   @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id])
+
+  description String
+  imageUrl    String?
+  quantity    Decimal @default(1) @db.Decimal(12, 2)
+  unitPrice   Decimal @default(0) @db.Decimal(12, 2)
+  discount    Decimal @default(0) @db.Decimal(12, 2)
+  total       Decimal @default(0) @db.Decimal(12, 2)
+  order       Int     @default(0)
+
+  stockMovements StockMovement[]
+
+  @@index([quoteId])
+}
+
+// ---------------------------------------------------------------------------
+// Estoque
+// ---------------------------------------------------------------------------
+
+enum StockMovementType {
+  IN
+  OUT
+}
+
+enum StockMovementReason {
+  PURCHASE   // Compra / aquisição
+  SALE       // Venda (manual ou automática, ao aprovar um orçamento)
+  RETURN     // Devolução (de cliente = entrada, a fornecedor = saída)
+  ADJUSTMENT // Ajuste / correção de contagem
+  LOSS       // Perda, quebra, vencimento
+  OTHER      // Outro motivo / uso interno
+}
+
+model StockMovement {
+  id        String  @id @default(cuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  type     StockMovementType
+  reason   StockMovementReason
+  quantity Decimal             @db.Decimal(12, 2)
+
+  unitCost  Decimal? @db.Decimal(12, 2)
+  unitPrice Decimal? @db.Decimal(12, 2)
+
+  // Preenchido quando a movimentação foi gerada automaticamente pela
+  // aprovação de um orçamento (baixa de venda).
+  quoteItemId String?
+  quoteItem   QuoteItem? @relation(fields: [quoteItemId], references: [id])
+
+  notes String?
+
+  createdAt DateTime @default(now())
+
+  @@index([companyId])
+  @@index([companyId, productId])
+  @@index([quoteItemId])
+}
+
+/// Contador de requisições por janela, usado no rate limiting.
+///
+/// Fica no banco e não em memória de propósito: em serverless cada instância
+/// tem a própria memória, então um Map global não limita nada — dois pedidos
+/// atendidos por instâncias diferentes nunca se veriam.
+model RateLimit {
+  id          String   @id @default(cuid())
+  /// Ação + identificador (IP, e-mail ou empresa), ex: "login:a@b.com".
+  key         String   @unique
+  count       Int      @default(0)
+  windowStart DateTime @default(now())
+
+  @@index([windowStart])
+}
+
+// ---------------------------------------------------------------------------
+// Notas fiscais (NF-e modelo 55)
+// ---------------------------------------------------------------------------
+
+enum InvoiceStatus {
+  PENDING    // criada localmente, ainda não enviada
+  PROCESSING // enviada ao provedor, aguardando retorno da SEFAZ
+  AUTHORIZED // autorizada — tem chave de acesso e protocolo
+  REJECTED   // recusada pela SEFAZ; ver rejectionCode/rejectionMessage
+  CANCELED   // autorizada e depois cancelada
+  ERROR      // falha de comunicação com o provedor, passível de retentativa
+}
+
+/// Uma NF-e emitida a partir de um orçamento. A relação com Quote é 1:N porque
+/// uma nota rejeitada ou cancelada não impede uma nova emissão do mesmo
+/// orçamento — o histórico de tentativas fica preservado.
+model Invoice {
+  id        String  @id @default(cuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  quoteId String?
+  quote   Quote?  @relation(fields: [quoteId], references: [id], onDelete: SetNull)
+
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id])
+
+  status      InvoiceStatus     @default(PENDING)
+  environment FiscalEnvironment @default(HOMOLOGACAO)
+
+  number Int
+  series Int @default(1)
+
+  // Preenchidos quando a SEFAZ autoriza
+  accessKey String? @unique // chave de acesso, 44 dígitos
+  protocol  String?
+  xmlUrl    String?
+  danfeUrl  String?
+
+  // Identificador da nota no gateway fiscal, usado para consultar o retorno
+  providerRef String?
+
+  rejectionCode    String?
+  rejectionMessage String?
+
+  operationNature String  @default("Venda de mercadoria")
+  totalAmount     Decimal @default(0) @db.Decimal(12, 2)
+
+  issuedAt     DateTime?
+  canceledAt   DateTime?
+  cancelReason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([companyId, series, number])
+  @@index([companyId])
+  @@index([companyId, status])
+  @@index([quoteId])
+  @@index([clientId])
+}
+
+// ---------------------------------------------------------------------------
+// Planos e assinaturas
+// ---------------------------------------------------------------------------
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+}
+
+model Plan {
+  id   String @id @default(cuid())
+  slug String @unique
+  name String
+
+  priceMonthly Decimal @default(0) @db.Decimal(12, 2)
+
+  maxQuotesPerMonth Int @default(10)
+  maxClients        Int @default(20)
+  maxProducts       Int @default(20)
+  maxUsers          Int @default(1)
+
+  hasAiFeatures  Boolean @default(false)
+  hasCustomBrand Boolean @default(false)
+
+  stripePriceId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id        String  @id @default(cuid())
+  companyId String  @unique
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  planId String
+  plan   Plan   @relation(fields: [planId], references: [id])
+
+  status SubscriptionStatus @default(TRIALING)
+
+  currentPeriodStart DateTime  @default(now())
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd  Boolean   @default(false)
+
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([planId])
+}
