@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Sparkles, Loader2, Boxes, Link2 } from 'lucide-react';
+import { Sparkles, Loader2, Boxes, Link2, Ruler } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
 import { Button } from '@/components/ui/Button';
 import { PriceSearchButton } from '@/components/ui/PriceSearchButton';
+import { UNIDADES_DE_PRODUTO, pareceVendidoPorMetro } from '@/lib/units';
 import { ImageUpload } from '@/components/ui/ImageUpload';
 import { AiTextActions } from '@/components/ui/AiTextActions';
 import { usePlanFeatures } from '@/components/providers/PlanFeaturesProvider';
@@ -193,13 +194,34 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
             value={form.category || ''}
             onChange={(e) => update('category', e.target.value)}
           />
-          <Input
-            label="Unidade"
-            name="unit"
-            value={form.unit}
-            onChange={(e) => update('unit', e.target.value)}
-            placeholder="un, kg, h, m²..."
-          />
+          <div>
+            <Input
+              label="Unidade"
+              name="unit"
+              list="unidades-de-produto"
+              maxLength={10}
+              value={form.unit}
+              onChange={(e) => update('unit', e.target.value)}
+              placeholder="un, m, kg, h, m²..."
+            />
+            {/* Mesma sugestão do item do orçamento: quem cadastra fibra ou cabo
+                não adivinha que precisa trocar "un" por "m". */}
+            {form.unit === 'un' && pareceVendidoPorMetro(form.name) && (
+              <button
+                type="button"
+                onClick={() => update('unit', 'm')}
+                className="mt-1.5 inline-flex items-center gap-1.5 rounded-lg bg-brand-500/10 px-2 py-1 text-xs font-medium text-brand-300 transition-colors hover:bg-brand-500/20"
+              >
+                <Ruler className="h-3.5 w-3.5" />
+                Vender por metro
+              </button>
+            )}
+            <datalist id="unidades-de-produto">
+              {UNIDADES_DE_PRODUTO.map((u) => (
+                <option key={u} value={u} />
+              ))}
+            </datalist>
+          </div>
         </div>
       </div>
 
@@ -236,7 +258,7 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
       <div className="grid gap-4 sm:grid-cols-3">
         <div>
           <Input
-            label="Preço de venda (R$)"
+            label={`Preço de venda por ${form.unit || 'un'} (R$)`}
             name="price"
             type="number"
             step="0.01"
@@ -254,7 +276,7 @@ export function ProductForm({ productId, initialData, currentStock }: ProductFor
         </div>
         <div>
           <Input
-            label="Custo (R$)"
+            label={`Custo por ${form.unit || 'un'} (R$)`}
             name="cost"
             type="number"
             step="0.01"

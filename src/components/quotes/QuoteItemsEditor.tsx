@@ -1,12 +1,13 @@
 'use client';
 
-import { Trash2, Plus } from 'lucide-react';
+import { Trash2, Plus, Ruler } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { calculateItemTotal } from '@/lib/calculations';
 import { formatCurrency } from '@/lib/utils';
 import { PriceSearchButton } from '@/components/ui/PriceSearchButton';
+import { UNIDADES, pareceVendidoPorMetro } from '@/lib/units';
 import type { QuoteItemInput } from '@/lib/validations/quote';
 
 export interface ProductOption {
@@ -25,10 +26,6 @@ interface QuoteItemsEditorProps {
   products: ProductOption[];
   onChange: (items: QuoteItemInput[]) => void;
 }
-
-/** Unidades mais usadas. É datalist, não select: quem vende por unidade que
-    não está aqui (rolo, saco, diária) digita a sua. */
-const UNIDADES = ['un', 'm', 'm²', 'm³', 'pç', 'cx', 'kg', 'L', 'h', 'par', 'jg', 'pct', 'rl'];
 
 const blankItem: QuoteItemInput = {
   productId: null,
@@ -160,6 +157,18 @@ export function QuoteItemsEditor({ items, products, onChange }: QuoteItemsEditor
           </div>
           <div className="mt-1 flex items-center justify-between">
             <div className="flex items-center gap-3">
+              {/* Oferecido, não imposto: trocar a unidade sozinho mudaria o
+                  sentido do valor que o usuário acabou de digitar. */}
+              {item.unit === 'un' && pareceVendidoPorMetro(item.description) && (
+                <button
+                  type="button"
+                  onClick={() => updateItem(index, { unit: 'm' })}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-brand-500/10 px-2 py-1 text-xs font-medium text-brand-300 transition-colors hover:bg-brand-500/20"
+                >
+                  <Ruler className="h-3.5 w-3.5" />
+                  Cobrar por metro
+                </button>
+              )}
               {/* A busca usa a descrição do item — é o que identifica o produto
                   aqui, inclusive em item avulso sem cadastro. */}
               <PriceSearchButton
