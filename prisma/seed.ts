@@ -4,8 +4,20 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 const DEMO_EMAIL = 'demo@orcafacil.com';
-const DEMO_PASSWORD = 'Demo@1234';
+/** Senha de conveniência do ambiente local. Nunca usada em produção — ver criarDemonstracao(). */
+const DEMO_PASSWORD_DEV = 'Demo@1234';
 
+/**
+ * Semeia o banco.
+ *
+ * Os planos são criados em todo ambiente: sem eles não há assinatura possível,
+ * e o upsert por slug torna a repetição inofensiva.
+ *
+ * A conta de demonstração é outra história. Este script roda no `vercel-build`,
+ * ou seja, a cada publicação — e criava uma conta OWNER com senha escrita no
+ * repositório. Em produção isso é uma porta destrancada para qualquer um que
+ * leia o código. Agora ela só nasce com permissão explícita.
+ */
 async function main() {
   const plans = [
     {
@@ -55,6 +67,34 @@ async function main() {
 
   console.log(`Planos cadastrados: ${plans.map((p) => p.name).join(', ')}`);
 
+  await criarDemonstracao();
+}
+
+/**
+ * Cria a empresa e o usuário de demonstração — só quando SEED_DEMO_USER=true.
+ *
+ * Em produção a senha tem que vir de SEED_DEMO_PASSWORD: a senha fixa daqui
+ * está no repositório e serve apenas para a máquina de quem desenvolve.
+ */
+async function criarDemonstracao() {
+  if (process.env.SEED_DEMO_USER !== 'true') {
+    console.log(
+      'Conta de demonstração não criada. Defina SEED_DEMO_USER=true para criá-la (apenas fora de produção).',
+    );
+    return;
+  }
+
+  const emProducao = process.env.NODE_ENV === 'production';
+  const senha = process.env.SEED_DEMO_PASSWORD || (emProducao ? null : DEMO_PASSWORD_DEV);
+
+  if (!senha) {
+    console.error(
+      'SEED_DEMO_USER=true em produção exige SEED_DEMO_PASSWORD. A conta não foi criada — ' +
+        'a senha do repositório é pública e não pode valer em produção.',
+    );
+    return;
+  }
+
   const existingDemoUser = await prisma.user.findUnique({ where: { email: DEMO_EMAIL } });
 
   if (existingDemoUser) {
@@ -62,7 +102,7 @@ async function main() {
     return;
   }
 
-  const passwordHash = await bcrypt.hash(DEMO_PASSWORD, 10);
+  const passwordHash = await bcrypt.hash(senha, 10);
 
   const company = await prisma.company.create({
     data: {
@@ -101,7 +141,10 @@ async function main() {
     },
   });
 
-  console.log(`Usuário de demonstração criado — e-mail: ${DEMO_EMAIL} / senha: ${DEMO_PASSWORD}`);
+  console.log(
+    `Usuário de demonstração criado — e-mail: ${DEMO_EMAIL}` +
+      (process.env.SEED_DEMO_PASSWORD ? ' / senha: a definida em SEED_DEMO_PASSWORD' : ` / senha: ${senha}`),
+  );
 }
 
 main()
