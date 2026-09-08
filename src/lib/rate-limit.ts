@@ -24,6 +24,10 @@ export const RATE_LIMITS = {
   upload: { limit: 60, windowSeconds: 60 * 60 },
   // Decisão do cliente no link público — endpoint sem autenticação.
   publicDecision: { limit: 20, windowSeconds: 60 * 60 },
+  // Aceite de convite. Mais folgado que o cadastro de propósito: uma equipe
+  // inteira aceita do mesmo IP do escritório, e o token de 32 bytes já torna
+  // tentativa às cegas inviável — o limite aqui é contra abuso, não adivinhação.
+  inviteAccept: { limit: 20, windowSeconds: 60 * 60 },
 } as const;
 
 export type RateLimitAction = keyof typeof RATE_LIMITS;

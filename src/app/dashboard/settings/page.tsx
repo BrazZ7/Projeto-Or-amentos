@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Building2, Palette, CreditCard, ChevronRight } from 'lucide-react';
+import { Building2, Palette, CreditCard, Users, ChevronRight } from 'lucide-react';
 
 // Índice de configurações. Existe porque a sidebar passou a ter uma única
 // entrada "Configurações": sem esta tela, empresa, modelos de PDF e plano
@@ -18,6 +18,13 @@ const SECTIONS = [
     title: 'Modelos de PDF',
     description: 'Escolha o modelo, a posição da logo e os textos padrão dos orçamentos.',
     accent: 'bg-violet-500/15 text-violet-300 ring-1 ring-inset ring-violet-400/25',
+  },
+  {
+    href: '/dashboard/settings/team',
+    icon: Users,
+    title: 'Equipe',
+    description: 'Convide pessoas, defina cargos e veja quem tem acesso à empresa.',
+    accent: 'bg-emerald-500/15 text-emerald-300 ring-1 ring-inset ring-emerald-400/25',
   },
   {
     href: '/dashboard/settings/plan',

@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma';
  * antes.
  */
 export async function resetDatabase() {
+  await prisma.invitation.deleteMany();
   await prisma.invoice.deleteMany();
   await prisma.stockMovement.deleteMany();
   await prisma.quoteItem.deleteMany();
@@ -27,6 +28,7 @@ export async function createCompanyWithPlan(overrides?: {
   maxProducts?: number;
   maxQuotesPerMonth?: number;
   maxClients?: number;
+  maxUsers?: number;
 }) {
   planCounter += 1;
   const plan = await prisma.plan.create({
@@ -37,7 +39,7 @@ export async function createCompanyWithPlan(overrides?: {
       maxQuotesPerMonth: overrides?.maxQuotesPerMonth ?? 100,
       maxClients: overrides?.maxClients ?? 100,
       maxProducts: overrides?.maxProducts ?? 100,
-      maxUsers: 1,
+      maxUsers: overrides?.maxUsers ?? 1,
       hasAiFeatures: overrides?.hasAiFeatures ?? true,
       hasCustomBrand: overrides?.hasCustomBrand ?? true,
     },

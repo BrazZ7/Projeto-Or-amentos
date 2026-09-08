@@ -58,29 +58,29 @@ model Company {
   id String @id @default(cuid())
 
   // Identificação
-  legalName String // Razão social
-  tradeName String? // Nome fantasia
+  legalName    String // Razão social
+  tradeName    String? // Nome fantasia
   documentType DocumentType @default(CNPJ)
   document     String // CPF ou CNPJ (somente números)
 
   // Contato
-  email     String?
-  phone     String?
-  whatsapp  String?
+  email    String?
+  phone    String?
+  whatsapp String?
 
   // Dados fiscais do emitente (NF-e)
-  stateRegistration String?   // Inscrição Estadual; "ISENTO" quando não houver
+  stateRegistration String? // Inscrição Estadual; "ISENTO" quando não houver
   taxRegime         TaxRegime @default(SIMPLES)
-  cityCode          String?   // Código IBGE do município (7 dígitos)
+  cityCode          String? // Código IBGE do município (7 dígitos)
 
   // Endereço
-  addressStreet     String?
-  addressNumber     String?
-  addressComplement String?
+  addressStreet       String?
+  addressNumber       String?
+  addressComplement   String?
   addressNeighborhood String?
-  addressCity       String?
-  addressState      String?
-  addressZipCode    String?
+  addressCity         String?
+  addressState        String?
+  addressZipCode      String?
 
   // Identidade visual
   logoUrl        String?
@@ -90,24 +90,24 @@ model Company {
   fontFamily     String  @default("Helvetica")
 
   // Dados para pagamento (exibidos no orçamento)
-  bankName      String?
-  bankAgency    String?
-  bankAccount   String?
-  pixKey        String?
-  paymentNotes  String?
+  bankName     String?
+  bankAgency   String?
+  bankAccount  String?
+  pixKey       String?
+  paymentNotes String?
 
   // Configurações padrão de documento / PDF
-  pdfTemplate      PdfTemplate  @default(CLASSIC)
-  logoPosition     LogoPosition @default(LEFT)
-  headerText       String?
-  footerText       String?
-  quotePrefix      String       @default("ORC")
-  nextQuoteNumber  Int          @default(1)
-  defaultValidityDays Int       @default(15)
-  defaultPaymentTerms String?
+  pdfTemplate          PdfTemplate  @default(CLASSIC)
+  logoPosition         LogoPosition @default(LEFT)
+  headerText           String?
+  footerText           String?
+  quotePrefix          String       @default("ORC")
+  nextQuoteNumber      Int          @default(1)
+  defaultValidityDays  Int          @default(15)
+  defaultPaymentTerms  String?
   defaultDeliveryTerms String?
-  defaultWarranty  String?
-  defaultNotes     String?
+  defaultWarranty      String?
+  defaultNotes         String?
 
   // Emissão de NF-e
   nfeEnvironment FiscalEnvironment @default(HOMOLOGACAO)
@@ -121,6 +121,7 @@ model Company {
   updatedAt DateTime @updatedAt
 
   users          User[]
+  invitations    Invitation[]
   clients        Client[]
   products       Product[]
   quotes         Quote[]
@@ -142,9 +143,9 @@ enum UserRole {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  companyId    String
-  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  id        String  @id @default(cuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   name         String
   email        String   @unique
@@ -159,6 +160,7 @@ model User {
 
   emailVerificationTokens EmailVerificationToken[]
   passwordResetTokens     PasswordResetToken[]
+  convitesEnviados        Invitation[]             @relation("ConvitesEnviados")
 
   @@index([companyId])
 }
@@ -175,13 +177,13 @@ model EmailVerificationToken {
 }
 
 model PasswordResetToken {
-  id        String   @id @default(cuid())
-  token     String   @unique
+  id        String    @id @default(cuid())
+  token     String    @unique
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
   usedAt    DateTime?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 
   @@index([userId])
 }
@@ -204,9 +206,9 @@ enum StateRegistrationType {
 }
 
 model Client {
-  id        String     @id @default(cuid())
+  id        String  @id @default(cuid())
   companyId String
-  company   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   type     ClientType @default(PF)
   name     String
@@ -271,12 +273,12 @@ model Product {
   // Dados fiscais do item (NF-e). Sem NCM e CFOP a SEFAZ rejeita a nota, mas
   // os campos são opcionais no banco: produtos cadastrados antes da emissão
   // fiscal existir continuam válidos, e a validação acontece na emissão.
-  ncm           String? // 8 dígitos
-  cest          String? // 7 dígitos, apenas para itens com substituição tributária
-  cfop          String? // 4 dígitos, ex: 5102 (venda dentro do estado)
-  taxOrigin     Int     @default(0) // 0 a 8 — origem da mercadoria
-  taxSituation  String? // CSOSN (Simples) ou CST de ICMS (regime normal)
-  taxableUnit   String? // unidade tributável, quando difere da comercial
+  ncm          String? // 8 dígitos
+  cest         String? // 7 dígitos, apenas para itens com substituição tributária
+  cfop         String? // 4 dígitos, ex: 5102 (venda dentro do estado)
+  taxOrigin    Int     @default(0) // 0 a 8 — origem da mercadoria
+  taxSituation String? // CSOSN (Simples) ou CST de ICMS (regime normal)
+  taxableUnit  String? // unidade tributável, quando difere da comercial
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -322,16 +324,16 @@ model Quote {
   issueDate  DateTime @default(now())
   validUntil DateTime
 
-  subtotal     Decimal @default(0) @db.Decimal(12, 2)
-  discountType DiscountType @default(PERCENT)
-  discountValue Decimal @default(0) @db.Decimal(12, 2)
-  freight      Decimal @default(0) @db.Decimal(12, 2)
-  total        Decimal @default(0) @db.Decimal(12, 2)
+  subtotal      Decimal      @default(0) @db.Decimal(12, 2)
+  discountType  DiscountType @default(PERCENT)
+  discountValue Decimal      @default(0) @db.Decimal(12, 2)
+  freight       Decimal      @default(0) @db.Decimal(12, 2)
+  total         Decimal      @default(0) @db.Decimal(12, 2)
 
-  paymentTerms   String?
-  deliveryTerms  String?
-  warranty       String?
-  notes          String?
+  paymentTerms  String?
+  deliveryTerms String?
+  warranty      String?
+  notes         String?
 
   template PdfTemplate @default(CLASSIC)
 
@@ -341,11 +343,11 @@ model Quote {
   /// única sem autenticação.
   publicToken String @unique
 
-  sentAt      DateTime?
-  viewedAt    DateTime?
-  approvedAt  DateTime?
-  rejectedAt  DateTime?
-  canceledAt  DateTime?
+  sentAt     DateTime?
+  viewedAt   DateTime?
+  approvedAt DateTime?
+  rejectedAt DateTime?
+  canceledAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -360,9 +362,9 @@ model Quote {
 }
 
 model QuoteItem {
-  id      String  @id @default(cuid())
+  id      String @id @default(cuid())
   quoteId String
-  quote   Quote   @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  quote   Quote  @relation(fields: [quoteId], references: [id], onDelete: Cascade)
 
   productId String?
   product   Product? @relation(fields: [productId], references: [id])
@@ -394,12 +396,12 @@ enum StockMovementType {
 }
 
 enum StockMovementReason {
-  PURCHASE   // Compra / aquisição
-  SALE       // Venda (manual ou automática, ao aprovar um orçamento)
-  RETURN     // Devolução (de cliente = entrada, a fornecedor = saída)
+  PURCHASE // Compra / aquisição
+  SALE // Venda (manual ou automática, ao aprovar um orçamento)
+  RETURN // Devolução (de cliente = entrada, a fornecedor = saída)
   ADJUSTMENT // Ajuste / correção de contagem
-  LOSS       // Perda, quebra, vencimento
-  OTHER      // Outro motivo / uso interno
+  LOSS // Perda, quebra, vencimento
+  OTHER // Outro motivo / uso interno
 }
 
 model StockMovement {
@@ -451,12 +453,12 @@ model RateLimit {
 // ---------------------------------------------------------------------------
 
 enum InvoiceStatus {
-  PENDING    // criada localmente, ainda não enviada
+  PENDING // criada localmente, ainda não enviada
   PROCESSING // enviada ao provedor, aguardando retorno da SEFAZ
   AUTHORIZED // autorizada — tem chave de acesso e protocolo
-  REJECTED   // recusada pela SEFAZ; ver rejectionCode/rejectionMessage
-  CANCELED   // autorizada e depois cancelada
-  ERROR      // falha de comunicação com o provedor, passível de retentativa
+  REJECTED // recusada pela SEFAZ; ver rejectionCode/rejectionMessage
+  CANCELED // autorizada e depois cancelada
+  ERROR // falha de comunicação com o provedor, passível de retentativa
 }
 
 /// Uma NF-e emitida a partir de um orçamento. A relação com Quote é 1:N porque
@@ -563,4 +565,38 @@ model Subscription {
   updatedAt DateTime @updatedAt
 
   @@index([planId])
+}
+
+/// Convite para alguém entrar na empresa.
+///
+/// O convite é por e-mail e não cria usuário: quem aceita define o próprio
+/// nome e a própria senha. Assim ninguém precisa combinar senha por WhatsApp,
+/// e o convite pode expirar sem deixar conta órfã no sistema.
+model Invitation {
+  id        String  @id @default(cuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  email String
+  role  UserRole @default(MEMBER)
+
+  /// Segredo do link. randomBytes, nunca cuid: é a única credencial que
+  /// permite entrar numa empresa sem sessão.
+  token String @unique
+
+  invitedById String?
+  invitedBy   User?   @relation("ConvitesEnviados", fields: [invitedById], references: [id], onDelete: SetNull)
+
+  expiresAt    DateTime
+  acceptedAt   DateTime?
+  /// Guardado para o histórico continuar legível depois que o convite é usado.
+  acceptedById String?
+
+  createdAt DateTime @default(now())
+
+  /// Um convite pendente por e-mail dentro da mesma empresa. Reconvidar
+  /// substitui o anterior em vez de acumular links válidos.
+  @@unique([companyId, email])
+  @@index([companyId])
+  @@index([token])
 }
