@@ -9,7 +9,14 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  /// Conexão da aplicação. Em produção aponta para o pooler do Supabase
+  /// (porta 6543), que é o que sustenta funções serverless: cada invocação
+  /// abre e fecha conexão, e sem pooler o banco esgota o limite num pico.
   url      = env("DATABASE_URL")
+  /// Conexão direta (porta 5432), usada só por `prisma migrate deploy`.
+  /// Migração não passa pelo pooler: ela usa advisory lock e prepared
+  /// statements, que o pgbouncer em modo transação não suporta.
+  directUrl = env("DIRECT_URL")
 }
 
 // ---------------------------------------------------------------------------

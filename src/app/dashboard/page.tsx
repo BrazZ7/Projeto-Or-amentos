@@ -2,6 +2,7 @@ import { subMonths, startOfMonth, endOfMonth, isSameMonth } from 'date-fns';
 import { FileText, CheckCircle2, Clock, DollarSign } from 'lucide-react';
 import { requireSession } from '@/lib/session';
 import { prisma } from '@/lib/prisma';
+import { getDashboardMetrics } from '@/lib/dashboard-metrics';
 import { StatsCard } from '@/components/dashboard/StatsCard';
 import { RevenueAreaChart, type RevenuePoint } from '@/components/dashboard/charts/RevenueAreaChart';
 import { RecentQuotesTable } from '@/components/dashboard/RecentQuotesTable';
@@ -28,57 +29,22 @@ export default async function DashboardPage() {
   const lastMonthEnd = endOfMonth(subMonths(now, 1));
 
   const [
-    totalQuotes,
-    approvedCount,
-    pendingCount,
-    monthRevenue,
-    prevMonthRevenue,
-    quotesThisMonth,
-    quotesLastMonth,
-    approvedThisMonth,
-    approvedLastMonth,
-    pendingLastMonth,
+    metrics,
     monthlySeries,
     recentQuotes,
     latestQuote,
     company,
     activityQuotes,
   ] = await Promise.all([
-    prisma.quote.count({ where: { companyId } }),
-    prisma.quote.count({ where: { companyId, status: 'APPROVED' } }),
-    prisma.quote.count({ where: { companyId, status: { in: [...PENDING_STATUSES] } } }),
-    prisma.quote.aggregate({
-      where: { companyId, status: 'APPROVED', approvedAt: { gte: thisMonthStart } },
-      _sum: { total: true },
-    }),
-    prisma.quote.aggregate({
-      where: {
-        companyId,
-        status: 'APPROVED',
-        approvedAt: { gte: lastMonthStart, lte: lastMonthEnd },
-      },
-      _sum: { total: true },
-    }),
-    prisma.quote.count({ where: { companyId, createdAt: { gte: thisMonthStart } } }),
-    prisma.quote.count({
-      where: { companyId, createdAt: { gte: lastMonthStart, lte: lastMonthEnd } },
-    }),
-    prisma.quote.count({
-      where: { companyId, status: 'APPROVED', approvedAt: { gte: thisMonthStart } },
-    }),
-    prisma.quote.count({
-      where: {
-        companyId,
-        status: 'APPROVED',
-        approvedAt: { gte: lastMonthStart, lte: lastMonthEnd },
-      },
-    }),
-    prisma.quote.count({
-      where: {
-        companyId,
-        status: { in: [...PENDING_STATUSES] },
-        createdAt: { gte: lastMonthStart, lte: lastMonthEnd },
-      },
+    // Dez contagens e somas viraram uma consulta só: com o pooler em produção
+    // a aplicação usa uma conexão por instância, e consultas "paralelas"
+    // enfileiram nela. Ver src/lib/dashboard-metrics.ts.
+    getDashboardMetrics({
+      companyId,
+      thisMonthStart,
+      lastMonthStart,
+      lastMonthEnd,
+      pendingStatuses: PENDING_STATUSES,
     }),
     // Série de 12 meses: o seletor de período do gráfico recorta no cliente.
     prisma.quote.findMany({
@@ -116,8 +82,23 @@ export default async function DashboardPage() {
     }),
   ]);
 
-  const revenueThisMonth = Number(monthRevenue._sum.total || 0);
-  const revenuePrevMonth = Number(prevMonthRevenue._sum.total || 0);
+  // Nomes soltos para o resto da página continuar lendo como antes.
+  const {
+    totalQuotes,
+    approvedCount,
+    pendingCount,
+    monthRevenue,
+    prevMonthRevenue,
+    quotesThisMonth,
+    quotesLastMonth,
+    approvedThisMonth,
+    approvedLastMonth,
+    pendingLastMonth,
+  } = metrics;
+
+  // Já vêm somados como número da consulta única.
+  const revenueThisMonth = monthRevenue;
+  const revenuePrevMonth = prevMonthRevenue;
 
   const monthlyData: RevenuePoint[] = Array.from({ length: 12 }, (_, index) => {
     const monthStart = startOfMonth(subMonths(now, 11 - index));
