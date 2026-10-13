@@ -1,0 +1,217 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-night-950 text-slate-200;
+  /* Fundo grafite com clareamento difuso e uma faixa diagonal de luz. Os tons
+     são o que o vidro dos painéis borra por trás — num fundo chapado o
+     backdrop-blur não tem o que fazer e o efeito some. */
+  background-image:
+    linear-gradient(118deg, transparent 26%, rgba(255, 255, 255, 0.045) 42%, transparent 56%),
+    radial-gradient(70rem 45rem at 10% -8%, rgba(255, 255, 255, 0.07), transparent 62%),
+    radial-gradient(55rem 38rem at 92% 4%, rgba(148, 163, 184, 0.06), transparent 58%),
+    radial-gradient(60rem 40rem at 60% 100%, rgba(255, 255, 255, 0.035), transparent 60%);
+  background-attachment: fixed;
+}
+
+::selection {
+  @apply bg-brand-500/30 text-white;
+}
+
+/* Barra de rolagem discreta, para não abrir uma faixa clara no tema escuro. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.25) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.22);
+  border-radius: 9999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.35);
+}
+
+@layer utilities {
+  /* Painel padrão do app. O gradiente de cima para baixo (mais claro no topo)
+     simula luz vindo de cima; junto do filete branco do shadow-panel e da
+     borda prateada é o que reproduz o vidro polido do mockup. */
+  /* Vidro: branco translúcido sobre o grafite, com blur forte. Opacidade
+     bem baixa para o fundo atravessar — o blur é que sustenta a legibilidade,
+     não a camada de cor. */
+  .panel {
+    @apply relative rounded-2xl border border-hairline shadow-panel backdrop-blur-2xl backdrop-saturate-150;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.025) 45%,
+      rgba(255, 255, 255, 0.015) 100%
+    );
+  }
+
+  /* Menus, diálogos e tooltips. Mesma linguagem, mais corpo: sobre conteúdo
+     em movimento um painel a 5% deixa o texto de trás competir com o da
+     frente.
+     Sem `relative` de propósito: como utilitário custom ele venceria a classe
+     `absolute` do JSX na cascata, e o menu ficaria no fluxo em vez de
+     sobreposto. */
+  .panel-overlay {
+    @apply rounded-2xl border border-hairline-strong bg-night-850/90 shadow-glass backdrop-blur-2xl backdrop-saturate-150;
+  }
+
+  /* Realce prateado na aresta superior de todo painel — no mockup o
+     tratamento é uniforme, não só nos cards de destaque.
+     top: 0 e não -1px porque vários painéis usam overflow-hidden e
+     cortariam o filete. */
+  .panel::before {
+    content: '';
+    position: absolute;
+    inset-inline: 12%;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(226, 232, 240, 0.55), transparent);
+    pointer-events: none;
+  }
+
+  .panel-raised {
+    @apply relative rounded-2xl border border-hairline-strong bg-white/[0.09] shadow-glass backdrop-blur-2xl;
+  }
+
+  .glass {
+    @apply relative border border-hairline bg-white/[0.06] shadow-glass backdrop-blur-xl;
+  }
+
+  .glass-strong {
+    @apply relative border border-hairline-strong bg-white/[0.1] shadow-glass backdrop-blur-2xl;
+  }
+
+  /* Para menus e diálogos sobrepostos: precisa de mais corpo que um painel,
+     senão o conteúdo por baixo compete com o texto. */
+  .glass-solid {
+    @apply relative border border-hairline bg-night-850/95 shadow-glass backdrop-blur-2xl;
+  }
+
+  .glass-dark {
+    @apply relative border border-hairline bg-black/30 shadow-glass backdrop-blur-xl;
+  }
+
+  .bg-grid-fade {
+    background-image: radial-gradient(circle at 1px 1px, rgba(148, 163, 184, 0.09) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+
+  /* Textura de ruído sutil para tirar a "planura" digital das superfícies. */
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+
+  /* Campos de vidro: em vez de caixa escura chapada, o campo é branco
+     translúcido que deixa o fundo passar e reage ao toque — escurece no hover
+     e ganha corpo mais claro, aro e halo no foco.
+     O seletor é composto (.glass-fields input) de propósito: precisa vencer o
+     `bg-night-850/80` que o componente Input aplica pela className, e utilitário
+     de uma classe só perderia na especificidade.
+     Aplicado onde o campo é o elemento principal da tela — hoje a área de
+     acesso. Nos formulários longos do painel a caixa opaca separa melhor um
+     campo do outro. */
+  .glass-fields input,
+  .glass-fields select,
+  .glass-fields textarea {
+    background-color: rgba(255, 255, 255, 0.045);
+    border-color: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(12px) saturate(1.4);
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .glass-fields input:hover:not(:focus),
+  .glass-fields select:hover:not(:focus),
+  .glass-fields textarea:hover:not(:focus) {
+    background-color: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.24);
+  }
+
+  .glass-fields input:focus,
+  .glass-fields select:focus,
+  .glass-fields textarea:focus {
+    background-color: rgba(255, 255, 255, 0.09);
+    box-shadow:
+      0 0 0 3px rgba(59, 130, 246, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  }
+
+  /* O autofill do Chrome pinta o campo de azul sólido e apagaria o vidro. */
+  .glass-fields input:-webkit-autofill,
+  .glass-fields input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #e2e8f0;
+    -webkit-box-shadow: 0 0 0 1000px rgba(38, 42, 48, 0.92) inset;
+    caret-color: #e2e8f0;
+  }
+
+  /* Brilho ambiente ao redor do elemento, revelado no hover — usar junto de
+     `group` no ancestral. Só box-shadow, então nunca é cortado por
+     overflow-hidden de irmãos. */
+  .glow-ring {
+    transition: box-shadow 0.5s ease;
+  }
+
+  .group:hover .glow-ring,
+  .glow-ring:hover {
+    box-shadow:
+      0 0 0 1px rgba(59, 130, 246, 0.35),
+      0 10px 40px -10px rgba(37, 99, 235, 0.55),
+      0 0 60px -18px rgba(56, 189, 248, 0.4);
+  }
+
+  /* Sweep especular no hover. Bem mais fraco que no tema claro: no escuro um
+     branco a 55% vira um flash. */
+  .sheen-hover {
+    @apply relative overflow-hidden;
+  }
+
+  .sheen-hover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.14) 50%, transparent 60%);
+    transform: translateX(-120%);
+    pointer-events: none;
+  }
+
+  .group:hover .sheen-hover::after,
+  .sheen-hover:hover::after {
+    animation: sheen 1s ease-out;
+  }
+
+  /* Texto com gradiente, usado na marca e em números de destaque. */
+  .text-gradient-brand {
+    @apply bg-gradient-to-r from-white via-brand-100 to-brand-300 bg-clip-text text-transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
